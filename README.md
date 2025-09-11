@@ -1,117 +1,137 @@
-# NodeJS Backend Template
+# SOPHIA - Course Service
 
-Template  para proyectos backend con Node.js, TypeScript.
+**SOPHIA Course Service** es un microservicio diseñado para gestionar todo lo relacionado con cursos dentro del ecosistema educativo SOPHIA. Este servicio actúa como el núcleo central para:
 
-Si tienes alguna sugerencia o comentario, no dudes en conactarme o hacer un fork
+- **Gestión de Cursos**: Creación, actualización, eliminación y consulta de cursos
+- **Administración de Contenido**: Manejo de materiales educativos, recursos y módulos de aprendizaje
+- **Control de Acceso**: Gestión de permisos y roles para acceso a cursos
+- **Seguimiento de Progreso**: Monitoreo del avance de estudiantes en los cursos
+- **Integración con otros Servicios**: Comunicación con microservicios de usuarios, evaluaciones y notificaciones
 
-[Miguel Motta](https://github.com/MIGUEL-MOTTA-U)
+## Descripción del Proyecto
 
-## 🚀 Tecnologías
+Este es el backend de **SOPHIA Course Service**, una aplicación desarrollada en Node.js con TypeScript que proporciona servicios para la gestión de cursos. El backend incluye funcionalidades para el manejo de peticiones HTTP, middleware de seguridad, logging, y manejo de errores.
 
-- **Node.js 24** + **TypeScript 5.9**
-- **pnpm** - Gestor de paquetes eficiente
-- **Biome** - Linting, formateo y organización de imports
-- **Vitest** - Testing framework rápido
-- **Nodemon** - Hot reload en desarrollo
-- **Docker** - Contenerización completa
+### 🏗️ Arquitectura del Microservicio
 
-## 📦 Dependencias
+Este servicio forma parte de una arquitectura de microservicios donde:
 
-### Producción
-- `dotenv` - Variables de entorno
+- **Independencia**: Puede desplegarse y escalarse de forma independiente
+- **Comunicación**: Utiliza APIs RESTful para interactuar con otros servicios
+- **Monitoreo**: Incluye endpoints de salud y métricas para supervisión
+- **Seguridad**: Implementa middleware de seguridad y manejo de CORS
 
-### Desarrollo
-- `typescript` - Compilador TypeScript
-- `@types/node` - Tipos para Node.js
-- `nodemon` - Auto-restart en desarrollo
-- `tsx` - Ejecutor TypeScript directo
-- `@biomejs/biome` - Linter y formatter
-- `vitest` + `@vitest/coverage-istanbul` - Testing y cobertura
-- `vitest-mock-extended` - Mocking avanzado
-- `typedoc` - Generador de documentación
+### 📋 Casos de Uso Típicos
 
-## ⚙️ Configuración
+1. **Instructores**: Crear y gestionar cursos, subir contenido, revisar progreso de estudiantes
+2. **Estudiantes**: Consultar cursos disponibles, acceder a materiales, seguir su progreso
+3. **Administradores**: Supervisar la plataforma, gestionar permisos, generar reportes
+4. **Sistemas Externos**: Integración con LMS, sistemas de calificaciones, plataformas de pago
 
-### Biome (`biome.json`)
-- ✅ Linting con reglas recomendadas
-- ✅ Formateo automático (espacios, comillas simples, semicolons)
-- ✅ Organización de imports
-- ✅ Detección de variables no usadas y `any` explícitos
+### 🔄 Integración en el Ecosistema SOPHIA
 
-### TypeScript (`tsconfig.json`)
-- ✅ Target ES2022 con módulos NodeNext
-- ✅ Strict mode habilitado
-- ✅ Source maps y declaraciones
-- ✅ Output en directorio `dist/`
+- Se conecta con el servicio de **Usuarios** para autenticación y autorización
+- Interactúa con el servicio de **Evaluaciones** para pruebas y calificaciones
+- Comunica con el servicio de **Notificaciones** para alertas y recordatorios
+- Integra con servicios de **Análiticas** para métricas y reportes
 
-## 🛠️ Scripts Disponibles
+## Versión del Lenguaje
 
+- **Node.js**: v24 
+- **TypeScript**: 5.9.2
+- **Target ES**: ES2022
+
+## Dependencias
+
+### Dependencias de Producción
+- **express**: ^5.1.0 - Framework web para Node.js
+- **cors**: ^2.8.5 - Middleware para manejar CORS
+- **helmet**: ^8.1.0 - Middleware de seguridad
+- **morgan**: ^1.10.1 - Logger de peticiones HTTP
+- **winston**: ^3.17.0 - Logger de aplicación
+- **dotenv**: 17.2.2 - Manejo de variables de entorno
+
+### Dependencias de Desarrollo
+- **@biomejs/biome**: 2.2.2 - Linter y formateador
+- **nodemon**: 3.1.10 - Monitor de cambios para desarrollo
+- **vitest**: 3.2.4 - Framework de testing
+- **typescript**: 5.9.2 - Compilador TypeScript
+- **supertest**: ^7.1.4 - Testing de APIs HTTP
+- **typedoc**: 0.28.12 - Generación de documentación
+
+## Instrucciones de Instalación y Ejecución
+
+### Prerrequisitos
+- Node.js 24 o superior
+- pnpm  o npm
+
+### Instalación
+
+1. Clona el repositorio:
 ```bash
-# Desarrollo
-pnpm dev          # Ejecutar con hot reload
-pnpm build        # Compilar TypeScript
-pnpm start        # Ejecutar versión compilada
-
-# Calidad de código
-pnpm format       # Formatear código
-pnpm lint         # Linter con auto-fix
-pnpm check        # Verificación completa
-
-# Testing
-pnpm test         # Ejecutar tests
-pnpm coverage     # Reporte de cobertura
-
-# Documentación
-pnpm doc          # Generar documentación
+git clone <repository-url>
+cd SOPHIA-CourseService
 ```
 
-## 🐳 Docker
-
-Este proyecto incluye configuración completa de Docker con múltiples entornos.
-
-**📋 Para información detallada de Docker, consulta [DOCKER.md](./DOCKER.md)**
-
-### Quick Start con Docker
+2. Instala las dependencias:
 ```bash
-# Desarrollo
+pnpm install
+# o
+npm install
+```
+
+3. Configura las variables de entorno:
+   - Crea un archivo `.env` basado en las variables necesarias
+   - Configura `CORS_ORIGIN` y otras variables según tu entorno
+
+### Scripts Disponibles
+
+- **Desarrollo**: `pnpm dev` - Ejecuta la aplicación en modo desarrollo con recarga automática
+- **Construcción**: `pnpm build` - Compila el proyecto TypeScript
+- **Producción**: `pnpm start` - Ejecuta la aplicación compilada
+- **Testing**: `pnpm test` - Ejecuta las pruebas unitarias
+- **Cobertura**: `pnpm coverage` - Ejecuta pruebas con reporte de cobertura
+- **Linting**: `pnpm lint` - Ejecuta el linter
+- **Formato**: `pnpm format` - Formatea el código
+- **Documentación**: `pnpm doc` - Genera documentación TypeDoc
+
+### Ejecución con Docker
+
+1. Construcción de la imagen:
+```bash
+docker build -t sophia-course-service .
+```
+
+2. Ejecución del contenedor:
+```bash
+docker run -p 3000:3000 sophia-course-service
+```
+
+3. Para desarrollo con Docker Compose:
+```bash
 docker-compose -f docker-compose.dev.yml up
-
-# Imagen simple
-docker build -t nodejs-back-template .
-docker run -p 3000:3000 nodejs-back-template
 ```
 
-## 🏗️ Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
-├── src/
-│   └── server.ts          # Servidor HTTP principal
-├── test/
-│   └── server.test.ts     # Tests
-├── dist/                  # Código compilado
-├── docs/                  # Documentación generada
-├── Dockerfile             # Imagen de producción
-├── Dockerfile.dev         # Multi-stage para dev/prod
-├── docker-compose*.yml    # Orquestación de servicios
-├── biome.json            # Configuración de linting/formato
-├── tsconfig.json         # Configuración TypeScript
-└── package.json          # Dependencias y scripts
+src/
+├── app.ts                 # Configuración principal de Express
+├── server.ts              # Punto de entrada del servidor
+├── controllers/           # Controladores de rutas
+├── middleware/            # Middleware personalizado
+├── routes/                # Definición de rutas
+└── utils/                 # Utilidades y helpers
+
+test/                      # Pruebas unitarias
 ```
 
-## 🎯 Características
+## Enlace al Documento de Planeación
 
-- ⚡ **Hot reload** en desarrollo
-- 🔧 **Linting y formateo** automático
-- 🧪 **Testing** configurado con Vitest
-- 📚 **Documentación** automática con TypeDoc
-- 🐳 **Docker** multi-entorno
-- 🔒 **TypeScript estricto**
-- 📦 **pnpm** para gestión eficiente de dependencias
+📋 **Tablero de Planeación**: [SOPHIA - Trello Board](https://trello.com/invite/b/68be127bf45c3eaecf8cc70d/ATTI6891bb77d37b8e0184327426470801ed6871D57B/sophia)
 
-## 🚦 Endpoints
-
-- `GET /` - Información general del servidor
-- `GET /fibonacci?n=10` - Cálculo de fibonacci
-
-Servidor ejecutándose en: `http://localhost:3000`
-
+El tablero de Trello contiene:
+- Backlog del producto
+- Historias de usuario
+- Tareas asignadas al equipo de desarrollo
+- Seguimiento del progreso del proyecto
