@@ -1,0 +1,237 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/* Enums */
+enum CourseStatus {
+  DRAFT
+  UNDER_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LessonType {
+  VIDEO
+  TEXT
+  QUIZ
+  RESOURCE
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  GRADED
+  PENDING
+}
+
+/* Models */
+
+model Course {
+  id           String    @id @default(uuid())
+  instructorId String
+  title        String
+  slug         String    @unique
+  description  String?
+  categoryId   String?
+  level        String?
+  language     String?
+  price        Float?    @default(0)
+  status       CourseStatus @default(DRAFT)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  sections     Section[]         @relation("CourseSections")
+  lessons      Lesson[]          @relation("CourseLessons")
+  quizzes      Quiz[]            @relation("CourseQuizzes")
+  reviews      CourseReview[]    @relation("CourseReviews")
+  favourites   FavouriteCourse[] @relation("CourseFavourites")
+  iaRequests   IaGeneration[]    @relation("CourseIa")
+
+  // relación explícita con Category (nombre de relación = "CourseCategory")
+  category     Category? @relation("CourseCategory", fields: [categoryId], references: [id])
+
+  @@index([instructorId])
+  @@index([categoryId])
+}
+
+model Section {
+  id        String   @id @default(uuid())
+  courseId  String
+  title     String
+  order     Int
+  createdAt DateTime @default(now())
+
+  course    Course   @relation("CourseSections", fields: [courseId], references: [id])
+  lessons   Lesson[] @relation("SectionLessons")
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String     @id @default(uuid())
+  courseId    String
+  sectionId   String?
+  order       Int
+  title       String
+  type        LessonType @default(TEXT)
+  content     String?
+  resourceUrl String?
+  duration    Int?
+  createdAt   DateTime   @default(now())
+
+  course      Course     @relation("CourseLessons", fields: [courseId], references: [id])
+  section     Section?   @relation("SectionLessons", fields: [sectionId], references: [id])
+  resources   Resource[] @relation("LessonResources")
+  assignments Assignment[] @relation("LessonAssignments")
+
+  @@index([courseId])
+  @@index([sectionId])
+}
+
+model Resource {
+  id        String   @id @default(uuid())
+  lessonId  String
+  name      String
+  url       String
+  mime      String?
+  createdAt DateTime @default(now())
+
+  lesson    Lesson   @relation("LessonResources", fields: [lessonId], references: [id])
+
+  @@index([lessonId])
+}
+
+model Quiz {
+  id          String        @id @default(uuid())
+  courseId    String
+  title       String
+  description String?
+  createdAt   DateTime      @default(now())
+
+  course      Course        @relation("CourseQuizzes", fields: [courseId], references: [id])
+  questions   QuizQuestion[] @relation("QuizQuestions")
+
+  @@index([courseId])
+}
+
+model QuizQuestion {
+  id        String       @id @default(uuid())
+  quizId    String
+  question  String
+  order     Int
+
+  quiz      Quiz         @relation("QuizQuestions", fields: [quizId], references: [id])
+  options   QuizOption[] @relation("QuestionOptions")
+
+  @@index([quizId])
+}
+
+model QuizOption {
+  id         String       @id @default(uuid())
+  questionId String
+  option     String
+  isCorrect  Boolean      @default(false)
+
+  question   QuizQuestion @relation("QuestionOptions", fields: [questionId], references: [id])
+
+  @@index([questionId])
+}
+
+model Assignment {
+  id          String     @id @default(uuid())
+  lessonId    String
+  title       String
+  instructions String?
+  maxScore    Float?
+  dueDate     DateTime?
+  createdAt   DateTime   @default(now())
+
+  lesson      Lesson     @relation("LessonAssignments", fields: [lessonId], references: [id])
+  submissions Submission[] @relation("AssignmentSubmissions")
+
+  @@index([lessonId])
+}
+
+model Submission {
+  id           String   @id @default(uuid())
+  assignmentId String
+  userId       String
+  submittedAt  DateTime @default(now())
+  status       SubmissionStatus @default(SUBMITTED)
+  grade        Float?
+  feedback     String?
+
+  assignment   Assignment @relation("AssignmentSubmissions", fields: [assignmentId], references: [id])
+  resources    SubmissionResource[] @relation("SubmissionResources")
+
+  @@index([assignmentId])
+  @@index([userId])
+}
+
+model SubmissionResource {
+  id            String @id @default(uuid())
+  submissionId  String
+  name          String
+  url           String
+  mime          String?
+
+  submission    Submission @relation("SubmissionResources", fields: [submissionId], references: [id])
+  @@index([submissionId])
+}
+
+model CourseReview {
+  id        String   @id @default(uuid())
+  courseId  String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  course    Course   @relation("CourseReviews", fields: [courseId], references: [id])
+
+  @@index([courseId])
+  @@index([userId])
+}
+
+model FavouriteCourse {
+  id        String @id @default(uuid())
+  courseId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  course    Course @relation("CourseFavourites", fields: [courseId], references: [id])
+
+  @@unique([courseId, userId])
+  @@index([courseId])
+  @@index([userId])
+}
+
+model Category {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  // relación inversa con Course usando el mismo nombre "CourseCategory"
+  courses     Course[] @relation("CourseCategory")
+}
+
+model IaGeneration {
+  id            String  @id @default(uuid())
+  courseId      String?
+  userId        String?
+  type          String
+  prompt        String
+  response      String?
+  tokensIn      Int?
+  tokensOut     Int?
+  costEstimated Float?
+  status        String?
+  createdAt     DateTime @default(now())
+
+  course        Course? @relation("CourseIa", fields: [courseId], references: [id])
+}
