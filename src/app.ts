@@ -2,7 +2,7 @@ import cors from 'cors';
 import express, { type Application } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { errorHandler, notFound } from './middleware/errorHandler.js';
+import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import routes from './routes/index.js';
 import { logger } from './utils/logger.js';
 
