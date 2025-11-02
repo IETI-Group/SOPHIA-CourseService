@@ -13,9 +13,9 @@ export interface ProgressContentRepository {
   getProgress(
     filters: FiltersProgressContent,
     sort: SortingContentProgress
-  ): PaginatedContentProgress;
-  getProgressById(progressId: string): ProgressContentOutDTO;
-  createProgress(dto: ProgressContentInDTO): ProgressContentOutDTO;
-  updateProgress(progressId: string, dto: ProgressContentUpdateDTO): ProgressContentOutDTO;
-  deleteProgressById(progressId: string): void;
+  ): Promise<PaginatedContentProgress>;
+  getProgressById(progressId: string): Promise<ProgressContentOutDTO>;
+  createProgress(dto: ProgressContentInDTO): Promise<ProgressContentOutDTO>;
+  updateProgress(progressId: string, dto: ProgressContentUpdateDTO): Promise<ProgressContentOutDTO>;
+  deleteProgressById(progressId: string): Promise<void>;
 }

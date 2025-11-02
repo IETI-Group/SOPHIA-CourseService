@@ -10,13 +10,13 @@ export interface AISpecsLessonRepository {
     filters: FiltersAISpecsLesson,
     sort: SortingAILessonSpecs,
     lightDTO: boolean
-  ): PaginatedLessonAISpecs;
-  getAISpecById(aiSpecId: string, lightDTO: boolean): AISpecsLessonOutLightDTO;
-  createAISpec(dto: AISpecsLessonInDTO, lightDTO: boolean): AISpecsLessonOutLightDTO;
+  ): Promise<PaginatedLessonAISpecs>;
+  getAISpecById(aiSpecId: string, lightDTO: boolean): Promise<AISpecsLessonOutLightDTO>;
+  createAISpec(dto: AISpecsLessonInDTO, lightDTO: boolean): Promise<AISpecsLessonOutLightDTO>;
   updateAISpec(
     aiSpecId: string,
     dto: AISpecsLessonInDTO,
     lightDTO: boolean
-  ): AISpecsLessonOutLightDTO;
-  deleteAISpecById(aiSpecId: string): void;
+  ): Promise<AISpecsLessonOutLightDTO>;
+  deleteAISpecById(aiSpecId: string): Promise<void>;
 }

@@ -9,9 +9,9 @@ export interface QuestionsQuizzRepository {
   getQuestionsQuiz(
     filters: FiltersQuestionQuiz,
     sort: SortingQuizQuestions
-  ): PaginatedQuizQuestions;
-  getQuestionQuizById(questionQuizId: string): QuestionQuizOutDTO;
-  createQuestionQuiz(dto: QuestionQuizInDTO): QuestionQuizOutDTO;
-  updateQuestionQuiz(questionQuizId: string, dto: QuestionQuizInDTO): QuestionQuizOutDTO;
-  deleteQuestionQuizById(questionQuizId: string): void;
+  ): Promise<PaginatedQuizQuestions>;
+  getQuestionQuizById(questionQuizId: string): Promise<QuestionQuizOutDTO>;
+  createQuestionQuiz(dto: QuestionQuizInDTO): Promise<QuestionQuizOutDTO>;
+  updateQuestionQuiz(questionQuizId: string, dto: QuestionQuizInDTO): Promise<QuestionQuizOutDTO>;
+  deleteQuestionQuizById(questionQuizId: string): Promise<void>;
 }

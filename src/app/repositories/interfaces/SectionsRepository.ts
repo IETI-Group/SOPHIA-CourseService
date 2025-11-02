@@ -6,13 +6,17 @@ import type {
 } from '../../models/index.js';
 
 export interface SectionsRepository {
-  getSections(filters: FiltersSection, sort: SortingSections, lightDTO: boolean): PaginatedSections;
-  getSectionById(sectionId: string, lightDTO: boolean): SectionCourseOutLightDTO;
-  createSection(dto: SectionCourseInDTO, lightDTO: boolean): SectionCourseOutLightDTO;
+  getSections(
+    filters: FiltersSection,
+    sort: SortingSections,
+    lightDTO: boolean
+  ): Promise<PaginatedSections>;
+  getSectionById(sectionId: string, lightDTO: boolean): Promise<SectionCourseOutLightDTO>;
+  createSection(dto: SectionCourseInDTO, lightDTO: boolean): Promise<SectionCourseOutLightDTO>;
   updateSection(
     sectionId: string,
     dto: SectionCourseUpdateDTO,
     lightDTO: boolean
-  ): SectionCourseOutLightDTO;
-  deleteSectionById(sectionId: string): void;
+  ): Promise<SectionCourseOutLightDTO>;
+  deleteSectionById(sectionId: string): Promise<void>;
 }

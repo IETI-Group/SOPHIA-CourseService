@@ -10,9 +10,12 @@ import type {
 } from '../../models/index.js';
 
 export interface AttemptsQuizzRepository {
-  getAttempts(filters: FiltersAttemptQuiz, sort: SortingQuizAttempts): PaginatedQuizAttempts;
-  getAttemptById(attemptId: string): AttemptQuizOutDTO;
-  createAttempt(dto: AttemptQuizInDTO): AttemptQuizOutDTO;
-  updateAttempt(attemptId: string, dto: AttemptQuizUpdateDTO): AttemptQuizOutDTO;
-  deleteAttemptById(attemptId: string): void;
+  getAttempts(
+    filters: FiltersAttemptQuiz,
+    sort: SortingQuizAttempts
+  ): Promise<PaginatedQuizAttempts>;
+  getAttemptById(attemptId: string): Promise<AttemptQuizOutDTO>;
+  createAttempt(dto: AttemptQuizInDTO): Promise<AttemptQuizOutDTO>;
+  updateAttempt(attemptId: string, dto: AttemptQuizUpdateDTO): Promise<AttemptQuizOutDTO>;
+  deleteAttemptById(attemptId: string): Promise<void>;
 }

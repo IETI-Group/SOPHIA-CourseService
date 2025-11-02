@@ -6,9 +6,9 @@ import type {
 import type { OptionQuizInDTO, OptionQuizOutDTO } from '../../models/index.js';
 
 export interface OptionsQuizzRepository {
-  getOptions(filters: FiltersOptionQuiz, sort: SortingQuizOptions): PaginatedQuizOptions;
-  getOptionById(optionId: string): OptionQuizOutDTO;
-  createOption(dto: OptionQuizInDTO): OptionQuizOutDTO;
-  updateOption(optionId: string, dto: OptionQuizInDTO): OptionQuizOutDTO;
-  deleteOptionById(optionId: string): void;
+  getOptions(filters: FiltersOptionQuiz, sort: SortingQuizOptions): Promise<PaginatedQuizOptions>;
+  getOptionById(optionId: string): Promise<OptionQuizOutDTO>;
+  createOption(dto: OptionQuizInDTO): Promise<OptionQuizOutDTO>;
+  updateOption(optionId: string, dto: OptionQuizInDTO): Promise<OptionQuizOutDTO>;
+  deleteOptionById(optionId: string): Promise<void>;
 }

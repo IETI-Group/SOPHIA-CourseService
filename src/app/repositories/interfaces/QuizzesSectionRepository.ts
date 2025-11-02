@@ -14,9 +14,13 @@ export interface QuizzesSectionRepository {
     filters: FiltersQuizSection,
     sort: SortingSectionQuizzes,
     lightDTO: boolean
-  ): PaginatedQuizzes;
-  getQuizById(quizId: string, lightDTO: boolean): QuizSectionOutLightDTO;
-  createQuiz(dto: QuizSectionInDTO, lightDTO: boolean): QuizSectionOutLightDTO;
-  updateQuiz(quizId: string, dto: QuizSectionUpdateDTO, lightDTO: boolean): QuizSectionOutLightDTO;
-  deleteQuizById(quizId: string): void;
+  ): Promise<PaginatedQuizzes>;
+  getQuizById(quizId: string, lightDTO: boolean): Promise<QuizSectionOutLightDTO>;
+  createQuiz(dto: QuizSectionInDTO, lightDTO: boolean): Promise<QuizSectionOutLightDTO>;
+  updateQuiz(
+    quizId: string,
+    dto: QuizSectionUpdateDTO,
+    lightDTO: boolean
+  ): Promise<QuizSectionOutLightDTO>;
+  deleteQuizById(quizId: string): Promise<void>;
 }

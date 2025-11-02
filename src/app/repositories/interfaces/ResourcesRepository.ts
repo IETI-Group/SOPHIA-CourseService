@@ -10,9 +10,13 @@ export interface ResourcesRepository {
     filters: FiltersResource,
     sort: SortingResources,
     lightDTO: boolean
-  ): PaginatedResources;
-  getResourceById(resourceId: string, lightDTO: boolean): ResourcesOutLightDTO;
-  createResource(dto: ResourcesInDTO, lightDTO: boolean): ResourcesOutLightDTO;
-  updateResource(resourceId: string, dto: ResourcesInDTO, lightDTO: boolean): ResourcesOutLightDTO;
-  deleteResourceById(resourceId: string): void;
+  ): Promise<PaginatedResources>;
+  getResourceById(resourceId: string, lightDTO: boolean): Promise<ResourcesOutLightDTO>;
+  createResource(dto: ResourcesInDTO, lightDTO: boolean): Promise<ResourcesOutLightDTO>;
+  updateResource(
+    resourceId: string,
+    dto: ResourcesInDTO,
+    lightDTO: boolean
+  ): Promise<ResourcesOutLightDTO>;
+  deleteResourceById(resourceId: string): Promise<void>;
 }

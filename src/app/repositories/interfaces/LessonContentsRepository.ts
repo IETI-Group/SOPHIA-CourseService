@@ -14,13 +14,19 @@ export interface LessonContentsRepository {
     filters: FiltersLessonContent,
     sort: SortingLessonContent,
     lightDTO: boolean
-  ): PaginatedLessonContents;
-  getLessonContentById(lessonContentId: string, lightDTO: boolean): ContentLessonOutLightDTO;
-  createLessonContent(dto: ContentLessonInDTO, lightDTO: boolean): ContentLessonOutLightDTO;
+  ): Promise<PaginatedLessonContents>;
+  getLessonContentById(
+    lessonContentId: string,
+    lightDTO: boolean
+  ): Promise<ContentLessonOutLightDTO>;
+  createLessonContent(
+    dto: ContentLessonInDTO,
+    lightDTO: boolean
+  ): Promise<ContentLessonOutLightDTO>;
   updateLessonContent(
     lessonContentId: string,
     dto: ContentLessonUpdateDTO,
     lightDTO: boolean
-  ): ContentLessonOutLightDTO;
-  deleteLessonContentById(lessonContentId: string): void;
+  ): Promise<ContentLessonOutLightDTO>;
+  deleteLessonContentById(lessonContentId: string): Promise<void>;
 }

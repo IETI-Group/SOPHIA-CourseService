@@ -10,12 +10,15 @@ import type {
 } from '../../models/index.js';
 
 export interface InscriptionsCourseRepository {
-  getInscriptions(filters: FiltersInscription, sort: SortingInscriptions): PaginatedInscriptions;
-  getInscriptionById(inscriptionId: string): InscriptionCourseOutDTO;
-  createInscription(dto: InscriptionCourseInDTO): InscriptionCourseOutDTO;
+  getInscriptions(
+    filters: FiltersInscription,
+    sort: SortingInscriptions
+  ): Promise<PaginatedInscriptions>;
+  getInscriptionById(inscriptionId: string): Promise<InscriptionCourseOutDTO>;
+  createInscription(dto: InscriptionCourseInDTO): Promise<InscriptionCourseOutDTO>;
   updateInscription(
     inscriptionId: string,
     dto: InscriptionCourseUpdateDTO
-  ): InscriptionCourseOutDTO;
-  deleteInscriptionById(inscriptionId: string): void;
+  ): Promise<InscriptionCourseOutDTO>;
+  deleteInscriptionById(inscriptionId: string): Promise<void>;
 }

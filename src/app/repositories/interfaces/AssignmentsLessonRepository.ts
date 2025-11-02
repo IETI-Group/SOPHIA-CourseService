@@ -10,12 +10,15 @@ import type {
 } from '../../models/index.js';
 
 export interface AssignmentsLessonRepository {
-  getAssignments(filters: FiltersAssignmentLesson, sort: SortingAssignments): PaginatedAssignments;
-  getAssignmentById(assignmentLessonId: string): AssignmentLessonOutDTO;
-  createAssignment(dto: AssignmentLessonInDTO): AssignmentLessonOutDTO;
+  getAssignments(
+    filters: FiltersAssignmentLesson,
+    sort: SortingAssignments
+  ): Promise<PaginatedAssignments>;
+  getAssignmentById(assignmentLessonId: string): Promise<AssignmentLessonOutDTO>;
+  createAssignment(dto: AssignmentLessonInDTO): Promise<AssignmentLessonOutDTO>;
   updateAssignment(
     assignmentLessonId: string,
     dto: AssignmentLessonUpdateDTO
-  ): AssignmentLessonOutDTO;
-  deleteAssignmentById(assignmentLessonId: string): void;
+  ): Promise<AssignmentLessonOutDTO>;
+  deleteAssignmentById(assignmentLessonId: string): Promise<void>;
 }

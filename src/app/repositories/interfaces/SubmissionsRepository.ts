@@ -10,12 +10,15 @@ import type {
 } from '../../models/index.js';
 
 export interface SubmissionsRepository {
-  getSubmissions(filters: FiltersSubmission, sort: SortingSubmissions): PaginatedSubmissions;
-  getSubmissionById(submissionId: string): SubmissionAssignmentOutDTO;
-  createSubmission(dto: SubmissionAssignmentInDTO): SubmissionAssignmentOutDTO;
+  getSubmissions(
+    filters: FiltersSubmission,
+    sort: SortingSubmissions
+  ): Promise<PaginatedSubmissions>;
+  getSubmissionById(submissionId: string): Promise<SubmissionAssignmentOutDTO>;
+  createSubmission(dto: SubmissionAssignmentInDTO): Promise<SubmissionAssignmentOutDTO>;
   updateSubmission(
     submissionId: string,
     dto: SubmissionAssignmentUpdateDTO
-  ): SubmissionAssignmentOutDTO;
-  deleteSubmissionById(submissionId: string): void;
+  ): Promise<SubmissionAssignmentOutDTO>;
+  deleteSubmissionById(submissionId: string): Promise<void>;
 }

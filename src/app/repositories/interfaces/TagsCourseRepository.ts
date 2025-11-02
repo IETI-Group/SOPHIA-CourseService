@@ -2,9 +2,9 @@ import type { FiltersTag, PaginatedTags, SortingTags } from '../../../utils/inde
 import type { TagCourseInDTO, TagCourseOutDTO } from '../../models/index.js';
 
 export interface TagsCourseRepository {
-  getTags(filters: FiltersTag, sort: SortingTags): PaginatedTags;
-  getTagById(tagId: string): TagCourseOutDTO;
-  createTag(dto: TagCourseInDTO): TagCourseOutDTO;
-  updateTag(tagId: string, dto: TagCourseInDTO): TagCourseOutDTO;
-  deleteTagById(tagId: string): void;
+  getTags(filters: FiltersTag, sort: SortingTags): Promise<PaginatedTags>;
+  getTagById(tagId: string): Promise<TagCourseOutDTO>;
+  createTag(dto: TagCourseInDTO): Promise<TagCourseOutDTO>;
+  updateTag(tagId: string, dto: TagCourseInDTO): Promise<TagCourseOutDTO>;
+  deleteTagById(tagId: string): Promise<void>;
 }

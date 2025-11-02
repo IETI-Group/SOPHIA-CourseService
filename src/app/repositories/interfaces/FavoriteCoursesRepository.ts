@@ -9,9 +9,12 @@ export interface FavoriteCoursesRepository {
   getFavoriteCourses(
     filters: FiltersFavoriteCourse,
     sort: SortingFavoriteCourses
-  ): PaginatedFavoriteCourses;
-  getFavoriteCourseById(favoriteCourseId: string): FavoriteCourseOutDTO;
-  createFavoriteCourse(dto: FavoriteCourseInDTO): FavoriteCourseOutDTO;
-  updateFavoriteCourse(favoriteCourseId: string, dto: FavoriteCourseInDTO): FavoriteCourseOutDTO;
-  deleteFavoriteCourseById(favoriteCourseId: string): void;
+  ): Promise<PaginatedFavoriteCourses>;
+  getFavoriteCourseById(favoriteCourseId: string): Promise<FavoriteCourseOutDTO>;
+  createFavoriteCourse(dto: FavoriteCourseInDTO): Promise<FavoriteCourseOutDTO>;
+  updateFavoriteCourse(
+    favoriteCourseId: string,
+    dto: FavoriteCourseInDTO
+  ): Promise<FavoriteCourseOutDTO>;
+  deleteFavoriteCourseById(favoriteCourseId: string): Promise<void>;
 }

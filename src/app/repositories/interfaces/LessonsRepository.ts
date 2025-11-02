@@ -6,13 +6,17 @@ import type {
 } from '../../models/index.js';
 
 export interface LessonsRepository {
-  getLessons(filters: FiltersLesson, sort: SortingLessons, lightDTO: boolean): PaginatedLessons;
-  getLessonById(lessonId: string, lightDTO: boolean): LessonSectionOutLightDTO;
-  createLesson(dto: LessonSectionInDTO, lightDTO: boolean): LessonSectionOutLightDTO;
+  getLessons(
+    filters: FiltersLesson,
+    sort: SortingLessons,
+    lightDTO: boolean
+  ): Promise<PaginatedLessons>;
+  getLessonById(lessonId: string, lightDTO: boolean): Promise<LessonSectionOutLightDTO>;
+  createLesson(dto: LessonSectionInDTO, lightDTO: boolean): Promise<LessonSectionOutLightDTO>;
   updateLesson(
     lessonId: string,
     dto: LessonSectionUpdateDTO,
     lightDTO: boolean
-  ): LessonSectionOutLightDTO;
-  deleteLessonById(lessonId: string): void;
+  ): Promise<LessonSectionOutLightDTO>;
+  deleteLessonById(lessonId: string): Promise<void>;
 }
