@@ -20,6 +20,8 @@
     "prisma:studio": "prisma studio --schema=./src/schemas/prisma/schema.prisma",
     "prisma:push": "prisma db push --schema=./src/schemas/prisma/schema.prisma",
     "prisma:reset": "prisma migrate reset --schema=./src/schemas/prisma/schema.prisma",
+    "prisma:format": "prisma format --schema=./src/schemas/prisma/schema.prisma",
+    "prisma:validate": "prisma validate --schema=./src/schemas/prisma/schema.prisma",
     "test:db": "tsx scripts/test-db-connection.ts"
   },
   "keywords": [
