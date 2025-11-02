@@ -1,0 +1,61 @@
+import type { NextFunction, Request, Response } from 'express';
+import { logger } from '../utils/logger.js';
+
+export interface CustomError extends Error {
+  statusCode?: number;
+  status?: string;
+}
+
+export const errorHandler = (
+  err: CustomError,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+): void => {
+  let error = { ...err };
+  error.message = err.message;
+
+  logger.error({
+    message: err.message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+    ip: req.ip,
+  });
+
+  if (err.name === 'ValidationError') {
+    const message = 'Validation Error';
+    error = {
+      name: 'ValidationError',
+      message,
+      statusCode: 400,
+    } as CustomError;
+  }
+
+  if (err.name === 'MongoError' && (err as Error)) {
+    const message = 'Duplicate field value entered';
+    error = {
+      name: 'DuplicateFieldError',
+      message,
+      statusCode: 400,
+    } as CustomError;
+  }
+
+  if (err.name === 'CastError') {
+    const message = 'Resource not found';
+    error = { name: 'CastError', message, statusCode: 404 } as CustomError;
+  }
+
+  res.status(error.statusCode || 500).json({
+    success: false,
+    error: error.statusCode === 404 ? `Not found - ${req.originalUrl}` : 'Server Error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
+};
+
+export const notFound = (req: Request, res: Response, _next: NextFunction): void => {
+  res.status(404).json({
+    success: false,
+    error: `Not found - ${req.originalUrl}`,
+  });
+};

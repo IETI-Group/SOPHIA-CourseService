@@ -1,0 +1,498 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DB_URI")
+  directUrl = env("DB_DIRECT_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PlayerStatus {
+  READY
+  WAITING
+  PLAYING
+}
+
+enum PlayerRole {
+  HOST
+  GUEST
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum CourseStatus {
+  DRAFT
+  UNDER_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DifficultyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  GRADED
+  PENDING
+}
+
+enum LearningTechnique {
+  VISUAL
+  AUDITORY
+  KINESTHETIC
+  READING_WRITING
+  GAMIFICATION
+  STORYTELLING
+  CASE_STUDY
+  PROBLEM_SOLVING
+  COLLABORATIVE
+  SELF_PACED
+}
+
+enum LessonContentType {
+  TEXT
+  VIDEO_SCRIPT
+  SLIDES
+  INTERACTIVE
+  CODE_EXAMPLE
+  INFOGRAPHIC
+  DIAGRAM
+  READING
+  EXERCISE
+  CASE_STUDY
+}
+
+enum LessonType {
+  THEORY
+  PRACTICE
+  MIXED
+  PROJECT
+  CASE_STUDY
+  DISCUSSION
+}
+
+enum AssignmentType {
+  PDF
+  PICTURE
+  CODE
+  LINK
+  TEXT
+}
+
+enum ResourceType {
+  PDF
+  PICTURE
+  CODE
+  LINK
+  TEXT
+  VIDEO
+  AUDIO
+  INTERACTIVE
+  DIAGRAM
+  SIMULATION
+  NOTEBOOK
+  DATASET
+}
+
+enum DiscriminantResource {
+  SUBMISSION
+  QUIZ_QUESTION
+  QUIZ_OPTION
+  LESSON
+}
+
+model Courses {
+  id_course           String       @id @default(uuid())
+  instructor_id       String? // Nullable: permite que el curso persista si se elimina el instructor
+  title               String       @db.VarChar(100)
+  description         String       @db.Text
+  created_at          DateTime     @default(now())
+  active              Boolean      @default(false)
+  price               Float
+  average_reviews     Float
+  total_reviews       Int
+  total_enrollments   Int
+  duration_hours      Int
+  total_lessons       Int
+  level               CourseLevel
+  status              CourseStatus
+  published_at        DateTime?
+  updated_at          DateTime?    @updatedAt
+  ai_generated        Boolean
+  generation_task_id  String?      @db.VarChar(36)
+  generation_metadata Json?
+  last_ai_update_at   DateTime?
+
+  // Relations
+  favorited_in    FavouritesCourses[]
+  inscriptions_in Inscriptions[]
+  tags_in         Tags[]
+  sections        Sections[]
+
+  @@index([instructor_id])
+  @@index([status])
+  @@index([active])
+  @@index([level])
+}
+
+model FavouritesCourses {
+  user_id    String
+  course_id  String   @db.VarChar(36)
+  created_at DateTime @default(now())
+
+  // Relations
+  courses Courses @relation(fields: [course_id], references: [id_course], onDelete: Cascade)
+
+  @@id([user_id, course_id])
+  @@index([user_id])
+  @@index([course_id])
+}
+
+model Inscriptions {
+  id_inscription      String   @id @default(uuid())
+  user_id             String
+  course_id           String   @db.VarChar(36)
+  created_at          DateTime @default(now())
+  progress_percentage Float    @default(0.0)
+  score               Float?
+  active              Boolean
+  completed           Boolean  @default(false)
+
+  // Relations
+  courses Courses @relation(fields: [course_id], references: [id_course], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([course_id])
+  @@index([user_id, course_id])
+  @@index([completed])
+}
+
+model Tags {
+  category_id String   @db.VarChar(36)
+  course_id   String   @db.VarChar(36)
+  created_at  DateTime @default(now())
+
+  // Relations
+  categories Categories @relation(fields: [category_id], references: [id_category], onDelete: Cascade)
+  courses    Courses    @relation(fields: [course_id], references: [id_course], onDelete: Cascade)
+
+  @@id([category_id, course_id])
+  @@index([course_id])
+  @@index([category_id])
+}
+
+model Categories {
+  id_category     String      @id @default(uuid())
+  name            String      @unique @db.VarChar(150)
+  description     String      @db.Text
+  active          Boolean     @default(false)
+  parent_category String?     @db.VarChar(36)
+  parent          Categories? @relation("CategoryTree", fields: [parent_category], references: [id_category], onDelete: SetNull)
+
+  // Relations
+  children Categories[] @relation("CategoryTree")
+  tags_in  Tags[]
+
+  @@index([active])
+  @@index([parent_category])
+}
+
+model Sections {
+  id_section         String   @id @default(uuid())
+  course_id          String   @db.VarChar(36)
+  title              String   @db.VarChar(100)
+  description        String   @db.Text
+  active             Boolean  @default(false)
+  order              Int
+  duration_hours     Int
+  created_at         DateTime @default(now())
+  ai_generated       Boolean  @default(false)
+  generation_task_id String?
+  suggested_by_ai    Boolean  @default(false)
+
+  // Relations
+  course Courses @relation(fields: [course_id], references: [id_course], onDelete: Cascade)
+
+  lessons Lessons[]
+  quizzes Quizzes[]
+
+  @@index([course_id])
+  @@index([course_id, order])
+  @@index([active])
+}
+
+model Lessons {
+  id_lesson            String     @id @default(uuid())
+  section_id           String     @db.VarChar(36)
+  title                String     @db.VarChar(100)
+  description          String     @db.Text
+  active               Boolean    @default(false)
+  order                Int
+  created_at           DateTime   @default(now())
+  duration_minutes     Int
+  ai_generated         Boolean    @default(false)
+  generation_task_id   String?
+  lesson_type          LessonType
+  estimated_difficulty Float
+
+  // Relations
+  sections Sections @relation(fields: [section_id], references: [id_section], onDelete: Cascade)
+
+  assignments Assignments[]
+  contents    LessonContents[]
+
+  @@index([section_id])
+  @@index([section_id, order])
+  @@index([active])
+}
+
+model Assignments {
+  id_assignment    String         @id @default(uuid())
+  lesson_id        String         @db.VarChar(36)
+  title            String         @db.VarChar(60)
+  instructions     String         @db.Text
+  max_file_size_mb Int
+  allowed_types    AssignmentType
+  created_at       DateTime       @default(now())
+  due_date         DateTime
+  max_score        Float
+  active           Boolean        @default(false)
+
+  // Relations
+  lessons Lessons @relation(fields: [lesson_id], references: [id_lesson], onDelete: Cascade)
+
+  submissions Submissions[]
+
+  @@index([lesson_id])
+  @@index([due_date])
+  @@index([active])
+}
+
+model Submissions {
+  id_submission String           @id @default(uuid())
+  assignment_id String           @db.VarChar(36)
+  user_id       String
+  feedback      String?          @db.Text
+  greated_at    DateTime?
+  submitted_at  DateTime?
+  active        Boolean          @default(false)
+  score         Float?
+  status        SubmissionStatus
+
+  // Relations
+  assignments Assignments           @relation(fields: [assignment_id], references: [id_assignment], onDelete: Cascade)
+  resource    SubmissionResources[]
+
+  @@index([user_id])
+  @@index([assignment_id])
+  @@index([status])
+  @@index([user_id, assignment_id])
+}
+
+model Quizzes {
+  id_quiz                 String   @id @default(uuid())
+  section_id              String   @db.VarChar(36)
+  description             String   @db.Text
+  created_at              DateTime @default(now())
+  active                  Boolean  @default(false)
+  title                   String   @db.VarChar(60)
+  duration_minutes        Int
+  ai_generated            Boolean  @default(false)
+  generation_task_id      String?
+  difficulty_distribution Json?
+  adaptative_logic        Json?
+
+  // Relations
+  section   Sections        @relation(fields: [section_id], references: [id_section], onDelete: Cascade)
+  questions QuizQuestions[]
+  attempts  QuizAttempts[]
+
+  @@index([section_id])
+  @@index([active])
+}
+
+model QuizAttempts {
+  id_quiz_attempt  String   @id @default(uuid())
+  quiz_id          String   @db.VarChar(36)
+  user_id          String
+  submitted_at     DateTime @default(now())
+  grade            Float?
+  duration_minutes Int
+
+  // Relations
+  quiz Quizzes @relation(fields: [quiz_id], references: [id_quiz], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([quiz_id])
+  @@index([user_id, quiz_id])
+}
+
+model QuizQuestions {
+  id_quiz_question String @id @default(uuid())
+  quiz_id          String @db.VarChar(36)
+  question         String @db.Text
+  duration_minutes Int
+
+  // Relations 
+  quiz Quizzes @relation(fields: [quiz_id], references: [id_quiz], onDelete: Cascade)
+
+  options  QuizOptions[]
+  resource QuizQuestionResources[]
+
+  @@index([quiz_id])
+}
+
+model QuizOptions {
+  id_option        String  @id @default(uuid())
+  quiz_question_id String  @db.VarChar(36)
+  option           String  @db.Text
+  is_correct       Boolean @default(false)
+
+  // Relations
+  quiz_questions QuizQuestions @relation(fields: [quiz_question_id], references: [id_quiz_question], onDelete: Cascade)
+
+  resource QuizOptionResources[]
+
+  @@index([quiz_question_id])
+}
+
+model LessonContents {
+  id_lesson_content  String            @id @default(uuid())
+  lesson_id          String            @db.VarChar(36)
+  metadata           Json
+  active             Boolean           @default(false)
+  created_at         DateTime          @default(now())
+  difficulty_level   DifficultyLevel
+  learning_technique LearningTechnique
+  order_preference   Int?
+  ai_generated       Boolean
+  generation_log_id  String?
+  content_type       LessonContentType
+  version            Int
+  parent_content_id  String?           @db.VarChar(36)
+  is_current_version Boolean
+
+  // Relations 
+  parent LessonContents? @relation("LessonTree", fields: [parent_content_id], references: [id_lesson_content], onDelete: SetNull)
+  lesson Lessons         @relation(fields: [lesson_id], references: [id_lesson], onDelete: Cascade)
+
+  children LessonContents[]        @relation("LessonTree")
+  aiSpecs  LessonAISpecs[]
+  resource LessonResources[]
+  progress LessonContentProgress[]
+
+  @@index([lesson_id])
+  @@index([active])
+  @@index([is_current_version])
+  @@index([lesson_id, is_current_version])
+}
+
+model LessonContentProgress {
+  id_content_progress   String    @id @default(uuid())
+  user_id               String
+  lesson_content_id     String    @db.VarChar(36)
+  started_at            DateTime?
+  completed_at          DateTime?
+  time_spend_minutes    Int       @default(0)
+  completion_percentage Float     @default(0.0)
+  effectiviness_score   Float
+  active                Boolean
+  user_rating           Int?
+
+  // Relations 
+  lesson_content LessonContents @relation(fields: [lesson_content_id], references: [id_lesson_content], onDelete: Cascade)
+
+  @@unique([user_id, lesson_content_id])
+  @@index([user_id])
+  @@index([lesson_content_id])
+  @@index([completed_at])
+}
+
+model LessonAISpecs {
+  id_lesson_spec                String   @id @default(uuid())
+  lesson_content_id             String   @db.VarChar(36)
+  created_at                    DateTime @default(now())
+  generation_prompt_summary     String   @db.Text
+  content_structure             Json
+  estimated_video_duration_mins Int?
+  video_script                  String?  @db.Text
+  video_generation_instructions Json?
+  interactive_elements          Json?
+  exercise_parameters           Json?
+
+  // Relations 
+  lesson LessonContents @relation(fields: [lesson_content_id], references: [id_lesson_content], onDelete: Cascade)
+
+  @@index([lesson_content_id])
+}
+
+model Resources {
+  id_resource      String       @id @default(uuid())
+  name             String       @db.VarChar(150)
+  type             ResourceType
+  url              String?      @db.VarChar(300)
+  content          String?      @db.Text
+  order            Int
+  duration_seconds Int
+  file_size_mb     Float
+  mime_type        String?      @db.VarChar(100)
+  thumnail_url     String?      @db.VarChar(300)
+  metadata         Json
+
+  // Relations
+  quiz_option   QuizOptionResources?
+  quiz_question QuizQuestionResources?
+  submission    SubmissionResources?
+  lesson        LessonResources?
+}
+
+model QuizOptionResources {
+  id_resource    String @id
+  quiz_option_id String @db.VarChar(36)
+
+  // Relations
+  parent Resources   @relation(fields: [id_resource], references: [id_resource], onDelete: Cascade)
+  option QuizOptions @relation(fields: [quiz_option_id], references: [id_option], onDelete: Cascade)
+}
+
+model QuizQuestionResources {
+  id_resource      String @id
+  quiz_question_id String @db.VarChar(36)
+
+  // Relations
+  parent   Resources     @relation(fields: [id_resource], references: [id_resource], onDelete: Cascade)
+  question QuizQuestions @relation(fields: [quiz_question_id], references: [id_quiz_question], onDelete: Cascade)
+}
+
+model SubmissionResources {
+  id_resource   String @id
+  submission_id String @db.VarChar(36)
+
+  // Relations
+  parent     Resources   @relation(fields: [id_resource], references: [id_resource], onDelete: Cascade)
+  submission Submissions @relation(fields: [submission_id], references: [id_submission], onDelete: Cascade)
+}
+
+model LessonResources {
+  id_resource       String @id
+  lesson_content_id String @db.VarChar(36)
+
+  // Relations
+  parent Resources      @relation(fields: [id_resource], references: [id_resource], onDelete: Cascade)
+  lesson LessonContents @relation(fields: [lesson_content_id], references: [id_lesson_content], onDelete: Cascade)
+}
