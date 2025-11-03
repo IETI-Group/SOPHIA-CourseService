@@ -1,4 +1,3 @@
-// Repository interfaces exports
 export type { AISpecsLessonRepository } from './interfaces/AISpecsLessonRepository.js';
 export type { AssignmentsLessonRepository } from './interfaces/AssignmentsLessonRepository.js';
 export type { AttemptsQuizzRepository } from './interfaces/AttemptsQuizzRepository.js';
@@ -16,3 +15,20 @@ export type { ResourcesRepository } from './interfaces/ResourcesRepository.js';
 export type { SectionsRepository } from './interfaces/SectionsRepository.js';
 export type { SubmissionsRepository } from './interfaces/SubmissionsRepository.js';
 export type { TagsCourseRepository } from './interfaces/TagsCourseRepository.js';
+export { AISpecsLessonRepositoryPostgreSQL } from './postgresql/AISpecsLessonRepositoryPostgreSQL.js';
+export { AssignmentsLessonRepositoryPostgreSQL } from './postgresql/AssignmentsLessonRepositoryPostgreSQL.js';
+export { AttemptsQuizzRepositoryPostgreSQL } from './postgresql/AttemptsQuizzRepositoryPostgreSQL.js';
+export { CategoriesRepositoryPostgreSQL } from './postgresql/CategoriesRepositoryPostgreSQL.js';
+export { CoursesRepositoryPostgreSQL } from './postgresql/CoursesRepositoryPostgreSQL.js';
+export { FavoriteCoursesRepositoryPostgreSQL } from './postgresql/FavoriteCoursesRepositoryPostgreSQL.js';
+export { InscriptionsCourseRepositoryPostgreSQL } from './postgresql/InscriptionsCourseRepositoryPostgreSQL.js';
+export { LessonContentsRepositoryPostgreSQL } from './postgresql/LessonContentsRepositoryPostgreSQL.js';
+export { LessonsRepositoryPostgreSQL } from './postgresql/LessonsRepositoryPostgreSQL.js';
+export { OptionsQuizzRepositoryPostgreSQL } from './postgresql/OptionsQuizzRepositoryPostgreSQL.js';
+export { ProgressContentRepositoryPostgreSQL } from './postgresql/ProgressContentRepositoryPostgreSQL.js';
+export { QuestionsQuizzRepositoryPostgreSQL } from './postgresql/QuestionsQuizzRepositoryPostgreSQL.js';
+export { QuizzesSectionRepositoryPostgreSQL } from './postgresql/QuizzesSectionRepositoryPostgreSQL.js';
+export { ResourcesRepositoryPostgreSQL } from './postgresql/ResourcesRepositoryPostgreSQL.js';
+export { SectionsRepositoryPostgreSQL } from './postgresql/SectionsRepositoryPostgreSQL.js';
+export { SubmissionsRepositoryPostgreSQL } from './postgresql/SubmissionsRepositoryPostgreSQL.js';
+export { TagsCourseRepositoryPostgreSQL } from './postgresql/TagsCourseRepositoryPostgreSQL.js';

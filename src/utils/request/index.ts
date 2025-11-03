@@ -21,7 +21,7 @@ import type {
 export interface ApiRequest {
   page: number;
   size: number;
-  sortDirection: number;
+  sortDirection: 'asc' | 'desc';
 }
 
 export interface Sorting<T> {

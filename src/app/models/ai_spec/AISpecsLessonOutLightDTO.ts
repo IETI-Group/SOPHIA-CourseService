@@ -6,5 +6,5 @@ export interface AISpecsLessonOutLightDTO {
   lessonContentId: string;
   generationPromptSummary: string;
   contentStructure: Json;
-  estimatedVideoDuration: number | null;
+  estimatedVideoDurationMinutes: number | null;
 }

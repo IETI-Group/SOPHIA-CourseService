@@ -4,9 +4,9 @@ export interface AISpecsLessonInDTO {
   lessonContentId: string;
   generationPromptSummary: string;
   contentStructure: Json;
-  estimatedVideoDuration: number | null;
+  estimatedVideoDurationMinutes: number | null;
   videoScript: string | null;
   videoGenerationInstructions: Json;
-  interactiveElements: Json;
-  exerciseParameters: Json;
+  interactiveElements: Json | null;
+  exerciseParameters: Json | null;
 }
