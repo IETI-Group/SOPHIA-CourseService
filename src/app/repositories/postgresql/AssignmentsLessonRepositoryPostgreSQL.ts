@@ -1,7 +1,8 @@
-import type { PrismaClient } from '@prisma/client/default.js';
+import type { Prisma, PrismaClient } from '@prisma/client/default.js';
 import type {
   FiltersAssignmentLesson,
   PaginatedAssignments,
+  SORT_ASSIGNMENT,
   SortingAssignments,
 } from '../../../utils/index.js';
 import type {
@@ -17,27 +18,221 @@ export class AssignmentsLessonRepositoryPostgreSQL implements AssignmentsLessonR
   constructor(prismaClient: PrismaClient) {
     this.prismaClient = prismaClient;
   }
-  getAssignments(
-    _filters: FiltersAssignmentLesson,
-    _sort: SortingAssignments
+
+  private addExactFilter<T>(value: T | null, field: string, where: Record<string, unknown>): void {
+    if (value !== null && value !== undefined) {
+      where[field] = value;
+    }
+  }
+
+  private addTextFilter(value: string | null, field: string, where: Record<string, unknown>): void {
+    if (value !== null && value !== undefined) {
+      where[field] = {
+        contains: value,
+        mode: 'insensitive',
+      } as Prisma.StringFilter;
+    }
+  }
+
+  private addNumericRangeFilter(
+    min: number | null,
+    max: number | null,
+    field: string,
+    where: Record<string, unknown>
+  ): void {
+    if (min !== null || max !== null) {
+      const rangeFilter: Prisma.IntFilter | Prisma.FloatFilter = {};
+      if (min !== null) rangeFilter.gte = min;
+      if (max !== null) rangeFilter.lte = max;
+      where[field] = rangeFilter;
+    }
+  }
+
+  private addDateRangeFilter(
+    start: Date | null,
+    end: Date | null,
+    field: string,
+    where: Record<string, unknown>
+  ): void {
+    if (start !== null || end !== null) {
+      const rangeFilter: Prisma.DateTimeFilter = {};
+      if (start !== null) rangeFilter.gte = start;
+      if (end !== null) rangeFilter.lte = end;
+      where[field] = rangeFilter;
+    }
+  }
+
+  private buildWhere(filters: FiltersAssignmentLesson): Record<string, unknown> {
+    const where: Record<string, unknown> = {};
+
+    this.addExactFilter(filters.lessonId, 'lesson_id', where);
+    this.addTextFilter(filters.title, 'title', where);
+    this.addExactFilter(filters.allowedTypes, 'allowed_types', where);
+    this.addExactFilter(filters.active, 'active', where);
+
+    this.addNumericRangeFilter(
+      filters.limitFileSizeMbMin,
+      filters.limitFileSizeMbMax,
+      'max_file_size_mb',
+      where
+    );
+    this.addNumericRangeFilter(filters.limitScoreMin, filters.limitScoreMax, 'max_score', where);
+    this.addDateRangeFilter(filters.createdAtStart, filters.createdAtEnd, 'created_at', where);
+    this.addDateRangeFilter(filters.dueDateStart, filters.dueDateEnd, 'due_date', where);
+
+    return where;
+  }
+
+  private buildSort(sort: SortingAssignments): Record<string, Prisma.SortOrder>[] {
+    const orderBy: Record<string, Prisma.SortOrder>[] = [];
+
+    for (const field of sort.sortFields) {
+      switch (field) {
+        case 'TITLE' as SORT_ASSIGNMENT:
+          orderBy.push({ title: sort.sortDirection });
+          break;
+        case 'MAX_FILE_SIZE_MB' as SORT_ASSIGNMENT:
+          orderBy.push({ max_file_size_mb: sort.sortDirection });
+          break;
+        case 'ALLOWED_TYPES' as SORT_ASSIGNMENT:
+          orderBy.push({ allowed_types: sort.sortDirection });
+          break;
+        case 'DUE_DATE' as SORT_ASSIGNMENT:
+          orderBy.push({ due_date: sort.sortDirection });
+          break;
+        case 'MAX_SCORE' as SORT_ASSIGNMENT:
+          orderBy.push({ max_score: sort.sortDirection });
+          break;
+        case 'ACTIVE' as SORT_ASSIGNMENT:
+          orderBy.push({ active: sort.sortDirection });
+          break;
+        case 'CREATION_DATE' as SORT_ASSIGNMENT:
+          orderBy.push({ created_at: sort.sortDirection });
+          break;
+      }
+    }
+
+    return orderBy;
+  }
+
+  private buildDTO(assignment: {
+    id_assignment: string;
+    lesson_id: string;
+    title: string;
+    instructions: string;
+    max_file_size_mb: number;
+    allowed_types: string;
+    created_at: Date;
+    due_date: Date;
+    max_score: number;
+    active: boolean;
+  }): AssignmentLessonOutDTO {
+    return {
+      idAssignment: assignment.id_assignment,
+      lessonId: assignment.lesson_id,
+      title: assignment.title,
+      instructions: assignment.instructions,
+      maxFileSizeMb: assignment.max_file_size_mb,
+      allowedTypes: assignment.allowed_types as never,
+      createdAt: assignment.created_at,
+      dueDate: assignment.due_date,
+      maxScore: assignment.max_score,
+      active: assignment.active,
+    };
+  }
+
+  private buildPaginatedResponse(
+    data: AssignmentLessonOutDTO[],
+    page: number,
+    size: number,
+    total: number
+  ): PaginatedAssignments {
+    return {
+      success: true,
+      message: 'Assignments retrieved successfully',
+      data,
+      page,
+      size,
+      total,
+      totalPages: Math.ceil(total / size),
+      hasNext: page * size < total,
+      hasPrev: page > 1,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  async getAssignments(
+    filters: FiltersAssignmentLesson,
+    sort: SortingAssignments
   ): Promise<PaginatedAssignments> {
-    // To avoid unused variable error for
-    this.prismaClient;
-    throw new Error('Method not implemented.');
+    const where = this.buildWhere(filters);
+    const orderBy = this.buildSort(sort);
+    const skip = (sort.page - 1) * sort.size;
+
+    const [assignments, total] = await Promise.all([
+      this.prismaClient.assignments.findMany({
+        where,
+        orderBy,
+        skip,
+        take: sort.size,
+      }),
+      this.prismaClient.assignments.count({ where }),
+    ]);
+
+    const assignmentDTOs = assignments.map((assignment) => this.buildDTO(assignment));
+
+    return this.buildPaginatedResponse(assignmentDTOs, sort.page, sort.size, total);
   }
-  getAssignmentById(_assignmentLessonId: string): Promise<AssignmentLessonOutDTO> {
-    throw new Error('Method not implemented.');
+
+  async getAssignmentById(assignmentLessonId: string): Promise<AssignmentLessonOutDTO> {
+    const assignment = await this.prismaClient.assignments.findUniqueOrThrow({
+      where: { id_assignment: assignmentLessonId },
+    });
+
+    return this.buildDTO(assignment);
   }
-  createAssignment(_dto: AssignmentLessonInDTO): Promise<AssignmentLessonOutDTO> {
-    throw new Error('Method not implemented.');
+
+  async createAssignment(dto: AssignmentLessonInDTO): Promise<AssignmentLessonOutDTO> {
+    const assignment = await this.prismaClient.assignments.create({
+      data: {
+        lesson_id: dto.lessonId,
+        title: dto.title,
+        instructions: dto.instructions,
+        max_file_size_mb: dto.maxFileSizeMb,
+        allowed_types: dto.allowedTypes as never,
+        due_date: dto.dueDate,
+        max_score: dto.maxScore,
+        active: false,
+      },
+    });
+
+    return this.buildDTO(assignment);
   }
-  updateAssignment(
-    _assignmentLessonId: string,
-    _dto: AssignmentLessonUpdateDTO
+
+  async updateAssignment(
+    assignmentLessonId: string,
+    dto: AssignmentLessonUpdateDTO
   ): Promise<AssignmentLessonOutDTO> {
-    throw new Error('Method not implemented.');
+    const assignment = await this.prismaClient.assignments.update({
+      where: { id_assignment: assignmentLessonId },
+      data: {
+        lesson_id: dto.lessonId,
+        title: dto.title,
+        instructions: dto.instructions,
+        max_file_size_mb: dto.maxFileSizeMb,
+        allowed_types: dto.allowedTypes as never,
+        due_date: dto.dueDate,
+        max_score: dto.maxScore,
+        active: dto.active,
+      },
+    });
+
+    return this.buildDTO(assignment);
   }
-  deleteAssignmentById(_assignmentLessonId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async deleteAssignmentById(assignmentLessonId: string): Promise<void> {
+    await this.prismaClient.assignments.delete({
+      where: { id_assignment: assignmentLessonId },
+    });
   }
 }

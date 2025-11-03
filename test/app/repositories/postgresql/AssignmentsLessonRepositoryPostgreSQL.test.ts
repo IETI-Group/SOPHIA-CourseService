@@ -2,7 +2,8 @@ import { AssignmentType, type PrismaClient } from '@prisma/client';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
 import type { AssignmentsLessonRepository } from '../../../../src/app/index.js';
-import { AssignmentsLessonRepositoryPostgreSQL } from '../../../../src/app/repositories/postgresql/AssignmentsLessonRepositoryPostgreSQL.js';
+import { AssignmentsLessonRepositoryPostgreSQL } from '../../../../src/app/index.js';
+import { SORT_ASSIGNMENT } from '../../../../src/utils/index.js';
 
 describe('Assignments Lesson Repository', () => {
   const prismaClient = mockDeep<PrismaClient>();
@@ -70,13 +71,13 @@ describe('Assignments Lesson Repository', () => {
         },
         {
           page: 1,
-          pageSize: 10,
-          field: 'CREATION_DATE',
-          order: 'desc',
+          size: 10,
+          sortFields: [SORT_ASSIGNMENT.CREATION_DATE],
+          sortDirection: 'desc',
         }
       );
 
-      expect(result).toEqual({
+      expect(result).toMatchObject({
         data: [
           {
             idAssignment: '1',
@@ -104,11 +105,14 @@ describe('Assignments Lesson Repository', () => {
           },
         ],
         page: 1,
-        pageSize: 10,
+        size: 10,
         total: 2,
+        totalPages: 1,
         hasNext: false,
         hasPrev: false,
       });
+      expect(result.success).toBe(true);
+      expect(result.message).toBe('Assignments retrieved successfully');
     });
   });
 
