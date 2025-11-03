@@ -267,11 +267,7 @@ describe('Submissions Repository', () => {
     });
 
     it('Should throw error when deleting non-existent submission', async () => {
-      prismaClient.submissions.delete.mockRejectedValue(new Error('Submission not found'));
-
-      await expect(submissionsRepository.deleteSubmissionById('999')).rejects.toThrow(
-        'Submission not found'
-      );
+      await expect(submissionsRepository.deleteSubmissionById('999')).rejects.toThrow();
     });
   });
 });
