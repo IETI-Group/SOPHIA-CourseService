@@ -90,7 +90,12 @@ export class LessonsRepositoryPostgreSQL implements LessonsRepository {
       filters.estimatedDifficultyMax
     );
 
-    this.addDateRangeFilter(whereClause, 'created_at', filters.createdAtStart, filters.createdAtEnd);
+    this.addDateRangeFilter(
+      whereClause,
+      'created_at',
+      filters.createdAtStart,
+      filters.createdAtEnd
+    );
 
     return whereClause;
   }
