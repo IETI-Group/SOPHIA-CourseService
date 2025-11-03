@@ -39,6 +39,9 @@ describe('AI Specs Lesson Repository', () => {
       };
       const sort: SortingAILessonSpecs = {
         sortFields: [SORT_AI_SPECS_LESSON.CREATION_DATE],
+        page: 1,
+        size: 10,
+        sortDirection: 'desc',
       };
 
       const mockAISpecs = [
@@ -77,6 +80,9 @@ describe('AI Specs Lesson Repository', () => {
       };
       const sort: SortingAILessonSpecs = {
         sortFields: [SORT_AI_SPECS_LESSON.CREATION_DATE],
+        page: 1,
+        size: 10,
+        sortDirection: 'asc',
       };
 
       const mockAISpecs = [
@@ -122,7 +128,7 @@ describe('AI Specs Lesson Repository', () => {
         estimatedVideoDurationMinutes,
       };
 
-      prismaClient.lessonAISpecs.findUnique.mockResolvedValueOnce({
+      prismaClient.lessonAISpecs.findUniqueOrThrow.mockResolvedValueOnce({
         id_lesson_spec: aiSpecId,
         created_at: createdAt,
         lesson_content_id: lessonContentId,
@@ -137,7 +143,7 @@ describe('AI Specs Lesson Repository', () => {
 
       const result = await aiSpecsLessonRepository.getAISpecById(aiSpecId, true);
 
-      expect(prismaClient.lessonAISpecs.findUnique).toHaveBeenCalledOnce();
+      expect(prismaClient.lessonAISpecs.findUniqueOrThrow).toHaveBeenCalledOnce();
       expect(result).toEqual(expectedOutput);
     });
 
@@ -166,7 +172,7 @@ describe('AI Specs Lesson Repository', () => {
         exerciseParameters,
       };
 
-      prismaClient.lessonAISpecs.findUnique.mockResolvedValueOnce({
+      prismaClient.lessonAISpecs.findUniqueOrThrow.mockResolvedValueOnce({
         id_lesson_spec: aiSpecId,
         created_at: createdAt,
         lesson_content_id: lessonContentId,
@@ -181,7 +187,7 @@ describe('AI Specs Lesson Repository', () => {
 
       const result = await aiSpecsLessonRepository.getAISpecById(aiSpecId, false);
 
-      expect(prismaClient.lessonAISpecs.findUnique).toHaveBeenCalledOnce();
+      expect(prismaClient.lessonAISpecs.findUniqueOrThrow).toHaveBeenCalledOnce();
       expect(result).toEqual(expectedOutput);
     });
 

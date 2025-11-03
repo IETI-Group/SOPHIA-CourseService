@@ -24,7 +24,7 @@ export interface ApiRequest {
   sortDirection: 'asc' | 'desc';
 }
 
-export interface Sorting<T> extends ApiRequest{
+export interface Sorting<T> extends ApiRequest {
   sortFields: T[];
 }
 
