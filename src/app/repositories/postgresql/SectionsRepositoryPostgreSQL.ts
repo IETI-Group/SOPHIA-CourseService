@@ -84,7 +84,12 @@ export class SectionsRepositoryPostgreSQL implements SectionsRepository {
     );
     this.addNumericRangeFilter(whereClause, 'order', filters.orderMin, filters.orderMax);
 
-    this.addDateRangeFilter(whereClause, 'created_at', filters.createdAtStart, filters.createdAtEnd);
+    this.addDateRangeFilter(
+      whereClause,
+      'created_at',
+      filters.createdAtStart,
+      filters.createdAtEnd
+    );
 
     return whereClause;
   }
