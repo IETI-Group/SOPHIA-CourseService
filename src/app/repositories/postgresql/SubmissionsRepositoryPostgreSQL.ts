@@ -20,14 +20,12 @@ export class SubmissionsRepositoryPostgreSQL implements SubmissionsRepository {
     this.prismaClient = prismaClient;
   }
 
-  // Helper method for exact value filters
   private addExactFilter<T>(value: T | null, field: string, where: Record<string, unknown>): void {
     if (value !== null && value !== undefined) {
       where[field] = value;
     }
   }
 
-  // Helper method for numeric range filters
   private addNumericRangeFilter(
     min: number | null,
     max: number | null,
@@ -42,7 +40,6 @@ export class SubmissionsRepositoryPostgreSQL implements SubmissionsRepository {
     }
   }
 
-  // Helper method for date range filters
   private addDateRangeFilter(
     start: Date | null,
     end: Date | null,
