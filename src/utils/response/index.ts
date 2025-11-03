@@ -34,22 +34,22 @@ export interface PaginatedResponse<T> extends ApiResponse<T> {
   hasPrev: boolean;
 }
 
-export interface PaginatedQuizAttempts extends ApiResponse<AttemptQuizOutDTO[]> {}
-export interface PaginatedCategories extends ApiResponse<CategoryCourseOutDTO[]> {}
-export interface PaginatedQuizzes extends ApiResponse<QuizSectionOutLightDTO[]> {}
+export interface PaginatedQuizAttempts extends PaginatedResponse<AttemptQuizOutDTO[]> {}
+export interface PaginatedCategories extends PaginatedResponse<CategoryCourseOutDTO[]> {}
+export interface PaginatedQuizzes extends PaginatedResponse<QuizSectionOutLightDTO[]> {}
 
-export interface PaginatedTags extends ApiResponse<TagCourseOutDTO[]> {}
-export interface PaginatedLessonContents extends ApiResponse<ContentLessonOutLightDTO[]> {}
-export interface PaginatedContentProgress extends ApiResponse<ProgressContentOutDTO[]> {}
-export interface PaginatedLessonAISpecs extends ApiResponse<AISpecsLessonOutLightDTO[]> {}
+export interface PaginatedTags extends PaginatedResponse<TagCourseOutDTO[]> {}
+export interface PaginatedLessonContents extends PaginatedResponse<ContentLessonOutLightDTO[]> {}
+export interface PaginatedContentProgress extends PaginatedResponse<ProgressContentOutDTO[]> {}
+export interface PaginatedLessonAISpecs extends PaginatedResponse<AISpecsLessonOutLightDTO[]> {}
 
-export interface PaginatedCourses extends ApiResponse<CourseLightDTO[]> {}
-export interface PaginatedInscriptions extends ApiResponse<InscriptionCourseOutDTO[]> {}
-export interface PaginatedFavoriteCourses extends ApiResponse<FavoriteCourseOutDTO[]> {}
-export interface PaginatedQuizQuestions extends ApiResponse<QuestionQuizOutDTO[]> {}
-export interface PaginatedSections extends ApiResponse<SectionCourseOutLightDTO[]> {}
-export interface PaginatedQuizOptions extends ApiResponse<OptionQuizOutDTO[]> {}
-export interface PaginatedLessons extends ApiResponse<LessonSectionOutLightDTO[]> {}
-export interface PaginatedSubmissions extends ApiResponse<SubmissionAssignmentOutDTO[]> {}
-export interface PaginatedResources extends ApiResponse<ResourcesOutLightDTO[]> {}
-export interface PaginatedAssignments extends ApiResponse<AssignmentLessonOutDTO[]> {}
+export interface PaginatedCourses extends PaginatedResponse<CourseLightDTO[]> {}
+export interface PaginatedInscriptions extends PaginatedResponse<InscriptionCourseOutDTO[]> {}
+export interface PaginatedFavoriteCourses extends PaginatedResponse<FavoriteCourseOutDTO[]> {}
+export interface PaginatedQuizQuestions extends PaginatedResponse<QuestionQuizOutDTO[]> {}
+export interface PaginatedSections extends PaginatedResponse<SectionCourseOutLightDTO[]> {}
+export interface PaginatedQuizOptions extends PaginatedResponse<OptionQuizOutDTO[]> {}
+export interface PaginatedLessons extends PaginatedResponse<LessonSectionOutLightDTO[]> {}
+export interface PaginatedSubmissions extends PaginatedResponse<SubmissionAssignmentOutDTO[]> {}
+export interface PaginatedResources extends PaginatedResponse<ResourcesOutLightDTO[]> {}
+export interface PaginatedAssignments extends PaginatedResponse<AssignmentLessonOutDTO[]> {}
