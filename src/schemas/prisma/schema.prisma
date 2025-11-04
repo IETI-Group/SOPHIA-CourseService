@@ -8,22 +8,6 @@ datasource db {
   directUrl = env("DB_DIRECT_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum PlayerStatus {
-  READY
-  WAITING
-  PLAYING
-}
-
-enum PlayerRole {
-  HOST
-  GUEST
-}
-
 enum CourseLevel {
   BEGINNER
   INTERMEDIATE

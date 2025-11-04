@@ -16,7 +16,6 @@ export const HTTP_STATUS = {
   SERVICE_UNAVAILABLE: 503,
 } as const;
 
-// Mensajes de error comunes
 export const ERROR_MESSAGES = {
   SERVER_ERROR: 'Internal server error',
   NOT_FOUND: 'Resource not found',
@@ -26,7 +25,6 @@ export const ERROR_MESSAGES = {
   VALIDATION_ERROR: 'Validation error',
 } as const;
 
-// Mensajes de éxito
 export const SUCCESS_MESSAGES = {
   OPERATION_SUCCESS: 'Operation completed successfully',
   CREATED: 'Resource created successfully',
@@ -34,7 +32,6 @@ export const SUCCESS_MESSAGES = {
   DELETED: 'Resource deleted successfully',
 } as const;
 
-// Configuraciones de la aplicación
 export const APP_CONFIG = {
   API_VERSION: 'v1',
   DEFAULT_PAGE_SIZE: 10,
