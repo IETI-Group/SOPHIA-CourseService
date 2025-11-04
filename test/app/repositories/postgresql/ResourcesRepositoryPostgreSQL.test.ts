@@ -288,10 +288,13 @@ describe('Resources Repository', () => {
       };
 
       prismaClient.resources.create.mockResolvedValueOnce(mockCreatedResource);
+      prismaClient.lessonResources.create.mockResolvedValueOnce(mockCreatedResource.lesson);
+      prismaClient.resources.findUniqueOrThrow.mockResolvedValueOnce(mockCreatedResource);
 
       const result = await resourcesRepository.createResource(dto, true);
 
       expect(prismaClient.resources.create).toHaveBeenCalledOnce();
+      expect(prismaClient.lessonResources.create).toHaveBeenCalledOnce();
       expect(result.idResource).toBe('resource_6');
       expect(result.discriminant).toBe(DiscriminantResource.LESSON);
       expect(result.entityReference).toBe('lesson_2');
@@ -332,10 +335,15 @@ describe('Resources Repository', () => {
       };
 
       prismaClient.resources.create.mockResolvedValueOnce(mockCreatedResource);
+      prismaClient.quizOptionResources.create.mockResolvedValueOnce(
+        mockCreatedResource.quiz_option
+      );
+      prismaClient.resources.findUniqueOrThrow.mockResolvedValueOnce(mockCreatedResource);
 
       const result = await resourcesRepository.createResource(dto, false);
 
       expect(prismaClient.resources.create).toHaveBeenCalledOnce();
+      expect(prismaClient.quizOptionResources.create).toHaveBeenCalledOnce();
       expect(result.idResource).toBe('resource_7');
       expect(result.discriminant).toBe(DiscriminantResource.QUIZ_OPTION);
       expect(result).toHaveProperty('mimeType', 'audio/mpeg');
@@ -376,10 +384,13 @@ describe('Resources Repository', () => {
       };
 
       prismaClient.resources.create.mockResolvedValueOnce(mockCreatedResource);
+      prismaClient.submissionResources.create.mockResolvedValueOnce(mockCreatedResource.submission);
+      prismaClient.resources.findUniqueOrThrow.mockResolvedValueOnce(mockCreatedResource);
 
       const result = await resourcesRepository.createResource(dto, true);
 
       expect(prismaClient.resources.create).toHaveBeenCalledOnce();
+      expect(prismaClient.submissionResources.create).toHaveBeenCalledOnce();
       expect(result.idResource).toBe('resource_8');
       expect(result.discriminant).toBe(DiscriminantResource.SUBMISSION);
       expect(result.content).toBe('console.log("Hello World");');
@@ -420,10 +431,15 @@ describe('Resources Repository', () => {
       };
 
       prismaClient.resources.create.mockResolvedValueOnce(mockCreatedResource);
+      prismaClient.quizQuestionResources.create.mockResolvedValueOnce(
+        mockCreatedResource.quiz_question
+      );
+      prismaClient.resources.findUniqueOrThrow.mockResolvedValueOnce(mockCreatedResource);
 
       const result = await resourcesRepository.createResource(dto, false);
 
       expect(prismaClient.resources.create).toHaveBeenCalledOnce();
+      expect(prismaClient.quizQuestionResources.create).toHaveBeenCalledOnce();
       expect(result.idResource).toBe('resource_9');
       expect(result.discriminant).toBe(DiscriminantResource.QUIZ_QUESTION);
       expect(result.entityReference).toBe('question_3');
@@ -552,6 +568,9 @@ describe('Resources Repository', () => {
         id_resource: resourceId,
         lesson_content_id: 'lesson_5',
       });
+      prismaClient.quizOptionResources.delete.mockRejectedValueOnce(new Error('Not found'));
+      prismaClient.quizQuestionResources.delete.mockRejectedValueOnce(new Error('Not found'));
+      prismaClient.submissionResources.delete.mockRejectedValueOnce(new Error('Not found'));
       prismaClient.resources.delete.mockResolvedValueOnce({
         id_resource: resourceId,
         name: 'Deleted Resource',
@@ -575,10 +594,13 @@ describe('Resources Repository', () => {
     it('Should delete a resource by id for quiz option', async () => {
       const resourceId = 'resource_13';
 
+      prismaClient.lessonResources.delete.mockRejectedValueOnce(new Error('Not found'));
       prismaClient.quizOptionResources.delete.mockResolvedValueOnce({
         id_resource: resourceId,
         quiz_option_id: 'option_4',
       });
+      prismaClient.quizQuestionResources.delete.mockRejectedValueOnce(new Error('Not found'));
+      prismaClient.submissionResources.delete.mockRejectedValueOnce(new Error('Not found'));
       prismaClient.resources.delete.mockResolvedValueOnce({
         id_resource: resourceId,
         name: 'Deleted Option Resource',
@@ -602,10 +624,13 @@ describe('Resources Repository', () => {
     it('Should delete a resource by id for quiz question', async () => {
       const resourceId = 'resource_14';
 
+      prismaClient.lessonResources.delete.mockRejectedValueOnce(new Error('Not found'));
+      prismaClient.quizOptionResources.delete.mockRejectedValueOnce(new Error('Not found'));
       prismaClient.quizQuestionResources.delete.mockResolvedValueOnce({
         id_resource: resourceId,
         quiz_question_id: 'question_4',
       });
+      prismaClient.submissionResources.delete.mockRejectedValueOnce(new Error('Not found'));
       prismaClient.resources.delete.mockResolvedValueOnce({
         id_resource: resourceId,
         name: 'Deleted Question Resource',
@@ -629,6 +654,9 @@ describe('Resources Repository', () => {
     it('Should delete a resource by id for submission', async () => {
       const resourceId = 'resource_15';
 
+      prismaClient.lessonResources.delete.mockRejectedValueOnce(new Error('Not found'));
+      prismaClient.quizOptionResources.delete.mockRejectedValueOnce(new Error('Not found'));
+      prismaClient.quizQuestionResources.delete.mockRejectedValueOnce(new Error('Not found'));
       prismaClient.submissionResources.delete.mockResolvedValueOnce({
         id_resource: resourceId,
         submission_id: 'submission_3',
