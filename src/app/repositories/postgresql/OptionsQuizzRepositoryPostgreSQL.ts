@@ -49,15 +49,21 @@ export class OptionsQuizzRepositoryPostgreSQL implements OptionsQuizzRepository 
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_OPTION_QUIZ,
+    keyof Prisma.QuizOptionsOrderByWithRelationInput
+  > = {
+    [SORT_OPTION_QUIZ.OPTION]: 'option',
+  };
+
   private buildSort(sortParams: SortingQuizOptions): Prisma.QuizOptionsOrderByWithRelationInput[] {
     const orderBy: Prisma.QuizOptionsOrderByWithRelationInput[] = [];
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case SORT_OPTION_QUIZ.OPTION:
-          orderBy.push({ option: direction });
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

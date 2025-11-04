@@ -5,6 +5,7 @@ import type {
   PaginatedCourses,
   SortingCourses,
 } from '../../../utils/index.js';
+import { SORT_COURSES } from '../../../utils/index.js';
 import type {
   CourseHeavyDTO,
   CourseInDTO,
@@ -143,59 +144,35 @@ export class CoursesRepositoryPostgreSQL implements CoursesRepository {
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_COURSES,
+    keyof Prisma.CoursesOrderByWithRelationInput
+  > = {
+    [SORT_COURSES.TITLE]: 'title',
+    [SORT_COURSES.LEVEL]: 'level',
+    [SORT_COURSES.STATUS]: 'status',
+    [SORT_COURSES.ACTIVE]: 'active',
+    [SORT_COURSES.AI_GENERATED]: 'ai_generated',
+    [SORT_COURSES.PRICE]: 'price',
+    [SORT_COURSES.AVERAGE_REVIEWS]: 'average_reviews',
+    [SORT_COURSES.DURATION_HOURS]: 'duration_hours',
+    [SORT_COURSES.TOTAL_LESSONS]: 'total_lessons',
+    [SORT_COURSES.TOTAL_REVIEWS]: 'total_reviews',
+    [SORT_COURSES.TOTAL_ENROLLMENTS]: 'total_enrollments',
+    [SORT_COURSES.CREATION_DATE]: 'created_at',
+    [SORT_COURSES.LAST_UPDATE]: 'updated_at',
+    [SORT_COURSES.PUBLISHING_DATE]: 'published_at',
+    [SORT_COURSES.LAST_AI_UPDATE]: 'last_ai_update_at',
+  };
+
   private buildSort(sortParams: SortingCourses): Prisma.CoursesOrderByWithRelationInput[] {
     const orderBy: Prisma.CoursesOrderByWithRelationInput[] = [];
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case 'TITLE':
-          orderBy.push({ title: direction });
-          break;
-        case 'LEVEL':
-          orderBy.push({ level: direction });
-          break;
-        case 'STATUS':
-          orderBy.push({ status: direction });
-          break;
-        case 'ACTIVE':
-          orderBy.push({ active: direction });
-          break;
-        case 'AI_GENERATED':
-          orderBy.push({ ai_generated: direction });
-          break;
-        case 'PRICE':
-          orderBy.push({ price: direction });
-          break;
-        case 'AVERAGE_REVIEWS':
-          orderBy.push({ average_reviews: direction });
-          break;
-        case 'DURATION_HOURS':
-          orderBy.push({ duration_hours: direction });
-          break;
-        case 'TOTAL_LESSONS':
-          orderBy.push({ total_lessons: direction });
-          break;
-        case 'TOTAL_REVIEWS':
-          orderBy.push({ total_reviews: direction });
-          break;
-        case 'TOTAL_ENROLLMENTS':
-          orderBy.push({ total_enrollments: direction });
-          break;
-        case 'CREATION_DATE':
-          orderBy.push({ created_at: direction });
-          break;
-        case 'LAST_UPDATE':
-          orderBy.push({ updated_at: direction });
-          break;
-        case 'PUBLISHING_DATE':
-          orderBy.push({ published_at: direction });
-          break;
-        case 'LAST_AI_UPDATE':
-          orderBy.push({ last_ai_update_at: direction });
-          break;
-        default:
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

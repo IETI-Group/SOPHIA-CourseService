@@ -2,9 +2,9 @@ import type { Prisma, PrismaClient } from '@prisma/client/default.js';
 import type {
   FiltersInscription,
   PaginatedInscriptions,
-  SORT_INSCRIPTION,
   SortingInscriptions,
 } from '../../../utils/index.js';
+import { SORT_INSCRIPTION } from '../../../utils/index.js';
 import type {
   InscriptionCourseInDTO,
   InscriptionCourseOutDTO,
@@ -51,26 +51,21 @@ export class InscriptionsCourseRepositoryPostgreSQL implements InscriptionsCours
     return where;
   }
 
+  private readonly sortFieldMapping: Record<SORT_INSCRIPTION, string> = {
+    [SORT_INSCRIPTION.COMPLETED]: 'completed',
+    [SORT_INSCRIPTION.CREATION_DATE]: 'created_at',
+    [SORT_INSCRIPTION.PROGRESS_PERCENTAGE]: 'progress_percentage',
+    [SORT_INSCRIPTION.SCORE]: 'score',
+    [SORT_INSCRIPTION.ACTIVE]: 'active',
+  };
+
   private buildSort(sort: SortingInscriptions): Record<string, Prisma.SortOrder>[] {
     const orderBy: Record<string, Prisma.SortOrder>[] = [];
 
     for (const field of sort.sortFields) {
-      switch (field) {
-        case 'COMPLETED' as SORT_INSCRIPTION:
-          orderBy.push({ completed: sort.sortDirection });
-          break;
-        case 'CREATION_DATE' as SORT_INSCRIPTION:
-          orderBy.push({ created_at: sort.sortDirection });
-          break;
-        case 'PROGRESS_PERCENTAGE' as SORT_INSCRIPTION:
-          orderBy.push({ progress_percentage: sort.sortDirection });
-          break;
-        case 'SCORE' as SORT_INSCRIPTION:
-          orderBy.push({ score: sort.sortDirection });
-          break;
-        case 'ACTIVE' as SORT_INSCRIPTION:
-          orderBy.push({ active: sort.sortDirection });
-          break;
+      const mappedField = this.sortFieldMapping[field];
+      if (mappedField) {
+        orderBy.push({ [mappedField]: sort.sortDirection });
       }
     }
 

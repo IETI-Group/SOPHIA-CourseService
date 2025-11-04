@@ -105,6 +105,19 @@ export class ProgressContentRepositoryPostgreSQL implements ProgressContentRepos
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_PROGRESS_CONTENT,
+    keyof Prisma.LessonContentProgressOrderByWithRelationInput
+  > = {
+    [SORT_PROGRESS_CONTENT.START_DATE]: 'started_at',
+    [SORT_PROGRESS_CONTENT.COMPLETED_DATE]: 'completed_at',
+    [SORT_PROGRESS_CONTENT.EFFECTIVINESS_SCORE]: 'effectiviness_score',
+    [SORT_PROGRESS_CONTENT.ACTIVE]: 'active',
+    [SORT_PROGRESS_CONTENT.USER_RATING]: 'user_rating',
+    [SORT_PROGRESS_CONTENT.TIME_SPEND_MINUTES]: 'time_spend_minutes',
+    [SORT_PROGRESS_CONTENT.COMPLETION_PERCENTAGE]: 'completion_percentage',
+  };
+
   private buildSort(
     sortParams: SortingContentProgress
   ): Prisma.LessonContentProgressOrderByWithRelationInput[] {
@@ -112,28 +125,9 @@ export class ProgressContentRepositoryPostgreSQL implements ProgressContentRepos
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case SORT_PROGRESS_CONTENT.START_DATE:
-          orderBy.push({ started_at: direction });
-          break;
-        case SORT_PROGRESS_CONTENT.COMPLETED_DATE:
-          orderBy.push({ completed_at: direction });
-          break;
-        case SORT_PROGRESS_CONTENT.EFFECTIVINESS_SCORE:
-          orderBy.push({ effectiviness_score: direction });
-          break;
-        case SORT_PROGRESS_CONTENT.ACTIVE:
-          orderBy.push({ active: direction });
-          break;
-        case SORT_PROGRESS_CONTENT.USER_RATING:
-          orderBy.push({ user_rating: direction });
-          break;
-        case SORT_PROGRESS_CONTENT.TIME_SPEND_MINUTES:
-          orderBy.push({ time_spend_minutes: direction });
-          break;
-        case SORT_PROGRESS_CONTENT.COMPLETION_PERCENTAGE:
-          orderBy.push({ completion_percentage: direction });
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

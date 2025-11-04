@@ -4,6 +4,7 @@ import type {
   PaginatedCategories,
   SortingCategories,
 } from '../../../utils/index.js';
+import { SORT_CATEGORY } from '../../../utils/index.js';
 import type {
   CategoryCourseInDTO,
   CategoryCourseOutDTO,
@@ -39,20 +40,22 @@ export class CategoriesRepositoryPostgreSQL implements CategoriesRepository {
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_CATEGORY,
+    keyof Prisma.CategoriesOrderByWithRelationInput
+  > = {
+    [SORT_CATEGORY.NAME]: 'name',
+    [SORT_CATEGORY.ACTIVE]: 'active',
+  };
+
   private buildSort(sortParams: SortingCategories): Prisma.CategoriesOrderByWithRelationInput[] {
     const orderBy: Prisma.CategoriesOrderByWithRelationInput[] = [];
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case 'NAME':
-          orderBy.push({ name: direction });
-          break;
-        case 'ACTIVE':
-          orderBy.push({ active: direction });
-          break;
-        default:
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

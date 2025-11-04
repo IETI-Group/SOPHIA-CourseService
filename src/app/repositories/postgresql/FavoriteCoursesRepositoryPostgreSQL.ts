@@ -2,9 +2,9 @@ import type { Prisma, PrismaClient } from '@prisma/client/default.js';
 import type {
   FiltersFavoriteCourse,
   PaginatedFavoriteCourses,
-  SORT_FAVORITE_COURSE,
   SortingFavoriteCourses,
 } from '../../../utils/index.js';
+import { SORT_FAVORITE_COURSE } from '../../../utils/index.js';
 import type { FavoriteCourseInDTO, FavoriteCourseOutDTO } from '../../models/index.js';
 import type { FavoriteCoursesRepository } from '../index.js';
 
@@ -92,26 +92,29 @@ export class FavoriteCoursesRepositoryPostgreSQL implements FavoriteCoursesRepos
     return where;
   }
 
+  private readonly sortFieldMapping: Record<SORT_FAVORITE_COURSE, Record<string, unknown>> = {
+    [SORT_FAVORITE_COURSE.CREATION_DATE]: { created_at: undefined },
+    [SORT_FAVORITE_COURSE.TITLE]: { courses: { title: undefined } },
+    [SORT_FAVORITE_COURSE.AVERAGE_REVIEWS]: { courses: { average_reviews: undefined } },
+    [SORT_FAVORITE_COURSE.TOTAL_ENROLLMENTS]: { courses: { total_enrollments: undefined } },
+    [SORT_FAVORITE_COURSE.LEVEL]: { courses: { level: undefined } },
+  };
+
   private buildSort(sort: SortingFavoriteCourses): Record<string, unknown>[] {
     const orderBy: Record<string, unknown>[] = [];
 
     for (const field of sort.sortFields) {
-      switch (field) {
-        case 'CREATION_DATE' as SORT_FAVORITE_COURSE:
-          orderBy.push({ created_at: sort.sortDirection });
-          break;
-        case 'TITLE' as SORT_FAVORITE_COURSE:
-          orderBy.push({ courses: { title: sort.sortDirection } });
-          break;
-        case 'AVERAGE_REVIEWS' as SORT_FAVORITE_COURSE:
-          orderBy.push({ courses: { average_reviews: sort.sortDirection } });
-          break;
-        case 'TOTAL_ENROLLMENTS' as SORT_FAVORITE_COURSE:
-          orderBy.push({ courses: { total_enrollments: sort.sortDirection } });
-          break;
-        case 'LEVEL' as SORT_FAVORITE_COURSE:
-          orderBy.push({ courses: { level: sort.sortDirection } });
-          break;
+      const mappedField = this.sortFieldMapping[field];
+      if (mappedField) {
+        const entry = JSON.parse(JSON.stringify(mappedField));
+        const key = Object.keys(entry)[0];
+        if (typeof entry[key] === 'object' && entry[key] !== null) {
+          const nestedKey = Object.keys(entry[key])[0];
+          entry[key][nestedKey] = sort.sortDirection;
+        } else {
+          entry[key] = sort.sortDirection;
+        }
+        orderBy.push(entry);
       }
     }
 

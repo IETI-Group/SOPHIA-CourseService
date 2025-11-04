@@ -1,5 +1,6 @@
 import type { Prisma, PrismaClient } from '@prisma/client/default.js';
 import type { FiltersLesson, PaginatedLessons, SortingLessons } from '../../../utils/index.js';
+import { SORT_LESSON } from '../../../utils/index.js';
 import type {
   LessonSectionInDTO,
   LessonSectionOutLightDTO,
@@ -100,38 +101,28 @@ export class LessonsRepositoryPostgreSQL implements LessonsRepository {
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_LESSON,
+    keyof Prisma.LessonsOrderByWithRelationInput
+  > = {
+    [SORT_LESSON.TITLE]: 'title',
+    [SORT_LESSON.DURATION_MINUTES]: 'duration_minutes',
+    [SORT_LESSON.CREATION_DATE]: 'created_at',
+    [SORT_LESSON.ACTIVE]: 'active',
+    [SORT_LESSON.ORDER]: 'order',
+    [SORT_LESSON.AI_GENERATED]: 'ai_generated',
+    [SORT_LESSON.ESTIMATED_DIFFICULTY]: 'estimated_difficulty',
+    [SORT_LESSON.LESSON_TYPE]: 'lesson_type',
+  };
+
   private buildSort(sortParams: SortingLessons): Prisma.LessonsOrderByWithRelationInput[] {
     const orderBy: Prisma.LessonsOrderByWithRelationInput[] = [];
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case 'TITLE':
-          orderBy.push({ title: direction });
-          break;
-        case 'DURATION_MINUTES':
-          orderBy.push({ duration_minutes: direction });
-          break;
-        case 'CREATION_DATE':
-          orderBy.push({ created_at: direction });
-          break;
-        case 'ACTIVE':
-          orderBy.push({ active: direction });
-          break;
-        case 'ORDER':
-          orderBy.push({ order: direction });
-          break;
-        case 'AI_GENERATED':
-          orderBy.push({ ai_generated: direction });
-          break;
-        case 'ESTIMATED_DIFFICULTY':
-          orderBy.push({ estimated_difficulty: direction });
-          break;
-        case 'LESSON_TYPE':
-          orderBy.push({ lesson_type: direction });
-          break;
-        default:
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

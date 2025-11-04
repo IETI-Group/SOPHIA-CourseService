@@ -1,5 +1,6 @@
 import type { Prisma, PrismaClient } from '@prisma/client/default.js';
-import type { FiltersTag, PaginatedTags, SORT_TAG, SortingTags } from '../../../utils/index.js';
+import type { FiltersTag, PaginatedTags, SortingTags } from '../../../utils/index.js';
+import { SORT_TAG } from '../../../utils/index.js';
 import type { TagCourseInDTO, TagCourseOutDTO } from '../../models/index.js';
 import type { TagsCourseRepository } from '../index.js';
 
@@ -47,17 +48,26 @@ export class TagsCourseRepositoryPostgreSQL implements TagsCourseRepository {
     return where;
   }
 
+  private readonly sortFieldMapping: Record<SORT_TAG, Record<string, unknown>> = {
+    [SORT_TAG.CREATION_DATE]: { created_at: undefined },
+    [SORT_TAG.NAME]: { categories: { name: undefined } },
+  };
+
   private buildSort(sort: SortingTags): Record<string, unknown>[] {
     const orderBy: Record<string, unknown>[] = [];
 
     for (const field of sort.sortFields) {
-      switch (field) {
-        case 'CREATION_DATE' as SORT_TAG:
-          orderBy.push({ created_at: sort.sortDirection });
-          break;
-        case 'NAME' as SORT_TAG:
-          orderBy.push({ categories: { name: sort.sortDirection } });
-          break;
+      const mappedField = this.sortFieldMapping[field];
+      if (mappedField) {
+        const entry = JSON.parse(JSON.stringify(mappedField));
+        const key = Object.keys(entry)[0];
+        if (typeof entry[key] === 'object' && entry[key] !== null) {
+          const nestedKey = Object.keys(entry[key])[0];
+          entry[key][nestedKey] = sort.sortDirection;
+        } else {
+          entry[key] = sort.sortDirection;
+        }
+        orderBy.push(entry);
       }
     }
 

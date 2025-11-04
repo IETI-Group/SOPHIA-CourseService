@@ -5,6 +5,7 @@ import type {
   PaginatedLessonAISpecs,
   SortingAILessonSpecs,
 } from '../../../utils/index.js';
+import { SORT_AI_SPECS_LESSON } from '../../../utils/index.js';
 import type {
   AISpecsLessonInDTO,
   AISpecsLessonOutHeavyDTO,
@@ -55,6 +56,14 @@ export class AISpecsLessonRepositoryPostgreSQL implements AISpecsLessonRepositor
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_AI_SPECS_LESSON,
+    keyof Prisma.LessonAISpecsOrderByWithRelationInput
+  > = {
+    [SORT_AI_SPECS_LESSON.CREATION_DATE]: 'created_at',
+    [SORT_AI_SPECS_LESSON.ESTIMATED_VIDEO_DURATION]: 'estimated_video_duration_mins',
+  };
+
   private buildSort(
     sortParams: SortingAILessonSpecs
   ): Prisma.LessonAISpecsOrderByWithRelationInput[] {
@@ -62,15 +71,9 @@ export class AISpecsLessonRepositoryPostgreSQL implements AISpecsLessonRepositor
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case 'CREATION_DATE':
-          orderBy.push({ created_at: direction });
-          break;
-        case 'ESTIMATED_VIDEO_DURATION':
-          orderBy.push({ estimated_video_duration_mins: direction });
-          break;
-        default:
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

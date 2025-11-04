@@ -79,6 +79,15 @@ export class AttemptsQuizzRepositoryPostgreSQL implements AttemptsQuizzRepositor
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_ATTEMPT_QUIZ,
+    keyof Prisma.QuizAttemptsOrderByWithRelationInput
+  > = {
+    [SORT_ATTEMPT_QUIZ.SUBMISSION_DATE]: 'submitted_at',
+    [SORT_ATTEMPT_QUIZ.GRADE]: 'grade',
+    [SORT_ATTEMPT_QUIZ.DURATION_MINUTES]: 'duration_minutes',
+  };
+
   private buildSort(
     sortParams: SortingQuizAttempts
   ): Prisma.QuizAttemptsOrderByWithRelationInput[] {
@@ -86,16 +95,9 @@ export class AttemptsQuizzRepositoryPostgreSQL implements AttemptsQuizzRepositor
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case SORT_ATTEMPT_QUIZ.SUBMISSION_DATE:
-          orderBy.push({ submitted_at: direction });
-          break;
-        case SORT_ATTEMPT_QUIZ.GRADE:
-          orderBy.push({ grade: direction });
-          break;
-        case SORT_ATTEMPT_QUIZ.DURATION_MINUTES:
-          orderBy.push({ duration_minutes: direction });
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

@@ -2,9 +2,9 @@ import type { Prisma, PrismaClient } from '@prisma/client/default.js';
 import type {
   FiltersAssignmentLesson,
   PaginatedAssignments,
-  SORT_ASSIGNMENT,
   SortingAssignments,
 } from '../../../utils/index.js';
+import { SORT_ASSIGNMENT } from '../../../utils/index.js';
 import type {
   AssignmentLessonInDTO,
   AssignmentLessonOutDTO,
@@ -83,32 +83,23 @@ export class AssignmentsLessonRepositoryPostgreSQL implements AssignmentsLessonR
     return where;
   }
 
+  private readonly sortFieldMapping: Record<SORT_ASSIGNMENT, string> = {
+    [SORT_ASSIGNMENT.TITLE]: 'title',
+    [SORT_ASSIGNMENT.MAX_FILE_SIZE_MB]: 'max_file_size_mb',
+    [SORT_ASSIGNMENT.ALLOWED_TYPES]: 'allowed_types',
+    [SORT_ASSIGNMENT.DUE_DATE]: 'due_date',
+    [SORT_ASSIGNMENT.MAX_SCORE]: 'max_score',
+    [SORT_ASSIGNMENT.ACTIVE]: 'active',
+    [SORT_ASSIGNMENT.CREATION_DATE]: 'created_at',
+  };
+
   private buildSort(sort: SortingAssignments): Record<string, Prisma.SortOrder>[] {
     const orderBy: Record<string, Prisma.SortOrder>[] = [];
 
     for (const field of sort.sortFields) {
-      switch (field) {
-        case 'TITLE' as SORT_ASSIGNMENT:
-          orderBy.push({ title: sort.sortDirection });
-          break;
-        case 'MAX_FILE_SIZE_MB' as SORT_ASSIGNMENT:
-          orderBy.push({ max_file_size_mb: sort.sortDirection });
-          break;
-        case 'ALLOWED_TYPES' as SORT_ASSIGNMENT:
-          orderBy.push({ allowed_types: sort.sortDirection });
-          break;
-        case 'DUE_DATE' as SORT_ASSIGNMENT:
-          orderBy.push({ due_date: sort.sortDirection });
-          break;
-        case 'MAX_SCORE' as SORT_ASSIGNMENT:
-          orderBy.push({ max_score: sort.sortDirection });
-          break;
-        case 'ACTIVE' as SORT_ASSIGNMENT:
-          orderBy.push({ active: sort.sortDirection });
-          break;
-        case 'CREATION_DATE' as SORT_ASSIGNMENT:
-          orderBy.push({ created_at: sort.sortDirection });
-          break;
+      const mappedField = this.sortFieldMapping[field];
+      if (mappedField) {
+        orderBy.push({ [mappedField]: sort.sortDirection });
       }
     }
 

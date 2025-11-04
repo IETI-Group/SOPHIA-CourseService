@@ -5,6 +5,7 @@ import type {
   PaginatedLessonContents,
   SortingLessonContent,
 } from '../../../utils/index.js';
+import { SORT_LESSON_CONTENT } from '../../../utils/index.js';
 import type {
   ContentLessonInDTO,
   ContentLessonOutLightDTO,
@@ -88,6 +89,20 @@ export class LessonContentsRepositoryPostgreSQL implements LessonContentsReposit
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_LESSON_CONTENT,
+    keyof Prisma.LessonContentsOrderByWithRelationInput
+  > = {
+    [SORT_LESSON_CONTENT.VERSION]: 'version',
+    [SORT_LESSON_CONTENT.ACTIVE]: 'active',
+    [SORT_LESSON_CONTENT.DIFFICULTY_LEVEL]: 'difficulty_level',
+    [SORT_LESSON_CONTENT.LEARNING_TECHNIQUE]: 'learning_technique',
+    [SORT_LESSON_CONTENT.ORDER_PREFERENCE]: 'order_preference',
+    [SORT_LESSON_CONTENT.CREATION_DATE]: 'created_at',
+    [SORT_LESSON_CONTENT.AI_GENERATED]: 'ai_generated',
+    [SORT_LESSON_CONTENT.CONTENT_TYPE]: 'content_type',
+  };
+
   private buildSort(
     sortParams: SortingLessonContent
   ): Prisma.LessonContentsOrderByWithRelationInput[] {
@@ -95,33 +110,9 @@ export class LessonContentsRepositoryPostgreSQL implements LessonContentsReposit
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case 'VERSION':
-          orderBy.push({ version: direction });
-          break;
-        case 'ACTIVE':
-          orderBy.push({ active: direction });
-          break;
-        case 'DIFFICULTY_LEVEL':
-          orderBy.push({ difficulty_level: direction });
-          break;
-        case 'LEARNING_TECHNIQUE':
-          orderBy.push({ learning_technique: direction });
-          break;
-        case 'ORDER_PREFERENCE':
-          orderBy.push({ order_preference: direction });
-          break;
-        case 'CREATION_DATE':
-          orderBy.push({ created_at: direction });
-          break;
-        case 'AI_GENERATED':
-          orderBy.push({ ai_generated: direction });
-          break;
-        case 'CONTENT_TYPE':
-          orderBy.push({ content_type: direction });
-          break;
-        default:
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

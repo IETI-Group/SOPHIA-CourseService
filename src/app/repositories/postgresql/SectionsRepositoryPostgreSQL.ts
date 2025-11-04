@@ -1,5 +1,6 @@
 import type { Prisma, PrismaClient } from '@prisma/client/default.js';
 import type { FiltersSection, PaginatedSections, SortingSections } from '../../../utils/index.js';
+import { SORT_SECTION } from '../../../utils/index.js';
 import type {
   SectionCourseInDTO,
   SectionCourseOutLightDTO,
@@ -94,35 +95,27 @@ export class SectionsRepositoryPostgreSQL implements SectionsRepository {
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_SECTION,
+    keyof Prisma.SectionsOrderByWithRelationInput
+  > = {
+    [SORT_SECTION.TITLE]: 'title',
+    [SORT_SECTION.DURATION_HOURS]: 'duration_hours',
+    [SORT_SECTION.CREATION_DATE]: 'created_at',
+    [SORT_SECTION.ACTIVE]: 'active',
+    [SORT_SECTION.ORDER]: 'order',
+    [SORT_SECTION.AI_GENERATED]: 'ai_generated',
+    [SORT_SECTION.SUGGESTED_BY_AI]: 'suggested_by_ai',
+  };
+
   private buildSort(sortParams: SortingSections): Prisma.SectionsOrderByWithRelationInput[] {
     const orderBy: Prisma.SectionsOrderByWithRelationInput[] = [];
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case 'TITLE':
-          orderBy.push({ title: direction });
-          break;
-        case 'DURATION_HOURS':
-          orderBy.push({ duration_hours: direction });
-          break;
-        case 'CREATION_DATE':
-          orderBy.push({ created_at: direction });
-          break;
-        case 'ACTIVE':
-          orderBy.push({ active: direction });
-          break;
-        case 'ORDER':
-          orderBy.push({ order: direction });
-          break;
-        case 'AI_GENERATED':
-          orderBy.push({ ai_generated: direction });
-          break;
-        case 'SUGGESTED_BY_AI':
-          orderBy.push({ suggested_by_ai: direction });
-          break;
-        default:
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

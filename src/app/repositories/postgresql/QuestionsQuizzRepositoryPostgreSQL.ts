@@ -69,6 +69,14 @@ export class QuestionsQuizzRepositoryPostgreSQL implements QuestionsQuizzReposit
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_QUESTION_QUIZ,
+    keyof Prisma.QuizQuestionsOrderByWithRelationInput
+  > = {
+    [SORT_QUESTION_QUIZ.QUESTION]: 'question',
+    [SORT_QUESTION_QUIZ.DURATION_MINUTES]: 'duration_minutes',
+  };
+
   private buildSort(
     sortParams: SortingQuizQuestions
   ): Prisma.QuizQuestionsOrderByWithRelationInput[] {
@@ -76,13 +84,9 @@ export class QuestionsQuizzRepositoryPostgreSQL implements QuestionsQuizzReposit
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case SORT_QUESTION_QUIZ.QUESTION:
-          orderBy.push({ question: direction });
-          break;
-        case SORT_QUESTION_QUIZ.DURATION_MINUTES:
-          orderBy.push({ duration_minutes: direction });
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 

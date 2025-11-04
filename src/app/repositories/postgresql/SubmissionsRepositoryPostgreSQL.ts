@@ -3,9 +3,9 @@ import type { Prisma, PrismaClient } from '@prisma/client/default.js';
 import type {
   FiltersSubmission,
   PaginatedSubmissions,
-  SORT_SUBMISSION,
   SortingSubmissions,
 } from '../../../utils/index.js';
+import { SORT_SUBMISSION } from '../../../utils/index.js';
 import type {
   SubmissionAssignmentInDTO,
   SubmissionAssignmentOutDTO,
@@ -74,26 +74,21 @@ export class SubmissionsRepositoryPostgreSQL implements SubmissionsRepository {
     return where;
   }
 
+  private readonly sortFieldMapping: Record<SORT_SUBMISSION, string> = {
+    [SORT_SUBMISSION.ACTIVE]: 'active',
+    [SORT_SUBMISSION.SCORE]: 'score',
+    [SORT_SUBMISSION.STATUS]: 'status',
+    [SORT_SUBMISSION.SUBMISSION_DATE]: 'submitted_at',
+    [SORT_SUBMISSION.GRADING_DATE]: 'greated_at',
+  };
+
   private buildSort(sort: SortingSubmissions): Record<string, Prisma.SortOrder>[] {
     const orderBy: Record<string, Prisma.SortOrder>[] = [];
 
     for (const field of sort.sortFields) {
-      switch (field) {
-        case 'ACTIVE' as SORT_SUBMISSION:
-          orderBy.push({ active: sort.sortDirection });
-          break;
-        case 'SCORE' as SORT_SUBMISSION:
-          orderBy.push({ score: sort.sortDirection });
-          break;
-        case 'STATUS' as SORT_SUBMISSION:
-          orderBy.push({ status: sort.sortDirection });
-          break;
-        case 'SUBMISSION_DATE' as SORT_SUBMISSION:
-          orderBy.push({ submitted_at: sort.sortDirection });
-          break;
-        case 'GRADING_DATE' as SORT_SUBMISSION:
-          orderBy.push({ greated_at: sort.sortDirection });
-          break;
+      const mappedField = this.sortFieldMapping[field];
+      if (mappedField) {
+        orderBy.push({ [mappedField]: sort.sortDirection });
       }
     }
 
