@@ -36,6 +36,17 @@ import { ResourcesRepositoryPostgreSQL } from '../app/repositories/postgresql/Re
 import { SectionsRepositoryPostgreSQL } from '../app/repositories/postgresql/SectionsRepositoryPostgreSQL.js';
 import { SubmissionsRepositoryPostgreSQL } from '../app/repositories/postgresql/SubmissionsRepositoryPostgreSQL.js';
 import { TagsCourseRepositoryPostgreSQL } from '../app/repositories/postgresql/TagsCourseRepositoryPostgreSQL.js';
+import {
+  AISpecsController,
+  AssignmentsController,
+  CategoriesController,
+  CoursesController,
+  LessonsController,
+  QuizzesController,
+  ResourcesController,
+  SectionsController,
+  TagsController,
+} from '../controllers/index.js';
 import { logger } from '../utils/logger.js';
 import prisma from './db.js';
 
@@ -59,6 +70,15 @@ interface DIContainer {
   sectionsRepository: SectionsRepository;
   submissionsRepository: SubmissionsRepository;
   tagsCourseRepository: TagsCourseRepository;
+  coursesController: CoursesController;
+  lessonsController: LessonsController;
+  quizzesController: QuizzesController;
+  assignmentsController: AssignmentsController;
+  sectionsController: SectionsController;
+  resourcesController: ResourcesController;
+  tagsController: TagsController;
+  categoriesController: CategoriesController;
+  aiSpecsController: AISpecsController;
 }
 
 const container = createContainer<DIContainer>({
@@ -68,6 +88,8 @@ const container = createContainer<DIContainer>({
 container.register({
   logger: asValue(logger),
   prisma: asValue(prisma),
+
+  // Repositories
 
   aiSpecsLessonRepository: asClass(AISpecsLessonRepositoryPostgreSQL, {
     lifetime: 'SINGLETON',
@@ -118,6 +140,36 @@ container.register({
     lifetime: 'SINGLETON',
   }),
   tagsCourseRepository: asClass(TagsCourseRepositoryPostgreSQL, {
+    lifetime: 'SINGLETON',
+  }),
+
+  // Controllers
+
+  coursesController: asClass(CoursesController, {
+    lifetime: 'SINGLETON',
+  }),
+  lessonsController: asClass(LessonsController, {
+    lifetime: 'SINGLETON',
+  }),
+  quizzesController: asClass(QuizzesController, {
+    lifetime: 'SINGLETON',
+  }),
+  assignmentsController: asClass(AssignmentsController, {
+    lifetime: 'SINGLETON',
+  }),
+  sectionsController: asClass(SectionsController, {
+    lifetime: 'SINGLETON',
+  }),
+  resourcesController: asClass(ResourcesController, {
+    lifetime: 'SINGLETON',
+  }),
+  tagsController: asClass(TagsController, {
+    lifetime: 'SINGLETON',
+  }),
+  categoriesController: asClass(CategoriesController, {
+    lifetime: 'SINGLETON',
+  }),
+  aiSpecsController: asClass(AISpecsController, {
     lifetime: 'SINGLETON',
   }),
 });
