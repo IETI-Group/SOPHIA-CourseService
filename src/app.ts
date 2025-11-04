@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { type Application } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import { envConfig } from './config/env.config.js';
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import routes from './routes/index.js';
 import { logger } from './utils/logger.js';
@@ -51,18 +52,18 @@ class App {
 
   private routes(): void {
     // API routes
-    this.app.use('/api/v1', routes);
+    this.app.use(envConfig.api.basePath, routes);
 
     // Root endpoint
     this.app.get('/', (_req, res) => {
       res.json({
         success: true,
         message: 'Welcome to SOPHIA Course Service API',
-        version: '1.0.0',
+        version: envConfig.api.versionNumber,
         endpoints: {
-          health: '/api/v1/health',
+          health: `${envConfig.api.basePath}/health`,
         },
-        documentation: '/api/docs', // Para futuro
+        documentation: `${envConfig.api.basePath}/docs`, // Para futuro con swagger
         timestamp: new Date().toISOString(),
       });
     });
