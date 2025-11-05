@@ -1,9 +1,9 @@
-import type { ApiResponse, FiltersLessonContent, SortingLessons } from '../../../utils/index.js';
+import type { ApiResponse, FiltersLesson, SortingLessons } from '../../../utils/index.js';
 import type { LessonSectionInDTO, LessonSectionUpdateDTO } from '../../models/index.js';
 
 export interface LessonService {
   getSectionLessons(
-    filters: FiltersLessonContent,
+    filters: FiltersLesson,
     sort: SortingLessons,
     lightDTO?: boolean
   ): Promise<ApiResponse<unknown>>;

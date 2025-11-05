@@ -6,20 +6,19 @@ export class TagsController {
   constructor(tagService: TagService) {
     this.tagService = tagService;
   }
-  getTags(_filters: FiltersTag, _sort: SortingTags): Promise<ApiResponse<unknown>> {
-    this.tagService;
-    throw new Error('Method not implemented');
+  getTags(filters: FiltersTag, sort: SortingTags): Promise<ApiResponse<unknown>> {
+    return this.tagService.getTags(filters, sort);
   }
-  getTagById(_tagId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getTagById(tagId: string): Promise<ApiResponse<unknown>> {
+    return this.tagService.getTagById(tagId);
   }
-  postTag(_dto: TagCourseInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postTag(dto: TagCourseInDTO): Promise<ApiResponse<unknown>> {
+    return this.tagService.postTag(dto);
   }
-  putTag(_tagId: string, _dto: Partial<TagCourseInDTO>): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  putTag(tagId: string, dto: Partial<TagCourseInDTO>): Promise<ApiResponse<unknown>> {
+    return this.tagService.putTag(tagId, dto);
   }
-  deleteTag(_tagId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteTag(tagId: string): Promise<ApiResponse<unknown>> {
+    return this.tagService.deleteTag(tagId);
   }
 }

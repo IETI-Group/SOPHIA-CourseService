@@ -24,47 +24,45 @@ export class AssignmentsController {
   }
 
   getAssignmentsLesson(
-    _filters: FiltersAssignmentLesson,
-    _sort: SortingAssignments
+    filters: FiltersAssignmentLesson,
+    sort: SortingAssignments
   ): Promise<ApiResponse<unknown>> {
-    this.assignmentService;
-    this.submissionService;
-    throw new Error('Method not implemented');
+    return this.assignmentService.getAssignmentsLesson(filters, sort);
   }
-  getAssignmentById(_assignmentLessonId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getAssignmentById(assignmentLessonId: string): Promise<ApiResponse<unknown>> {
+    return this.assignmentService.getAssignmentById(assignmentLessonId);
   }
-  postAssignmentLesson(_dto: AssignmentLessonInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postAssignmentLesson(dto: AssignmentLessonInDTO): Promise<ApiResponse<unknown>> {
+    return this.assignmentService.postAssignmentLesson(dto);
   }
   putAssignment(
-    _assignmentLessonId: string,
-    _dto: Partial<AssignmentLessonUpdateDTO>
+    assignmentLessonId: string,
+    dto: Partial<AssignmentLessonUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.assignmentService.putAssignment(assignmentLessonId, dto);
   }
-  deleteAssignment(_assignmentLessonId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteAssignment(assignmentLessonId: string): Promise<ApiResponse<unknown>> {
+    return this.assignmentService.deleteAssignment(assignmentLessonId);
   }
   getSubmissionsAssignment(
-    _filters: FiltersSubmission,
-    _sort: SortingSubmissions
+    filters: FiltersSubmission,
+    sort: SortingSubmissions
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.submissionService.getSubmissionsAssignment(filters, sort);
   }
-  getSubmission(_submissionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getSubmission(submissionId: string): Promise<ApiResponse<unknown>> {
+    return this.submissionService.getSubmission(submissionId);
   }
-  postSubmissionAssignment(_dto: SubmissionAssignmentInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postSubmissionAssignment(dto: SubmissionAssignmentInDTO): Promise<ApiResponse<unknown>> {
+    return this.submissionService.postSubmissionAssignment(dto);
   }
   putSubmission(
-    _submissionId: string,
-    _dto: Partial<SubmissionAssignmentUpdateDTO>
+    submissionId: string,
+    dto: Partial<SubmissionAssignmentUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.submissionService.putSubmission(submissionId, dto);
   }
-  deleteSubmission(_submissionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteSubmission(submissionId: string): Promise<ApiResponse<unknown>> {
+    return this.submissionService.deleteSubmission(submissionId);
   }
 }

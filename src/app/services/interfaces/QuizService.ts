@@ -34,7 +34,10 @@ export interface QuizService {
   ): Promise<ApiResponse<unknown>>;
   getQuestionById(questionQuizId: string): Promise<ApiResponse<unknown>>;
   postQuestionQuiz(dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>>;
-  putQuestion(questionQuizId: string, dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>>;
+  putQuestion(
+    questionQuizId: string,
+    dto: Partial<QuestionQuizInDTO>
+  ): Promise<ApiResponse<unknown>>;
   deleteQuestion(questionQuizId: string): Promise<ApiResponse<unknown>>;
   getOptionsQuiz(
     filters: FiltersOptionQuiz,

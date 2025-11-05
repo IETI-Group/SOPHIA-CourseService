@@ -10,26 +10,22 @@ export class CategoriesController {
   constructor(categoryService: CategoryService) {
     this.categoryService = categoryService;
   }
-  getCategories(
-    _filters: FiltersCategory,
-    _sort: SortingCategories
-  ): Promise<ApiResponse<unknown>> {
-    this.categoryService;
-    throw new Error('Method not implemented');
+  getCategories(filters: FiltersCategory, sort: SortingCategories): Promise<ApiResponse<unknown>> {
+    return this.categoryService.getCategories(filters, sort);
   }
-  getCategoryById(_categoryId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getCategoryById(categoryId: string): Promise<ApiResponse<unknown>> {
+    return this.categoryService.getCategoryById(categoryId);
   }
-  postCategory(_dto: CategoryCourseInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postCategory(dto: CategoryCourseInDTO): Promise<ApiResponse<unknown>> {
+    return this.categoryService.postCategory(dto);
   }
   putCategory(
-    _categoryId: string,
-    _dto: Partial<CategoryCourseUpdateDTO>
+    categoryId: string,
+    dto: Partial<CategoryCourseUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.categoryService.putCategory(categoryId, dto);
   }
-  deleteCategory(_categoryId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteCategory(categoryId: string): Promise<ApiResponse<unknown>> {
+    return this.categoryService.deleteCategory(categoryId);
   }
 }

@@ -8,27 +8,26 @@ export class AISpecsController {
     this.aISpecsService = aISpecsService;
   }
   getAISpecs(
-    _filters: FiltersAISpecsLesson,
-    _sort: SortingAILessonSpecs,
-    _lightDTO?: boolean
+    filters: FiltersAISpecsLesson,
+    sort: SortingAILessonSpecs,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.aISpecsService;
-    throw new Error('Method not implemented');
+    return this.aISpecsService.getAISpecs(filters, sort, lightDTO);
   }
-  getAISpecById(_aiSpecId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getAISpecById(aiSpecId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.aISpecsService.getAISpecById(aiSpecId, lightDTO);
   }
-  postAISpec(_dto: AISpecsLessonInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postAISpec(dto: AISpecsLessonInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.aISpecsService.postAISpec(dto, lightDTO);
   }
   putAISpec(
-    _aiSpecId: string,
-    _dto: Partial<AISpecsLessonInDTO>,
-    _lightDTO?: boolean
+    aiSpecId: string,
+    dto: Partial<AISpecsLessonInDTO>,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.aISpecsService.putAISpec(aiSpecId, dto, lightDTO);
   }
-  deleteAISpec(_aiSpecId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteAISpec(aiSpecId: string): Promise<ApiResponse<unknown>> {
+    return this.aISpecsService.deleteAISpec(aiSpecId);
   }
 }

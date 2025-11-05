@@ -7,27 +7,26 @@ export class ResourcesController {
     this.resourceService = resourceService;
   }
   getResources(
-    _filters: FiltersResource,
-    _sort: SortingResources,
-    _lightDTO?: boolean
+    filters: FiltersResource,
+    sort: SortingResources,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.resourceService;
-    throw new Error('Method not implemented');
+    return this.resourceService.getResources(filters, sort, lightDTO);
   }
-  getResourceById(_resourceId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getResourceById(resourceId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.resourceService.getResourceById(resourceId, lightDTO);
   }
-  postResources(_dto: ResourcesInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postResources(dto: ResourcesInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.resourceService.postResources(dto, lightDTO);
   }
   putResources(
-    _resourceId: string,
-    _dto: Partial<ResourcesInDTO>,
-    _lightDTO?: boolean
+    resourceId: string,
+    dto: Partial<ResourcesInDTO>,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.resourceService.putResources(resourceId, dto, lightDTO);
   }
-  deleteResources(_resourceId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteResources(resourceId: string): Promise<ApiResponse<unknown>> {
+    return this.resourceService.deleteResources(resourceId);
   }
 }

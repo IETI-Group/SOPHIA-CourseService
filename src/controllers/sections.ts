@@ -7,27 +7,26 @@ export class SectionsController {
     this.sectionService = sectionService;
   }
   getCourseSections(
-    _filters: FiltersSection,
-    _sort: SortingSections,
-    _lightDTO?: boolean
+    filters: FiltersSection,
+    sort: SortingSections,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.sectionService;
-    throw new Error('Method not implemented');
+    return this.sectionService.getCourseSections(filters, sort, lightDTO);
   }
-  getSectionById(_sectionId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getSectionById(sectionId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.sectionService.getSectionById(sectionId, lightDTO);
   }
-  postCourseSection(_dto: SectionCourseInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postCourseSection(dto: SectionCourseInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.sectionService.postCourseSection(dto, lightDTO);
   }
   putSection(
-    _sectionId: string,
-    _dto: Partial<SectionCourseUpdateDTO>,
-    _lightDTO?: boolean
+    sectionId: string,
+    dto: Partial<SectionCourseUpdateDTO>,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.sectionService.putSection(sectionId, dto, lightDTO);
   }
-  deleteSection(_sectionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteSection(sectionId: string): Promise<ApiResponse<unknown>> {
+    return this.sectionService.deleteSection(sectionId);
   }
 }

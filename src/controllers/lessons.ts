@@ -35,73 +35,70 @@ export class LessonsController {
   }
 
   getSectionLessons(
-    _filters: FiltersLesson,
-    _sort: SortingLessons,
-    _lightDTO?: boolean
+    filters: FiltersLesson,
+    sort: SortingLessons,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.lessonService;
-    this.progressService;
-    this.lessonContentService;
-    throw new Error('Method not implemented');
+    return this.lessonService.getSectionLessons(filters, sort, lightDTO);
   }
-  getLessonById(_lessonId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getLessonById(lessonId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.lessonService.getLessonById(lessonId, lightDTO);
   }
-  postSectionLesson(_dto: LessonSectionInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postSectionLesson(dto: LessonSectionInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.lessonService.postSectionLesson(dto, lightDTO);
   }
   putLesson(
-    _lessonId: string,
-    _dto: Partial<LessonSectionUpdateDTO>,
-    _lightDTO?: boolean
+    lessonId: string,
+    dto: Partial<LessonSectionUpdateDTO>,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.lessonService.putLesson(lessonId, dto, lightDTO);
   }
-  deleteLesson(_lessonId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteLesson(lessonId: string): Promise<ApiResponse<unknown>> {
+    return this.lessonService.deleteLesson(lessonId);
   }
   getLessonContents(
-    _filters: FiltersLessonContent,
-    _sort: SortingLessonContent,
-    _lightDTO?: boolean
+    filters: FiltersLessonContent,
+    sort: SortingLessonContent,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.lessonContentService.getLessonContents(filters, sort, lightDTO);
   }
   getLessonContentsById(
-    _lessonContentId: string,
-    _lightDTO?: boolean
+    lessonContentId: string,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.lessonContentService.getLessonContentsById(lessonContentId, lightDTO);
   }
-  postLessonContents(_dto: ContentLessonInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postLessonContents(dto: ContentLessonInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.lessonContentService.postLessonContents(dto, lightDTO);
   }
   putLessonContents(
-    _lessonContentId: string,
-    _dto: ContentLessonUpdateDTO,
-    _lightDTO?: boolean
+    lessonContentId: string,
+    dto: ContentLessonUpdateDTO,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.lessonContentService.putLessonContents(lessonContentId, dto, lightDTO);
   }
-  deleteLessonContents(_lessonContentId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteLessonContents(lessonContentId: string): Promise<ApiResponse<unknown>> {
+    return this.lessonContentService.deleteLessonContents(lessonContentId);
   }
   getProgressContent(
-    _filters: FiltersProgressContent,
-    _sort: SortingContentProgress
+    filters: FiltersProgressContent,
+    sort: SortingContentProgress
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.progressService.getProgressContent(filters, sort);
   }
-  getProgressById(_progressId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getProgressById(progressId: string): Promise<ApiResponse<unknown>> {
+    return this.progressService.getProgressById(progressId);
   }
-  postProgressContent(_dto: ProgressContentInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postProgressContent(dto: ProgressContentInDTO): Promise<ApiResponse<unknown>> {
+    return this.progressService.postProgressContent(dto);
   }
-  putProgress(_progressId: string, _dto: ProgressContentUpdateDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  putProgress(progressId: string, dto: ProgressContentUpdateDTO): Promise<ApiResponse<unknown>> {
+    return this.progressService.putProgress(progressId, dto);
   }
-  deleteProgress(_progressId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteProgress(progressId: string): Promise<ApiResponse<unknown>> {
+    return this.progressService.deleteProgress(progressId);
   }
 }

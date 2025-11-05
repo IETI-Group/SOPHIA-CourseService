@@ -30,88 +30,83 @@ export class QuizzesController {
   }
 
   getQuizzesSection(
-    _filters: FiltersQuizSection,
-    _sort: SortingSectionQuizzes,
-    _lightDTO?: boolean
+    filters: FiltersQuizSection,
+    sort: SortingSectionQuizzes,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.quizService;
-    this.attemptService;
-    throw new Error('Method not implemented');
+    return this.quizService.getQuizzesSection(filters, sort, lightDTO);
   }
-  getQuizById(_quizId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getQuizById(quizId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.quizService.getQuizById(quizId, lightDTO);
   }
-  postQuizSection(_dto: QuizSectionInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postQuizSection(dto: QuizSectionInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+    return this.quizService.postQuizSection(dto, lightDTO);
   }
   putQuiz(
-    _quizId: string,
-    _dto: Partial<QuizSectionUpdateDTO>,
-    _lightDTO?: boolean
+    quizId: string,
+    dto: Partial<QuizSectionUpdateDTO>,
+    lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.quizService.putQuiz(quizId, dto, lightDTO);
   }
-  deleteQuiz(_quizId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteQuiz(quizId: string): Promise<ApiResponse<unknown>> {
+    return this.quizService.deleteQuiz(quizId);
   }
   getQuestionsQuiz(
-    _filters: FiltersQuestionQuiz,
-    _sort: SortingQuizQuestions
+    filters: FiltersQuestionQuiz,
+    sort: SortingQuizQuestions
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.quizService.getQuestionsQuiz(filters, sort);
   }
-  getQuestionById(_questionQuizId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getQuestionById(questionQuizId: string): Promise<ApiResponse<unknown>> {
+    return this.quizService.getQuestionById(questionQuizId);
   }
-  postQuestionQuiz(_dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postQuestionQuiz(dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
+    return this.quizService.postQuestionQuiz(dto);
   }
   putQuestion(
-    _questionQuizId: string,
-    _dto: Partial<QuestionQuizInDTO>
+    questionQuizId: string,
+    dto: Partial<QuestionQuizInDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.quizService.putQuestion(questionQuizId, dto);
   }
-  deleteQuestion(_questionQuizId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteQuestion(questionQuizId: string): Promise<ApiResponse<unknown>> {
+    return this.quizService.deleteQuestion(questionQuizId);
   }
   getOptionsQuiz(
-    _filters: FiltersOptionQuiz,
-    _sort: SortingQuizOptions
+    filters: FiltersOptionQuiz,
+    sort: SortingQuizOptions
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.quizService.getOptionsQuiz(filters, sort);
   }
-  getOption(_optionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getOption(optionId: string): Promise<ApiResponse<unknown>> {
+    return this.quizService.getOption(optionId);
   }
-  postOptionQuiz(_dto: OptionQuizInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postOptionQuiz(dto: OptionQuizInDTO): Promise<ApiResponse<unknown>> {
+    return this.quizService.postOptionQuiz(dto);
   }
-  putOption(_optionId: string, _dto: Partial<OptionQuizInDTO>): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  putOption(optionId: string, dto: Partial<OptionQuizInDTO>): Promise<ApiResponse<unknown>> {
+    return this.quizService.putOption(optionId, dto);
   }
-  deleteOption(_optionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteOption(optionId: string): Promise<ApiResponse<unknown>> {
+    return this.quizService.deleteOption(optionId);
   }
   getAttemptsQuiz(
-    _filters: FiltersAttemptQuiz,
-    _sort: SortingQuizAttempts
+    filters: FiltersAttemptQuiz,
+    sort: SortingQuizAttempts
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+    return this.attemptService.getAttemptsQuiz(filters, sort);
   }
-  getAttempt(_attemptId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  getAttempt(attemptId: string): Promise<ApiResponse<unknown>> {
+    return this.attemptService.getAttempt(attemptId);
   }
-  postAttemptQuiz(_dto: AttemptQuizInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  postAttemptQuiz(dto: AttemptQuizInDTO): Promise<ApiResponse<unknown>> {
+    return this.attemptService.postAttemptQuiz(dto);
   }
-  putAttempt(
-    _attemptId: string,
-    _dto: Partial<AttemptQuizUpdateDTO>
-  ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  putAttempt(attemptId: string, dto: Partial<AttemptQuizUpdateDTO>): Promise<ApiResponse<unknown>> {
+    return this.attemptService.putAttempt(attemptId, dto);
   }
-  deleteAttempt(_attemptId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented');
+  deleteAttempt(attemptId: string): Promise<ApiResponse<unknown>> {
+    return this.attemptService.deleteAttempt(attemptId);
   }
 }
