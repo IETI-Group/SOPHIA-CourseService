@@ -1,71 +1,133 @@
 import { type IRouter, type Request, type Response, Router } from 'express';
+import type { CourseInDTO, FavoriteCourseInDTO, InscriptionCourseInDTO } from '../app/index.js';
 import container from '../config/diContainer.js';
 import type { CoursesController } from '../controllers/index.js';
+import {
+  courseInDTOSchema,
+  courseUpdateDTOSchema,
+  type FiltersCourse,
+  type FiltersFavoriteCourse,
+  type FiltersInscription,
+  favoriteCourseInDTOSchema,
+  favoriteCourseUpdateDTOSchema,
+  filtersCourseSchema,
+  filtersFavoriteCourseSchema,
+  filtersInscriptionSchema,
+  idSchema,
+  inscriptionCourseInDTOSchema,
+  inscriptionCourseUpdateDTOSchema,
+  lightDTOSchema,
+  type SortingCourses,
+  type SortingFavoriteCourses,
+  type SortingInscriptions,
+  sortingCoursesSchema,
+  sortingFavoriteCoursesSchema,
+  sortingInscriptionsSchema,
+} from '../utils/index.js';
 
-export const createCoursesRouter = (coursesController?: CoursesController): IRouter => {
+export const createCoursesRouter = (controller?: CoursesController): IRouter => {
   const router: IRouter = Router();
 
-  const _coursesController =
-    coursesController ?? container.resolve<CoursesController>('coursesController');
+  const coursesController = controller ?? container.resolve<CoursesController>('coursesController');
 
-  const getCourses = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get courses not implemented yet' });
+  const getCourses = async (req: Request, res: Response) => {
+    const filters: FiltersCourse = filtersCourseSchema().parse(req.query);
+    const sorting: SortingCourses = sortingCoursesSchema().parse(req.query);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await coursesController.getCourses(filters, sorting, lightDTO);
+    res.status(200).json(result);
   };
 
-  const getCourseById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get course by ID not implemented yet' });
+  const getCourseById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await coursesController.getCourseById(id, lightDTO);
+    res.status(200).json(result);
   };
 
-  const createCourse = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create course not implemented yet' });
+  const createCourse = async (req: Request, res: Response) => {
+    const dto: CourseInDTO = courseInDTOSchema().parse(req.body);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await coursesController.postCourse(dto, lightDTO);
+    res.status(201).json(result);
   };
 
-  const updateCourse = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update course not implemented yet' });
+  const updateCourse = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<CourseInDTO> = courseUpdateDTOSchema().parse(req.body);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await coursesController.putCourse(id, dto, lightDTO);
+    res.status(200).json(result);
   };
 
-  const deleteCourse = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete course not implemented yet' });
+  const deleteCourse = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await coursesController.deleteCourse(id);
+    res.status(200).json(result);
   };
 
-  const getInscriptionsByCourse = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get inscriptions by course not implemented yet' });
+  const getInscriptionsByCourse = async (req: Request, res: Response) => {
+    const filters: FiltersInscription = filtersInscriptionSchema().parse(req.query);
+    const sorting: SortingInscriptions = sortingInscriptionsSchema().parse(req.query);
+    const result = await coursesController.getInscriptionsCourse(filters, sorting);
+    res.status(200).json(result);
   };
 
-  const getInscriptionById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get inscription by ID not implemented yet' });
+  const getInscriptionById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await coursesController.getInscriptionById(id);
+    res.status(200).json(result);
   };
 
-  const createInscription = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create inscription not implemented yet' });
+  const createInscription = async (req: Request, res: Response) => {
+    const dto: InscriptionCourseInDTO = inscriptionCourseInDTOSchema().parse(req.body);
+    const result = await coursesController.postInscriptionCourse(dto);
+    res.status(201).json(result);
   };
 
-  const updateInscription = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update inscription not implemented yet' });
+  const updateInscription = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<InscriptionCourseInDTO> = inscriptionCourseUpdateDTOSchema().parse(req.body);
+    const result = await coursesController.putInscription(id, dto);
+    res.status(200).json(result);
   };
 
-  const deleteInscription = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete inscription not implemented yet' });
+  const deleteInscription = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await coursesController.deleteInscription(id);
+    res.status(200).json(result);
   };
 
-  const getFavoritesByCourse = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get favorites by course not implemented yet' });
+  const getFavoritesByCourse = async (req: Request, res: Response) => {
+    const filters: FiltersFavoriteCourse = filtersFavoriteCourseSchema().parse(req.query);
+    const sorting: SortingFavoriteCourses = sortingFavoriteCoursesSchema().parse(req.query);
+    const result = await coursesController.getFavoriteCourses(filters, sorting);
+    res.status(200).json(result);
   };
 
-  const getFavoriteById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get favorite by ID not implemented yet' });
+  const getFavoriteById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await coursesController.getFavorite(id);
+    res.status(200).json(result);
   };
 
-  const createFavorite = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create favorite not implemented yet' });
+  const createFavorite = async (req: Request, res: Response) => {
+    const dto: FavoriteCourseInDTO = favoriteCourseInDTOSchema().parse(req.body);
+    const result = await coursesController.postFavoriteCourse(dto);
+    res.status(201).json(result);
   };
 
-  const updateFavorite = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update favorite not implemented yet' });
+  const updateFavorite = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<FavoriteCourseInDTO> = favoriteCourseUpdateDTOSchema().parse(req.body);
+    const result = await coursesController.putFavorite(id, dto);
+    res.status(200).json(result);
   };
 
-  const deleteFavorite = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete favorite not implemented yet' });
+  const deleteFavorite = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await coursesController.deleteFavorite(id);
+    res.status(200).json(result);
   };
 
   router.get('/courses', getCourses);

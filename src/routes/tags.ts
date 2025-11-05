@@ -1,30 +1,52 @@
 import { type IRouter, type Request, type Response, Router } from 'express';
+import type { TagCourseInDTO } from '../app/index.js';
 import container from '../config/diContainer.js';
 import type { TagsController } from '../controllers/index.js';
+import {
+  type FiltersTag,
+  filtersTagSchema,
+  idSchema,
+  type SortingTags,
+  sortingTagsSchema,
+  tagCourseInDTOSchema,
+  tagCourseUpdateDTOSchema,
+} from '../utils/index.js';
 
-export const createTagsRouter = (tagsController?: TagsController): IRouter => {
+export const createTagsRouter = (controller?: TagsController): IRouter => {
   const router: IRouter = Router();
 
-  const _tagsController = tagsController ?? container.resolve<TagsController>('tagsController');
+  const tagsController = controller ?? container.resolve<TagsController>('tagsController');
 
-  const getTags = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get tags not implemented yet' });
+  const getTags = async (req: Request, res: Response) => {
+    const filters: FiltersTag = filtersTagSchema().parse(req.query);
+    const sorting: SortingTags = sortingTagsSchema().parse(req.query);
+    const result = await tagsController.getTags(filters, sorting);
+    res.status(200).json(result);
   };
 
-  const getTagById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get tag by ID not implemented yet' });
+  const getTagById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await tagsController.getTagById(id);
+    res.status(200).json(result);
   };
 
-  const createTag = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create tag not implemented yet' });
+  const createTag = async (req: Request, res: Response) => {
+    const dto: TagCourseInDTO = tagCourseInDTOSchema().parse(req.body);
+    const result = await tagsController.postTag(dto);
+    res.status(201).json(result);
   };
 
-  const updateTag = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update tag not implemented yet' });
+  const updateTag = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<TagCourseInDTO> = tagCourseUpdateDTOSchema().parse(req.body);
+    const result = await tagsController.putTag(id, dto);
+    res.status(200).json(result);
   };
 
-  const deleteTag = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete tag not implemented yet' });
+  const deleteTag = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await tagsController.deleteTag(id);
+    res.status(200).json(result);
   };
 
   router.get('/tags', getTags);

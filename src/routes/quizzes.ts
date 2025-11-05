@@ -1,91 +1,176 @@
 import { type IRouter, type Request, type Response, Router } from 'express';
+import type {
+  AttemptQuizInDTO,
+  OptionQuizInDTO,
+  QuestionQuizInDTO,
+  QuizSectionInDTO,
+} from '../app/index.js';
 import container from '../config/diContainer.js';
 import type { QuizzesController } from '../controllers/index.js';
+import {
+  attemptQuizInDTOSchema,
+  attemptQuizUpdateDTOSchema,
+  type FiltersAttemptQuiz,
+  type FiltersOptionQuiz,
+  type FiltersQuestionQuiz,
+  type FiltersQuizSection,
+  filtersAttemptQuizSchema,
+  filtersOptionQuizSchema,
+  filtersQuestionQuizSchema,
+  filtersQuizSectionSchema,
+  idSchema,
+  lightDTOSchema,
+  optionQuizInDTOSchema,
+  optionQuizUpdateDTOSchema,
+  questionQuizInDTOSchema,
+  questionQuizUpdateDTOSchema,
+  quizSectionInDTOSchema,
+  quizSectionUpdateDTOSchema,
+  type SortingQuizAttempts,
+  type SortingQuizOptions,
+  type SortingQuizQuestions,
+  type SortingSectionQuizzes,
+  sortingQuizAttemptsSchema,
+  sortingQuizOptionsSchema,
+  sortingQuizQuestionsSchema,
+  sortingSectionQuizzesSchema,
+} from '../utils/index.js';
 
-export const createQuizzesRouter = (quizzesController?: QuizzesController): IRouter => {
+export const createQuizzesRouter = (controller?: QuizzesController): IRouter => {
   const router: IRouter = Router();
 
-  const _quizzesController =
-    quizzesController ?? container.resolve<QuizzesController>('quizzesController');
+  const quizzesController = controller ?? container.resolve<QuizzesController>('quizzesController');
 
-  const getQuizzesBySection = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get quizzes by section not implemented yet' });
+  const getQuizzesBySection = async (req: Request, res: Response) => {
+    const filters: FiltersQuizSection = filtersQuizSectionSchema().parse(req.query);
+    const sorting: SortingSectionQuizzes = sortingSectionQuizzesSchema().parse(req.query);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await quizzesController.getQuizzesSection(filters, sorting, lightDTO);
+    res.status(200).json(result);
   };
 
-  const getQuizById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get quiz by ID not implemented yet' });
+  const getQuizById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await quizzesController.getQuizById(id, lightDTO);
+    res.status(200).json(result);
   };
 
-  const createQuiz = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create quiz not implemented yet' });
+  const createQuiz = async (req: Request, res: Response) => {
+    const dto: QuizSectionInDTO = quizSectionInDTOSchema().parse(req.body);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await quizzesController.postQuizSection(dto, lightDTO);
+    res.status(201).json(result);
   };
 
-  const updateQuiz = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update quiz not implemented yet' });
+  const updateQuiz = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<QuizSectionInDTO> = quizSectionUpdateDTOSchema().parse(req.body);
+    const { lightDTO } = lightDTOSchema().parse(req.query);
+    const result = await quizzesController.putQuiz(id, dto, lightDTO);
+    res.status(200).json(result);
   };
 
-  const deleteQuiz = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete quiz not implemented yet' });
+  const deleteQuiz = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await quizzesController.deleteQuiz(id);
+    res.status(200).json(result);
   };
 
-  const getQuestionsByQuiz = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get questions by quiz not implemented yet' });
+  const getQuestionsByQuiz = async (req: Request, res: Response) => {
+    const filters: FiltersQuestionQuiz = filtersQuestionQuizSchema().parse(req.query);
+    const sorting: SortingQuizQuestions = sortingQuizQuestionsSchema().parse(req.query);
+    const result = await quizzesController.getQuestionsQuiz(filters, sorting);
+    res.status(200).json(result);
   };
 
-  const getQuestionById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get question by ID not implemented yet' });
+  const getQuestionById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await quizzesController.getQuestionById(id);
+    res.status(200).json(result);
   };
 
-  const createQuestion = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create question not implemented yet' });
+  const createQuestion = async (req: Request, res: Response) => {
+    const dto: QuestionQuizInDTO = questionQuizInDTOSchema().parse(req.body);
+    const result = await quizzesController.postQuestionQuiz(dto);
+    res.status(201).json(result);
   };
 
-  const updateQuestion = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update question not implemented yet' });
+  const updateQuestion = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<QuestionQuizInDTO> = questionQuizUpdateDTOSchema().parse(req.body);
+    const result = await quizzesController.putQuestion(id, dto);
+    res.status(200).json(result);
   };
 
-  const deleteQuestion = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete question not implemented yet' });
+  const deleteQuestion = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await quizzesController.deleteQuestion(id);
+    res.status(200).json(result);
   };
 
-  const getOptionsByQuestion = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get options by question not implemented yet' });
+  const getOptionsByQuestion = async (req: Request, res: Response) => {
+    const filters: FiltersOptionQuiz = filtersOptionQuizSchema().parse(req.query);
+    const sorting: SortingQuizOptions = sortingQuizOptionsSchema().parse(req.query);
+    const result = await quizzesController.getOptionsQuiz(filters, sorting);
+    res.status(200).json(result);
   };
 
-  const getOptionById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get option by ID not implemented yet' });
+  const getOptionById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await quizzesController.getOption(id);
+    res.status(200).json(result);
   };
 
-  const createOption = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create option not implemented yet' });
+  const createOption = async (req: Request, res: Response) => {
+    const dto: OptionQuizInDTO = optionQuizInDTOSchema().parse(req.body);
+    const result = await quizzesController.postOptionQuiz(dto);
+    res.status(201).json(result);
   };
 
-  const updateOption = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update option not implemented yet' });
+  const updateOption = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<OptionQuizInDTO> = optionQuizUpdateDTOSchema().parse(req.body);
+    const result = await quizzesController.putOption(id, dto);
+    res.status(200).json(result);
   };
 
-  const deleteOption = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete option not implemented yet' });
+  const deleteOption = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await quizzesController.deleteOption(id);
+    res.status(200).json(result);
   };
 
-  const getAttemptsByQuiz = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get attempts by quiz not implemented yet' });
+  const getAttemptsByQuiz = async (req: Request, res: Response) => {
+    const filters: FiltersAttemptQuiz = filtersAttemptQuizSchema().parse(req.query);
+    const sorting: SortingQuizAttempts = sortingQuizAttemptsSchema().parse(req.query);
+    const result = await quizzesController.getAttemptsQuiz(filters, sorting);
+    res.status(200).json(result);
   };
 
-  const getAttemptById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get attempt by ID not implemented yet' });
+  const getAttemptById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await quizzesController.getAttempt(id);
+    res.status(200).json(result);
   };
 
-  const createAttempt = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create attempt not implemented yet' });
+  const createAttempt = async (req: Request, res: Response) => {
+    const dto: AttemptQuizInDTO = attemptQuizInDTOSchema().parse(req.body);
+    const result = await quizzesController.postAttemptQuiz(dto);
+    res.status(201).json(result);
   };
 
-  const updateAttempt = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update attempt not implemented yet' });
+  const updateAttempt = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<AttemptQuizInDTO> = attemptQuizUpdateDTOSchema().parse(req.body);
+    const result = await quizzesController.putAttempt(id, dto);
+    res.status(200).json(result);
   };
 
-  const deleteAttempt = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete attempt not implemented yet' });
+  const deleteAttempt = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await quizzesController.deleteAttempt(id);
+    res.status(200).json(result);
   };
 
   router.get('/sections/:sectionId/quizzes', getQuizzesBySection);

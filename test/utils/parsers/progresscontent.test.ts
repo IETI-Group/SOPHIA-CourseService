@@ -61,6 +61,10 @@ describe('progressContentUpdateDTOSchema', () => {
 
   it('should accept empty object for partial updates', () => {
     const result = progressContentUpdateDTOSchema().safeParse({});
+    if (result.data) {
+      const data: Partial<ProgressContentUpdateDTO> = result.data;
+      expect(data).toBeDefined();
+    }
     expect(result.success).toBe(true);
   });
 

@@ -5,12 +5,12 @@ export const contentLessonInDTOSchema = () => {
   return z.object({
     lessonId: z.string().min(1).max(200),
     metadata: z.any(),
-    difficultyLevel: z.enum(DifficultyLevel),
-    learningTechnique: z.enum(LearningTechnique),
+    difficultyLevel: z.nativeEnum(DifficultyLevel),
+    learningTechnique: z.nativeEnum(LearningTechnique),
     orderPreference: z.coerce.number().min(0).nullable(),
     aiGenerated: z.coerce.boolean(),
     generationLogId: z.string().min(1).max(200).nullable(),
-    contentType: z.enum(LessonContentType),
+    contentType: z.nativeEnum(LessonContentType),
     parentContentId: z.string().min(1).max(200).nullable(),
   });
 };
@@ -20,12 +20,12 @@ export const contentLessonUpdateDTOSchema = () => {
     .object({
       lessonId: z.string().min(1).max(200),
       metadata: z.any(),
-      difficultyLevel: z.enum(DifficultyLevel),
-      learningTechnique: z.enum(LearningTechnique),
+      difficultyLevel: z.nativeEnum(DifficultyLevel),
+      learningTechnique: z.nativeEnum(LearningTechnique),
       orderPreference: z.coerce.number().min(0).nullable(),
       aiGenerated: z.coerce.boolean(),
       generationLogId: z.string().min(1).max(200).nullable(),
-      contentType: z.enum(LessonContentType),
+      contentType: z.nativeEnum(LessonContentType),
       parentContentId: z.string().min(1).max(200).nullable(),
       active: z.coerce.boolean(),
       isCurrentVersion: z.coerce.boolean(),

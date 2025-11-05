@@ -224,7 +224,7 @@ describe('Filter Schemas', () => {
       const result = filtersLessonSchema().safeParse({
         sectionId: 'section-123',
         title: 'Variables in JavaScript',
-        lessonType: 'VIDEO',
+        lessonType: 'THEORY',
         active: true,
         durationMinutesMin: 10,
         durationMinutesMax: 30,
@@ -233,7 +233,7 @@ describe('Filter Schemas', () => {
       if (result.success) {
         expect(result.data.sectionId).toBe('section-123');
         expect(result.data.title).toBe('Variables in JavaScript');
-        expect(result.data.lessonType).toBe('VIDEO');
+        expect(result.data.lessonType).toBe('THEORY');
         expect(result.data.active).toBe(true);
       }
     });
@@ -538,8 +538,8 @@ describe('Filter Schemas', () => {
       const result = filtersResourceSchema().safeParse({
         entityReference: 'entity-123',
         name: 'Tutorial Video',
-        discriminant: 'VIDEO',
-        type: 'MP4',
+        discriminant: 'LESSON',
+        type: 'VIDEO',
         orderMin: 1,
         orderMax: 10,
         durationSecondsMin: 60,
@@ -549,8 +549,8 @@ describe('Filter Schemas', () => {
       if (result.success) {
         expect(result.data.entityReference).toBe('entity-123');
         expect(result.data.name).toBe('Tutorial Video');
-        expect(result.data.discriminant).toBe('VIDEO');
-        expect(result.data.type).toBe('MP4');
+        expect(result.data.discriminant).toBe('LESSON');
+        expect(result.data.type).toBe('VIDEO');
       }
     });
   });

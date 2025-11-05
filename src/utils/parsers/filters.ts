@@ -1,4 +1,17 @@
+import {
+  AssignmentType,
+  CourseLevel,
+  CourseStatus,
+  DifficultyLevel,
+  DiscriminantResource,
+  LearningTechnique,
+  LessonContentType,
+  LessonType,
+  ResourceType,
+  SubmissionStatus,
+} from '@prisma/client';
 import { z } from 'zod';
+
 export const filtersAISpecsLessonSchema = () => {
   return z
     .object({
@@ -28,8 +41,8 @@ export const filtersCourseSchema = () => {
       instructorId: z.string().min(1).max(200).nullable().catch(null),
       generationTaskId: z.string().min(1).max(200).nullable().catch(null),
       title: z.string().min(1).max(500).nullable().catch(null),
-      level: z.string().nullable().catch(null),
-      status: z.string().nullable().catch(null),
+      level: z.nativeEnum(CourseLevel).nullable().catch(null),
+      status: z.nativeEnum(CourseStatus).nullable().catch(null),
       active: z.coerce.boolean().nullable().catch(null),
       aiGenerated: z.coerce.boolean().nullable().catch(null),
       createdAtStart: z.coerce.date().nullable().catch(null),
@@ -109,7 +122,7 @@ export const filtersSubmissionSchema = () => {
     .object({
       assignmentId: z.string().min(1).max(200).nullable().catch(null),
       userId: z.string().min(1).max(200).nullable().catch(null),
-      status: z.string().nullable().catch(null),
+      status: z.nativeEnum(SubmissionStatus).nullable().catch(null),
       active: z.coerce.boolean().nullable().catch(null),
       scoreMin: z.coerce.number().min(0).nullable().catch(null),
       scoreMax: z.coerce.number().min(0).nullable().catch(null),
@@ -195,7 +208,7 @@ export const filtersLessonSchema = () => {
       sectionId: z.string().min(1).max(200).nullable().catch(null),
       generationTaskId: z.string().min(1).max(200).nullable().catch(null),
       title: z.string().min(1).max(500).nullable().catch(null),
-      lessonType: z.string().nullable().catch(null),
+      lessonType: z.nativeEnum(LessonType).nullable().catch(null),
       active: z.coerce.boolean().nullable().catch(null),
       aiGenerated: z.coerce.boolean().nullable().catch(null),
       durationMinutesMin: z.coerce.number().min(0).nullable().catch(null),
@@ -234,9 +247,9 @@ export const filtersLessonContentSchema = () => {
       lessonId: z.string().min(1).max(200).nullable().catch(null),
       parentContentId: z.string().min(1).max(200).nullable().catch(null),
       generationLogId: z.string().min(1).max(200).nullable().catch(null),
-      contentType: z.string().nullable().catch(null),
-      difficultyLevel: z.string().nullable().catch(null),
-      learningTechnique: z.string().nullable().catch(null),
+      contentType: z.nativeEnum(LessonContentType).nullable().catch(null),
+      difficultyLevel: z.nativeEnum(DifficultyLevel).nullable().catch(null),
+      learningTechnique: z.nativeEnum(LearningTechnique).nullable().catch(null),
       active: z.coerce.boolean().nullable().catch(null),
       aiGenerated: z.coerce.boolean().nullable().catch(null),
       isCurrentVersion: z.coerce.boolean().nullable().catch(null),
@@ -431,7 +444,7 @@ export const filtersFavoriteCourseSchema = () => {
       courseId: z.string().min(1).max(200).nullable().catch(null),
       courseTitle: z.string().min(1).max(500).nullable().catch(null),
       userId: z.string().min(1).max(200).nullable().catch(null),
-      courseLevel: z.string().nullable().catch(null),
+      courseLevel: z.nativeEnum(CourseLevel).nullable().catch(null),
       courseAverageReviewsMin: z.coerce.number().min(0).nullable().catch(null),
       courseAverageReviewsMax: z.coerce.number().min(0).nullable().catch(null),
       courseTotalEnrollmentsMin: z.coerce.number().min(0).nullable().catch(null),
@@ -461,7 +474,7 @@ export const filtersAssignmentLessonSchema = () => {
     .object({
       lessonId: z.string().min(1).max(200).nullable().catch(null),
       title: z.string().min(1).max(500).nullable().catch(null),
-      allowedTypes: z.string().nullable().catch(null),
+      allowedTypes: z.nativeEnum(AssignmentType).nullable().catch(null),
       active: z.coerce.boolean().nullable().catch(null),
       limitFileSizeMbMin: z.coerce.number().min(0).nullable().catch(null),
       limitFileSizeMbMax: z.coerce.number().min(0).nullable().catch(null),
@@ -500,8 +513,8 @@ export const filtersResourceSchema = () => {
     .object({
       entityReference: z.string().min(1).max(200).nullable().catch(null),
       name: z.string().min(1).max(500).nullable().catch(null),
-      discriminant: z.string().nullable().catch(null),
-      type: z.string().nullable().catch(null),
+      discriminant: z.nativeEnum(DiscriminantResource).nullable().catch(null),
+      type: z.nativeEnum(ResourceType).nullable().catch(null),
       orderMin: z.coerce.number().min(0).nullable().catch(null),
       orderMax: z.coerce.number().min(0).nullable().catch(null),
       durationSecondsMin: z.coerce.number().min(0).nullable().catch(null),

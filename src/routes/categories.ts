@@ -1,31 +1,53 @@
 import { type IRouter, type Request, type Response, Router } from 'express';
+import type { CategoryCourseInDTO } from '../app/index.js';
 import container from '../config/diContainer.js';
 import type { CategoriesController } from '../controllers/index.js';
+import {
+  categoryCourseInDTOSchema,
+  categoryCourseUpdateDTOSchema,
+  type FiltersCategory,
+  filtersCategorySchema,
+  idSchema,
+  type SortingCategories,
+  sortingCategoriesSchema,
+} from '../utils/index.js';
 
-export const createCategoriesRouter = (categoriesController?: CategoriesController): IRouter => {
+export const createCategoriesRouter = (controller?: CategoriesController): IRouter => {
   const router: IRouter = Router();
 
-  const _categoriesController =
-    categoriesController ?? container.resolve<CategoriesController>('categoriesController');
+  const categoriesController =
+    controller ?? container.resolve<CategoriesController>('categoriesController');
 
-  const getCategories = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get categories not implemented yet' });
+  const getCategories = async (req: Request, res: Response) => {
+    const filters: FiltersCategory = filtersCategorySchema().parse(req.query);
+    const sorting: SortingCategories = sortingCategoriesSchema().parse(req.query);
+    const result = await categoriesController.getCategories(filters, sorting);
+    res.status(200).json(result);
   };
 
-  const getCategoryById = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Get category by ID not implemented yet' });
+  const getCategoryById = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await categoriesController.getCategoryById(id);
+    res.status(200).json(result);
   };
 
-  const createCategory = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Create category not implemented yet' });
+  const createCategory = async (req: Request, res: Response) => {
+    const dto: CategoryCourseInDTO = categoryCourseInDTOSchema().parse(req.body);
+    const result = await categoriesController.postCategory(dto);
+    res.status(201).json(result);
   };
 
-  const updateCategory = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Update category not implemented yet' });
+  const updateCategory = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const dto: Partial<CategoryCourseInDTO> = categoryCourseUpdateDTOSchema().parse(req.body);
+    const result = await categoriesController.putCategory(id, dto);
+    res.status(200).json(result);
   };
 
-  const deleteCategory = (_req: Request, _res: Response) => {
-    _res.status(501).json({ message: 'Delete category not implemented yet' });
+  const deleteCategory = async (req: Request, res: Response) => {
+    const id: string = idSchema().parse(req.params.id);
+    const result = await categoriesController.deleteCategory(id);
+    res.status(200).json(result);
   };
 
   router.get('/categories', getCategories);
