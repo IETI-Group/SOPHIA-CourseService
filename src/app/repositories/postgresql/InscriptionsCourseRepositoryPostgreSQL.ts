@@ -159,17 +159,29 @@ export class InscriptionsCourseRepositoryPostgreSQL implements InscriptionsCours
 
   async updateInscription(
     inscriptionId: string,
-    dto: InscriptionCourseUpdateDTO
+    dto: Partial<InscriptionCourseUpdateDTO>
   ): Promise<InscriptionCourseOutDTO> {
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.userId !== undefined) {
+      dataToUpdate.user_id = dto.userId;
+    }
+    if (dto.courseId !== undefined) {
+      dataToUpdate.course_id = dto.courseId;
+    }
+    if (dto.progressPercentage !== undefined) {
+      dataToUpdate.progress_percentage = dto.progressPercentage;
+    }
+    if (dto.score !== undefined) {
+      dataToUpdate.score = dto.score;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+
     const inscription = await this.prismaClient.inscriptions.update({
       where: { id_inscription: inscriptionId },
-      data: {
-        user_id: dto.userId,
-        course_id: dto.courseId,
-        progress_percentage: dto.progressPercentage,
-        score: dto.score,
-        active: dto.active,
-      },
+      data: dataToUpdate,
     });
 
     return this.buildDTO(inscription);

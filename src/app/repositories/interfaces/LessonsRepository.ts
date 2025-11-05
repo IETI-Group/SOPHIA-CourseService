@@ -15,7 +15,7 @@ export interface LessonsRepository {
   createLesson(dto: LessonSectionInDTO, lightDTO: boolean): Promise<LessonSectionOutLightDTO>;
   updateLesson(
     lessonId: string,
-    dto: LessonSectionUpdateDTO,
+    dto: Partial<LessonSectionUpdateDTO>,
     lightDTO: boolean
   ): Promise<LessonSectionOutLightDTO>;
   deleteLessonById(lessonId: string): Promise<void>;

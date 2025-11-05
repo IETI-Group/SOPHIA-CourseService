@@ -251,9 +251,17 @@ export class FavoriteCoursesRepositoryPostgreSQL implements FavoriteCoursesRepos
 
   async updateFavoriteCourse(
     favoriteCourseId: string,
-    dto: FavoriteCourseInDTO
+    dto: Partial<FavoriteCourseInDTO>
   ): Promise<FavoriteCourseOutDTO> {
     const { userId, courseId } = this.parseCompositeKey(favoriteCourseId);
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.userId !== undefined) {
+      dataToUpdate.user_id = dto.userId;
+    }
+    if (dto.courseId !== undefined) {
+      dataToUpdate.course_id = dto.courseId;
+    }
 
     const favoriteCourse = await this.prismaClient.favouritesCourses.update({
       where: {
@@ -262,10 +270,7 @@ export class FavoriteCoursesRepositoryPostgreSQL implements FavoriteCoursesRepos
           course_id: courseId,
         },
       },
-      data: {
-        user_id: dto.userId,
-        course_id: dto.courseId,
-      },
+      data: dataToUpdate,
       include: {
         courses: {
           select: {

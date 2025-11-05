@@ -1,7 +1,10 @@
 import type { PrismaClient } from '@prisma/client/default.js';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
-import type { InscriptionsCourseRepository } from '../../../../src/app/index.js';
+import type {
+  InscriptionCourseUpdateDTO,
+  InscriptionsCourseRepository,
+} from '../../../../src/app/index.js';
 import { InscriptionsCourseRepositoryPostgreSQL } from '../../../../src/app/repositories/postgresql/InscriptionsCourseRepositoryPostgreSQL.js';
 import { SORT_INSCRIPTION } from '../../../../src/utils/index.js';
 
@@ -174,7 +177,7 @@ describe('Inscriptions Course Repository', () => {
 
   describe('updateInscription', () => {
     it('Should update an existing inscription', async () => {
-      const inscriptionUpdate = {
+      const inscriptionUpdate: Partial<InscriptionCourseUpdateDTO> = {
         userId: 'user-1',
         courseId: 'course-1',
         progressPercentage: 100.0,
@@ -212,8 +215,44 @@ describe('Inscriptions Course Repository', () => {
       });
     });
 
+    it('Should update only progress and score fields', async () => {
+      const partialUpdate: Partial<InscriptionCourseUpdateDTO> = {
+        progressPercentage: 50.0,
+        score: 75.0,
+      };
+
+      const mockUpdatedInscription = {
+        id_inscription: 'inscription-2',
+        user_id: 'user-2',
+        course_id: 'course-2',
+        created_at: new Date('2024-01-15'),
+        progress_percentage: 50.0,
+        score: 75.0,
+        active: true,
+        completed: false,
+      };
+
+      prismaClient.inscriptions.update.mockResolvedValue(mockUpdatedInscription);
+
+      const result = await inscriptionsCourseRepository.updateInscription(
+        'inscription-2',
+        partialUpdate
+      );
+
+      expect(result).toEqual({
+        idInscription: 'inscription-2',
+        userId: 'user-2',
+        courseId: 'course-2',
+        createdAt: new Date('2024-01-15'),
+        progressPercentage: 50.0,
+        score: 75.0,
+        active: true,
+        completed: false,
+      });
+    });
+
     it('Should throw error when updating non-existent inscription', async () => {
-      const inscriptionUpdate = {
+      const inscriptionUpdate: Partial<InscriptionCourseUpdateDTO> = {
         userId: 'user-1',
         courseId: 'course-1',
         progressPercentage: 50.0,

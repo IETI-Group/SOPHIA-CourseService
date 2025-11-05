@@ -12,3 +12,7 @@ export const aiSpecsLessonInDTOSchema = () => {
     exerciseParameters: z.any().nullable(),
   });
 };
+
+export const aiSpecsLessonUpdateDTOSchema = () => {
+  return aiSpecsLessonInDTOSchema().partial();
+};

@@ -16,6 +16,9 @@ export interface ProgressContentRepository {
   ): Promise<PaginatedContentProgress>;
   getProgressById(progressId: string): Promise<ProgressContentOutDTO>;
   createProgress(dto: ProgressContentInDTO): Promise<ProgressContentOutDTO>;
-  updateProgress(progressId: string, dto: ProgressContentUpdateDTO): Promise<ProgressContentOutDTO>;
+  updateProgress(
+    progressId: string,
+    dto: Partial<ProgressContentUpdateDTO>
+  ): Promise<ProgressContentOutDTO>;
   deleteProgressById(progressId: string): Promise<void>;
 }

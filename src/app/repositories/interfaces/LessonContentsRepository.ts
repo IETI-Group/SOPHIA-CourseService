@@ -25,7 +25,7 @@ export interface LessonContentsRepository {
   ): Promise<ContentLessonOutLightDTO>;
   updateLessonContent(
     lessonContentId: string,
-    dto: ContentLessonUpdateDTO,
+    dto: Partial<ContentLessonUpdateDTO>,
     lightDTO: boolean
   ): Promise<ContentLessonOutLightDTO>;
   deleteLessonContentById(lessonContentId: string): Promise<void>;

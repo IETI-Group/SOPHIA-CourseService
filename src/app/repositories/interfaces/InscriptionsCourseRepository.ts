@@ -18,7 +18,7 @@ export interface InscriptionsCourseRepository {
   createInscription(dto: InscriptionCourseInDTO): Promise<InscriptionCourseOutDTO>;
   updateInscription(
     inscriptionId: string,
-    dto: InscriptionCourseUpdateDTO
+    dto: Partial<InscriptionCourseUpdateDTO>
   ): Promise<InscriptionCourseOutDTO>;
   deleteInscriptionById(inscriptionId: string): Promise<void>;
 }

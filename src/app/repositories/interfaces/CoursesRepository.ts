@@ -9,6 +9,10 @@ export interface CoursesRepository {
   ): Promise<PaginatedCourses>;
   getCourseById(courseId: string, lightDTO: boolean): Promise<CourseLightDTO>;
   createCourse(dto: CourseInDTO, lightDTO: boolean): Promise<CourseLightDTO>;
-  updateCourse(courseId: string, dto: CourseUpdateDTO, lightDTO: boolean): Promise<CourseLightDTO>;
+  updateCourse(
+    courseId: string,
+    dto: Partial<CourseUpdateDTO>,
+    lightDTO: boolean
+  ): Promise<CourseLightDTO>;
   deleteCourseById(courseId: string): Promise<void>;
 }

@@ -18,7 +18,7 @@ export interface AssignmentsLessonRepository {
   createAssignment(dto: AssignmentLessonInDTO): Promise<AssignmentLessonOutDTO>;
   updateAssignment(
     assignmentLessonId: string,
-    dto: AssignmentLessonUpdateDTO
+    dto: Partial<AssignmentLessonUpdateDTO>
   ): Promise<AssignmentLessonOutDTO>;
   deleteAssignmentById(assignmentLessonId: string): Promise<void>;
 }

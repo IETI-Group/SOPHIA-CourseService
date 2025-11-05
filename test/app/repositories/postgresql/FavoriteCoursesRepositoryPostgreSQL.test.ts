@@ -1,7 +1,7 @@
 import { CourseLevel, type PrismaClient } from '@prisma/client';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
-import type { FavoriteCoursesRepository } from '../../../../src/app/index.js';
+import type { FavoriteCourseInDTO, FavoriteCoursesRepository } from '../../../../src/app/index.js';
 import { FavoriteCoursesRepositoryPostgreSQL } from '../../../../src/app/repositories/postgresql/FavoriteCoursesRepositoryPostgreSQL.js';
 import { SORT_FAVORITE_COURSE } from '../../../../src/utils/index.js';
 
@@ -183,7 +183,7 @@ describe('Favorite Courses Repository', () => {
 
   describe('updateFavoriteCourse', () => {
     it('Should update an existing favorite course', async () => {
-      const favoriteCourseUpdate = {
+      const favoriteCourseUpdate: Partial<FavoriteCourseInDTO> = {
         userId: 'user-1',
         courseId: 'course-2',
       };
@@ -218,8 +218,43 @@ describe('Favorite Courses Repository', () => {
       });
     });
 
+    it('Should update only courseId field', async () => {
+      const partialUpdate: Partial<FavoriteCourseInDTO> = {
+        courseId: 'course-3',
+      };
+
+      const mockUpdatedFavoriteCourse = {
+        user_id: 'user-1',
+        course_id: 'course-3',
+        created_at: new Date('2024-01-20'),
+        courses: {
+          title: 'Node.js Masterclass',
+          average_reviews: 4.7,
+          total_enrollments: 1200,
+          level: CourseLevel.INTERMEDIATE,
+        },
+      };
+
+      prismaClient.favouritesCourses.update.mockResolvedValue(mockUpdatedFavoriteCourse as never);
+
+      const result = await favoriteCoursesRepository.updateFavoriteCourse(
+        'user-1_course-1',
+        partialUpdate
+      );
+
+      expect(result).toEqual({
+        userId: 'user-1',
+        courseId: 'course-3',
+        createdAt: new Date('2024-01-20'),
+        courseTitle: 'Node.js Masterclass',
+        courseAverageReviews: 4.7,
+        courseTotalEnrollments: 1200,
+        courseLevel: CourseLevel.INTERMEDIATE,
+      });
+    });
+
     it('Should throw error when updating non-existent favorite course', async () => {
-      const favoriteCourseUpdate = {
+      const favoriteCourseUpdate: Partial<FavoriteCourseInDTO> = {
         userId: 'user-1',
         courseId: 'course-2',
       };

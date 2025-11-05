@@ -278,25 +278,47 @@ export class LessonsRepositoryPostgreSQL implements LessonsRepository {
 
   async updateLesson(
     lessonId: string,
-    dto: LessonSectionUpdateDTO,
+    dto: Partial<LessonSectionUpdateDTO>,
     lightDTO: boolean
   ): Promise<LessonSectionOutLightDTO> {
     const select = this.buildSelect(lightDTO);
 
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.sectionId !== undefined) {
+      dataToUpdate.section_id = dto.sectionId;
+    }
+    if (dto.title !== undefined) {
+      dataToUpdate.title = dto.title;
+    }
+    if (dto.description !== undefined) {
+      dataToUpdate.description = dto.description;
+    }
+    if (dto.order !== undefined) {
+      dataToUpdate.order = dto.order;
+    }
+    if (dto.durationMinutes !== undefined) {
+      dataToUpdate.duration_minutes = dto.durationMinutes;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.aiGenerated !== undefined) {
+      dataToUpdate.ai_generated = dto.aiGenerated;
+    }
+    if (dto.generationTaskId !== undefined) {
+      dataToUpdate.generation_task_id = dto.generationTaskId;
+    }
+    if (dto.lessonType !== undefined) {
+      dataToUpdate.lesson_type = dto.lessonType;
+    }
+    if (dto.estimatedDifficulty !== undefined) {
+      dataToUpdate.estimated_difficulty = dto.estimatedDifficulty;
+    }
+
     const updated = await this.prismaClient.lessons.update({
       where: { id_lesson: lessonId },
-      data: {
-        section_id: dto.sectionId,
-        title: dto.title,
-        description: dto.description,
-        order: dto.order,
-        duration_minutes: dto.durationMinutes,
-        active: dto.active,
-        ai_generated: dto.aiGenerated,
-        generation_task_id: dto.generationTaskId,
-        lesson_type: dto.lessonType,
-        estimated_difficulty: dto.estimatedDifficulty,
-      },
+      data: dataToUpdate,
       select,
     });
 

@@ -154,7 +154,7 @@ describe('Options Quizz Repository', () => {
   describe('updateOption', () => {
     it('Should update an existing option', async () => {
       const optionId = 'option_123';
-      const dto: OptionQuizInDTO = {
+      const dto: Partial<OptionQuizInDTO> = {
         quizQuestionId: 'question_1',
         option: 'Vienna',
         isCorrect: false,
@@ -177,9 +177,31 @@ describe('Options Quizz Repository', () => {
       expect(result.isCorrect).toBe(false);
     });
 
+    it('Should update only isCorrect field of option', async () => {
+      const optionId = 'option_456';
+      const partialDTO: Partial<OptionQuizInDTO> = {
+        isCorrect: true,
+      };
+
+      const mockUpdated = {
+        id_option: 'option_456',
+        quiz_question_id: 'question_1',
+        option: 'Paris',
+        is_correct: true,
+      };
+
+      prismaClient.quizOptions.update.mockResolvedValueOnce(mockUpdated);
+
+      const result = await optionsQuizzRepository.updateOption(optionId, partialDTO);
+
+      expect(prismaClient.quizOptions.update).toHaveBeenCalledOnce();
+      expect(result.idQuizOption).toBe('option_456');
+      expect(result.isCorrect).toBe(true);
+    });
+
     it('Should throw error when trying to update non-existent option', async () => {
       const optionId = 'nonexistent';
-      const dto: OptionQuizInDTO = {
+      const dto: Partial<OptionQuizInDTO> = {
         quizQuestionId: 'question_1',
         option: 'Vienna',
         isCorrect: false,

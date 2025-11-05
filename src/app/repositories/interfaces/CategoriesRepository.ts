@@ -13,6 +13,9 @@ export interface CategoriesRepository {
   getCategories(filters: FiltersCategory, sort: SortingCategories): Promise<PaginatedCategories>;
   getCategoryById(categoryId: string): Promise<CategoryCourseOutDTO>;
   createCategory(dto: CategoryCourseInDTO): Promise<CategoryCourseOutDTO>;
-  updateCategory(categoryId: string, dto: CategoryCourseUpdateDTO): Promise<CategoryCourseOutDTO>;
+  updateCategory(
+    categoryId: string,
+    dto: Partial<CategoryCourseUpdateDTO>
+  ): Promise<CategoryCourseOutDTO>;
   deleteCategoryById(categoryId: string): Promise<void>;
 }

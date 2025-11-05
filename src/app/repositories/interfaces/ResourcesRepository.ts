@@ -15,7 +15,7 @@ export interface ResourcesRepository {
   createResource(dto: ResourcesInDTO, lightDTO: boolean): Promise<ResourcesOutLightDTO>;
   updateResource(
     resourceId: string,
-    dto: ResourcesInDTO,
+    dto: Partial<ResourcesInDTO>,
     lightDTO: boolean
   ): Promise<ResourcesOutLightDTO>;
   deleteResourceById(resourceId: string): Promise<void>;

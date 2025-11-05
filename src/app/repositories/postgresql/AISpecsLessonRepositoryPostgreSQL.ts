@@ -220,23 +220,42 @@ export class AISpecsLessonRepositoryPostgreSQL implements AISpecsLessonRepositor
 
   async updateAISpec(
     aiSpecId: string,
-    dto: AISpecsLessonInDTO,
+    dto: Partial<AISpecsLessonInDTO>,
     lightDTO: boolean
   ): Promise<AISpecsLessonOutLightDTO> {
     const select = this.buildSelect(lightDTO);
 
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.lessonContentId !== undefined) {
+      dataToUpdate.lesson_content_id = dto.lessonContentId;
+    }
+    if (dto.generationPromptSummary !== undefined) {
+      dataToUpdate.generation_prompt_summary = dto.generationPromptSummary;
+    }
+    if (dto.contentStructure !== undefined) {
+      dataToUpdate.content_structure = dto.contentStructure as Prisma.InputJsonValue;
+    }
+    if (dto.estimatedVideoDurationMinutes !== undefined) {
+      dataToUpdate.estimated_video_duration_mins = dto.estimatedVideoDurationMinutes;
+    }
+    if (dto.videoScript !== undefined) {
+      dataToUpdate.video_script = dto.videoScript;
+    }
+    if (dto.videoGenerationInstructions !== undefined) {
+      dataToUpdate.video_generation_instructions =
+        dto.videoGenerationInstructions as Prisma.InputJsonValue;
+    }
+    if (dto.interactiveElements !== undefined) {
+      dataToUpdate.interactive_elements = dto.interactiveElements as Prisma.InputJsonValue;
+    }
+    if (dto.exerciseParameters !== undefined) {
+      dataToUpdate.exercise_parameters = dto.exerciseParameters as Prisma.InputJsonValue;
+    }
+
     const updated = await this.prismaClient.lessonAISpecs.update({
       where: { id_lesson_spec: aiSpecId },
-      data: {
-        lesson_content_id: dto.lessonContentId,
-        generation_prompt_summary: dto.generationPromptSummary,
-        content_structure: dto.contentStructure as Prisma.InputJsonValue,
-        estimated_video_duration_mins: dto.estimatedVideoDurationMinutes,
-        video_script: dto.videoScript,
-        video_generation_instructions: dto.videoGenerationInstructions as Prisma.InputJsonValue,
-        interactive_elements: dto.interactiveElements as Prisma.InputJsonValue,
-        exercise_parameters: dto.exerciseParameters as Prisma.InputJsonValue,
-      },
+      data: dataToUpdate,
       select,
     });
 

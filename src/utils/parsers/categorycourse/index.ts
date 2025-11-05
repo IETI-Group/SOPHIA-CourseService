@@ -9,10 +9,12 @@ export const categoryCourseInDTOSchema = () => {
 };
 
 export const categoryCourseUpdateDTOSchema = () => {
-  return z.object({
-    name: z.string().min(1).max(200),
-    description: z.string().min(1).max(1000),
-    parentCategory: z.string().min(1).max(200).nullable(),
-    active: z.coerce.boolean(),
-  });
+  return z
+    .object({
+      name: z.string().min(1).max(200),
+      description: z.string().min(1).max(1000),
+      parentCategory: z.string().min(1).max(200).nullable(),
+      active: z.coerce.boolean(),
+    })
+    .partial();
 };

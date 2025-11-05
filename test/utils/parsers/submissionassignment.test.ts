@@ -31,7 +31,7 @@ describe('submissionAssignmentInDTOSchema', () => {
 });
 
 describe('submissionAssignmentUpdateDTOSchema', () => {
-  it('should accept valid data', () => {
+  it('should accept valid data with all fields', () => {
     const result = submissionAssignmentUpdateDTOSchema().safeParse({
       assignmentId: 'assignment-123',
       userId: 'user-456',
@@ -45,14 +45,33 @@ describe('submissionAssignmentUpdateDTOSchema', () => {
     }
     expect(result.success).toBe(true);
     if (result.success) {
-      const data: SubmissionAssignmentUpdateDTO = result.data;
+      const data: Partial<SubmissionAssignmentUpdateDTO> = result.data;
       expect(data).toBeDefined();
     }
   });
 
-  it('should reject invalid data', () => {
+  it('should accept partial data (some fields only)', () => {
     const result = submissionAssignmentUpdateDTOSchema().safeParse({
-      assignmentId: '',
+      feedback: 'Updated feedback',
+      score: 88,
+      status: SubmissionStatus.GRADED,
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.feedback).toBe('Updated feedback');
+      expect(result.data.score).toBe(88);
+      expect(result.data.status).toBe(SubmissionStatus.GRADED);
+    }
+  });
+
+  it('should accept empty object for partial updates', () => {
+    const result = submissionAssignmentUpdateDTOSchema().safeParse({});
+    expect(result.success).toBe(true);
+  });
+
+  it('should reject invalid field values', () => {
+    const result = submissionAssignmentUpdateDTOSchema().safeParse({
+      assignmentId: '', // Empty string is invalid
     });
     expect(result.success).toBe(false);
   });

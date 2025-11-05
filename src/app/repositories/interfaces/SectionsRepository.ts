@@ -15,7 +15,7 @@ export interface SectionsRepository {
   createSection(dto: SectionCourseInDTO, lightDTO: boolean): Promise<SectionCourseOutLightDTO>;
   updateSection(
     sectionId: string,
-    dto: SectionCourseUpdateDTO,
+    dto: Partial<SectionCourseUpdateDTO>,
     lightDTO: boolean
   ): Promise<SectionCourseOutLightDTO>;
   deleteSectionById(sectionId: string): Promise<void>;

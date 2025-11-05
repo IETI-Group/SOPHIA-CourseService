@@ -6,3 +6,7 @@ export const tagCourseInDTOSchema = () => {
     courseId: z.string().min(1).max(200),
   });
 };
+
+export const tagCourseUpdateDTOSchema = () => {
+  return tagCourseInDTOSchema().partial();
+};

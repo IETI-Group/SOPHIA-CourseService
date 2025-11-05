@@ -202,20 +202,38 @@ export class AssignmentsLessonRepositoryPostgreSQL implements AssignmentsLessonR
 
   async updateAssignment(
     assignmentLessonId: string,
-    dto: AssignmentLessonUpdateDTO
+    dto: Partial<AssignmentLessonUpdateDTO>
   ): Promise<AssignmentLessonOutDTO> {
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.lessonId !== undefined) {
+      dataToUpdate.lesson_id = dto.lessonId;
+    }
+    if (dto.title !== undefined) {
+      dataToUpdate.title = dto.title;
+    }
+    if (dto.instructions !== undefined) {
+      dataToUpdate.instructions = dto.instructions;
+    }
+    if (dto.maxFileSizeMb !== undefined) {
+      dataToUpdate.max_file_size_mb = dto.maxFileSizeMb;
+    }
+    if (dto.allowedTypes !== undefined) {
+      dataToUpdate.allowed_types = dto.allowedTypes as never;
+    }
+    if (dto.dueDate !== undefined) {
+      dataToUpdate.due_date = dto.dueDate;
+    }
+    if (dto.maxScore !== undefined) {
+      dataToUpdate.max_score = dto.maxScore;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+
     const assignment = await this.prismaClient.assignments.update({
       where: { id_assignment: assignmentLessonId },
-      data: {
-        lesson_id: dto.lessonId,
-        title: dto.title,
-        instructions: dto.instructions,
-        max_file_size_mb: dto.maxFileSizeMb,
-        allowed_types: dto.allowedTypes as never,
-        due_date: dto.dueDate,
-        max_score: dto.maxScore,
-        active: dto.active,
-      },
+      data: dataToUpdate,
     });
 
     return this.buildDTO(assignment);

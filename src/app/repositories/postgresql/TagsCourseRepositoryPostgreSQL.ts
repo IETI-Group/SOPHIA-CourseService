@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient } from '@prisma/client/default.js';
+import type { PrismaClient } from '@prisma/client/default.js';
 import type { FiltersTag, PaginatedTags, SortingTags } from '../../../utils/index.js';
 import { SORT_TAG } from '../../../utils/index.js';
 import type { TagCourseInDTO, TagCourseOutDTO } from '../../models/index.js';
@@ -11,7 +11,11 @@ export class TagsCourseRepositoryPostgreSQL implements TagsCourseRepository {
     this.prismaClient = prismaClient;
   }
 
-  private addExactFilter<T>(value: T | null, field: string, where: Record<string, unknown>): void {
+  private addExactFilter<T>(
+    value: T | null | undefined,
+    field: string,
+    where: Record<string, unknown>
+  ): void {
     if (value !== null && value !== undefined) {
       where[field] = value;
     }
@@ -24,10 +28,10 @@ export class TagsCourseRepositoryPostgreSQL implements TagsCourseRepository {
     where: Record<string, unknown>
   ): void {
     if (start !== null || end !== null) {
-      const rangeFilter: Prisma.DateTimeFilter = {};
-      if (start !== null) rangeFilter.gte = start;
-      if (end !== null) rangeFilter.lte = end;
-      where[field] = rangeFilter;
+      where[field] = {
+        ...(start !== null && { gte: start }),
+        ...(end !== null && { lte: end }),
+      };
     }
   }
 
@@ -48,26 +52,18 @@ export class TagsCourseRepositoryPostgreSQL implements TagsCourseRepository {
     return where;
   }
 
-  private readonly sortFieldMapping: Record<SORT_TAG, Record<string, unknown>> = {
-    [SORT_TAG.CREATION_DATE]: { created_at: undefined },
-    [SORT_TAG.NAME]: { categories: { name: undefined } },
-  };
-
   private buildSort(sort: SortingTags): Record<string, unknown>[] {
     const orderBy: Record<string, unknown>[] = [];
+    const direction = sort.sortDirection;
 
     for (const field of sort.sortFields) {
-      const mappedField = this.sortFieldMapping[field];
-      if (mappedField) {
-        const entry = JSON.parse(JSON.stringify(mappedField));
-        const key = Object.keys(entry)[0];
-        if (typeof entry[key] === 'object' && entry[key] !== null) {
-          const nestedKey = Object.keys(entry[key])[0];
-          entry[key][nestedKey] = sort.sortDirection;
-        } else {
-          entry[key] = sort.sortDirection;
-        }
-        orderBy.push(entry);
+      switch (field) {
+        case SORT_TAG.CREATION_DATE:
+          orderBy.push({ created_at: direction });
+          break;
+        case SORT_TAG.NAME:
+          orderBy.push({ categories: { name: direction } });
+          break;
       }
     }
 
@@ -182,8 +178,17 @@ export class TagsCourseRepositoryPostgreSQL implements TagsCourseRepository {
     return this.buildDTO(tag as never);
   }
 
-  async updateTag(tagId: string, dto: TagCourseInDTO): Promise<TagCourseOutDTO> {
+  async updateTag(tagId: string, dto: Partial<TagCourseInDTO>): Promise<TagCourseOutDTO> {
     const { categoryId, courseId } = this.parseCompositeKey(tagId);
+
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.categoryId !== undefined) {
+      dataToUpdate.category_id = dto.categoryId;
+    }
+    if (dto.courseId !== undefined) {
+      dataToUpdate.course_id = dto.courseId;
+    }
 
     const tag = await this.prismaClient.tags.update({
       where: {
@@ -192,10 +197,7 @@ export class TagsCourseRepositoryPostgreSQL implements TagsCourseRepository {
           course_id: courseId,
         },
       },
-      data: {
-        category_id: dto.categoryId,
-        course_id: dto.courseId,
-      },
+      data: dataToUpdate,
       include: {
         categories: {
           select: {

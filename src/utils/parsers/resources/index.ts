@@ -17,3 +17,7 @@ export const resourcesInDTOSchema = () => {
     metadata: z.any(),
   });
 };
+
+export const resourcesUpdateDTOSchema = () => {
+  return resourcesInDTOSchema().partial();
+};

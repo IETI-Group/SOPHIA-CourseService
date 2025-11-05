@@ -253,7 +253,7 @@ describe('Progress Content Repository', () => {
   describe('updateProgress', () => {
     it('Should update an existing progress record', async () => {
       const progressId = 'progress_123';
-      const dto: ProgressContentUpdateDTO = {
+      const dto: Partial<ProgressContentUpdateDTO> = {
         userId: 'user_1',
         lessonContentId: 'content_1',
         timeSpendMinutes: 30,
@@ -285,6 +285,36 @@ describe('Progress Content Repository', () => {
       expect(result.timeSpendMinutes).toBe(30);
       expect(result.completionPercentage).toBe(75.0);
       expect(result.effectivinessScore).toBe(4.3);
+    });
+
+    it('Should update only completion percentage and user rating', async () => {
+      const progressId = 'progress_456';
+      const partialDTO: Partial<ProgressContentUpdateDTO> = {
+        completionPercentage: 100.0,
+        userRating: 5,
+      };
+
+      const mockUpdated = {
+        id_content_progress: 'progress_456',
+        user_id: 'user_1',
+        lesson_content_id: 'content_1',
+        started_at: new Date('2025-01-01'),
+        completed_at: new Date('2025-01-05'),
+        time_spend_minutes: 45,
+        completion_percentage: 100.0,
+        effectiviness_score: 4.5,
+        active: true,
+        user_rating: 5,
+      };
+
+      prismaClient.lessonContentProgress.update.mockResolvedValueOnce(mockUpdated);
+
+      const result = await progressContentRepository.updateProgress(progressId, partialDTO);
+
+      expect(prismaClient.lessonContentProgress.update).toHaveBeenCalledOnce();
+      expect(result.completionPercentage).toBe(100.0);
+      expect(result.userRating).toBe(5);
+      expect(result.completedAt).toEqual(new Date('2025-01-05'));
     });
 
     it('Should throw error when trying to update non-existent progress', async () => {

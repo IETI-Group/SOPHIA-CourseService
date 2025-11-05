@@ -16,6 +16,6 @@ export interface AttemptsQuizzRepository {
   ): Promise<PaginatedQuizAttempts>;
   getAttemptById(attemptId: string): Promise<AttemptQuizOutDTO>;
   createAttempt(dto: AttemptQuizInDTO): Promise<AttemptQuizOutDTO>;
-  updateAttempt(attemptId: string, dto: AttemptQuizUpdateDTO): Promise<AttemptQuizOutDTO>;
+  updateAttempt(attemptId: string, dto: Partial<AttemptQuizUpdateDTO>): Promise<AttemptQuizOutDTO>;
   deleteAttemptById(attemptId: string): Promise<void>;
 }

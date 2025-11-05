@@ -6,6 +6,7 @@ export const DEFAULT_PAGE = 1;
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_MAX_PAGE_SIZE = 100;
 export const DEFAULT_MIN_PAGE = 1;
+export const DEFAULT_LIGHT_DTO = true;
 
 export const stringSchema = (options?: {
   min?: number;
@@ -88,8 +89,18 @@ export const booleanSchema = (options?: { optional?: boolean; coerce?: boolean }
   const { optional = false, coerce = false } = options ?? {};
 
   const schema = coerce ? z.coerce.boolean() : z.boolean();
+  if (optional) return schema.optional();
+  return schema;
+};
 
-  return optional ? schema.optional() : schema;
+export const lightDTOSchema = () => {
+  return z.object({
+    lightDTO: booleanSchema().default(DEFAULT_LIGHT_DTO),
+  });
+};
+
+export const idSchema = () => {
+  return z.string().min(1).max(40).nonempty();
 };
 
 export const dateSchema = (options?: {

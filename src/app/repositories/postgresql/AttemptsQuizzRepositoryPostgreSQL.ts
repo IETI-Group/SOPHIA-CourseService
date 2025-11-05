@@ -202,15 +202,26 @@ export class AttemptsQuizzRepositoryPostgreSQL implements AttemptsQuizzRepositor
     return this.buildDTO(attempt);
   }
 
-  async updateAttempt(attemptId: string, dto: AttemptQuizUpdateDTO): Promise<AttemptQuizOutDTO> {
+  async updateAttempt(
+    attemptId: string,
+    dto: Partial<AttemptQuizUpdateDTO>
+  ): Promise<AttemptQuizOutDTO> {
     const select = this.buildSelect();
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.quizId !== undefined) {
+      dataToUpdate.quiz_id = dto.quizId;
+    }
+    if (dto.userId !== undefined) {
+      dataToUpdate.user_id = dto.userId;
+    }
+    if (dto.grade !== undefined) {
+      dataToUpdate.grade = dto.grade;
+    }
+
     const attempt = await this.prismaClient.quizAttempts.update({
       where: { id_quiz_attempt: attemptId },
-      data: {
-        quiz_id: dto.quizId,
-        user_id: dto.userId,
-        grade: dto.grade,
-      },
+      data: dataToUpdate,
       select,
     });
 

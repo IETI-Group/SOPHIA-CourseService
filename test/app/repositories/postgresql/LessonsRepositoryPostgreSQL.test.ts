@@ -362,7 +362,7 @@ describe('Lessons Repository', () => {
       const lessonType = LessonType.THEORY;
       const estimatedDifficulty = 2.5;
 
-      const updateDTO: LessonSectionUpdateDTO = {
+      const updateDTO: Partial<LessonSectionUpdateDTO> = {
         sectionId,
         title,
         description,
@@ -420,7 +420,7 @@ describe('Lessons Repository', () => {
       const lessonType = LessonType.PROJECT;
       const estimatedDifficulty = 4.5;
 
-      const updateDTO: LessonSectionUpdateDTO = {
+      const updateDTO: Partial<LessonSectionUpdateDTO> = {
         sectionId,
         title,
         description,
@@ -469,9 +469,49 @@ describe('Lessons Repository', () => {
       expect(result).toEqual(expectedOutput);
     });
 
+    it('Should update only some fields of a lesson', async () => {
+      const lessonId = 'lesson_partial_update';
+      const partialDTO: Partial<LessonSectionUpdateDTO> = {
+        title: 'Updated Title Only',
+        active: false,
+        order: 3,
+      };
+
+      const expectedOutput: LessonSectionOutLightDTO = {
+        idLesson: lessonId,
+        active: false,
+        createdAt: new Date('2025-01-10'),
+        sectionId: 'section_original',
+        title: 'Updated Title Only',
+        order: 3,
+        durationMinutes: 30,
+        lessonType: LessonType.THEORY,
+      };
+
+      prismaClient.lessons.update.mockResolvedValueOnce({
+        id_lesson: lessonId,
+        section_id: 'section_original',
+        title: 'Updated Title Only',
+        description: 'Original description',
+        active: false,
+        order: 3,
+        created_at: new Date('2025-01-10'),
+        duration_minutes: 30,
+        ai_generated: false,
+        generation_task_id: null,
+        lesson_type: LessonType.THEORY,
+        estimated_difficulty: 2.0,
+      });
+
+      const result = await lessonsRepository.updateLesson(lessonId, partialDTO, true);
+
+      expect(prismaClient.lessons.update).toHaveBeenCalledOnce();
+      expect(result).toEqual(expectedOutput);
+    });
+
     it('Should throw error when trying to update non-existent lesson', async () => {
       const lessonId = 'non_existent_lesson';
-      const updateDTO: LessonSectionUpdateDTO = {
+      const updateDTO: Partial<LessonSectionUpdateDTO> = {
         sectionId: 'section_1',
         title: 'Test',
         description: 'Test',

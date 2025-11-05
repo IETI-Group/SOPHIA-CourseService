@@ -206,7 +206,16 @@ describe('Assignments Lesson Repository', () => {
 
   describe('updateAssignment', () => {
     it('Should update an existing assignment', async () => {
-      const assignmentUpdate = {
+      const assignmentUpdate: Partial<{
+        lessonId: string;
+        title: string;
+        instructions: string;
+        maxFileSizeMb: number;
+        allowedTypes: AssignmentType;
+        dueDate: Date;
+        maxScore: number;
+        active: boolean;
+      }> = {
         lessonId: 'lesson-1',
         title: 'Updated Assignment',
         instructions: 'Updated instructions',
@@ -248,8 +257,63 @@ describe('Assignments Lesson Repository', () => {
       });
     });
 
+    it('Should update only some fields of an assignment', async () => {
+      const partialUpdate: Partial<{
+        lessonId: string;
+        title: string;
+        instructions: string;
+        maxFileSizeMb: number;
+        allowedTypes: AssignmentType;
+        dueDate: Date;
+        maxScore: number;
+        active: boolean;
+      }> = {
+        title: 'Partially Updated Title',
+        maxScore: 200,
+      };
+
+      const mockUpdatedAssignment = {
+        id_assignment: '1',
+        lesson_id: 'lesson-1',
+        title: 'Partially Updated Title',
+        instructions: 'Original instructions',
+        max_file_size_mb: 10,
+        allowed_types: AssignmentType.PDF,
+        created_at: new Date('2024-01-01'),
+        due_date: new Date('2024-01-31'),
+        max_score: 200,
+        active: true,
+      };
+
+      prismaClient.assignments.update.mockResolvedValue(mockUpdatedAssignment);
+
+      const result = await assignmentsLessonRepository.updateAssignment('1', partialUpdate);
+
+      expect(result).toEqual({
+        idAssignment: '1',
+        lessonId: 'lesson-1',
+        title: 'Partially Updated Title',
+        instructions: 'Original instructions',
+        maxFileSizeMb: 10,
+        allowedTypes: AssignmentType.PDF,
+        createdAt: new Date('2024-01-01'),
+        dueDate: new Date('2024-01-31'),
+        maxScore: 200,
+        active: true,
+      });
+    });
+
     it('Should throw error when updating non-existent assignment', async () => {
-      const assignmentUpdate = {
+      const assignmentUpdate: Partial<{
+        lessonId: string;
+        title: string;
+        instructions: string;
+        maxFileSizeMb: number;
+        allowedTypes: AssignmentType;
+        dueDate: Date;
+        maxScore: number;
+        active: boolean;
+      }> = {
         lessonId: 'lesson-1',
         title: 'Updated Assignment',
         instructions: 'Updated instructions',

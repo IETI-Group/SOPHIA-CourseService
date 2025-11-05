@@ -393,7 +393,7 @@ describe('Lesson Contents Repository', () => {
       const contentType = LessonContentType.VIDEO_SCRIPT;
       const parentContentId = null;
 
-      const updateDTO: ContentLessonUpdateDTO = {
+      const updateDTO: Partial<ContentLessonUpdateDTO> = {
         lessonId,
         metadata,
         difficultyLevel,
@@ -456,7 +456,7 @@ describe('Lesson Contents Repository', () => {
       const contentType = LessonContentType.EXERCISE;
       const parentContentId = 'parent_789';
 
-      const updateDTO: ContentLessonUpdateDTO = {
+      const updateDTO: Partial<ContentLessonUpdateDTO> = {
         lessonId,
         metadata,
         difficultyLevel,
@@ -514,9 +514,61 @@ describe('Lesson Contents Repository', () => {
       expect(result).toEqual(expectedOutput);
     });
 
+    it('Should update only some fields of lesson content', async () => {
+      const contentId = 'content_partial_update';
+      const partialDTO: Partial<ContentLessonUpdateDTO> = {
+        active: false,
+        difficultyLevel: DifficultyLevel.ADVANCED,
+        orderPreference: 5,
+      };
+
+      const expectedOutput: ContentLessonOutHeavyDTO = {
+        idLessonContent: contentId,
+        version: 3,
+        lessonId: 'lesson_original',
+        active: false,
+        isCurrentVersion: true,
+        difficultyLevel: DifficultyLevel.ADVANCED,
+        learningTechnique: LearningTechnique.VISUAL,
+        orderPreference: 5,
+        createdAt: new Date('2025-01-15'),
+        metadata: { original: true },
+        aiGenerated: false,
+        generationLogId: null,
+        contentType: LessonContentType.TEXT,
+        parentContentId: null,
+      };
+
+      prismaClient.lessonContents.update.mockResolvedValueOnce({
+        id_lesson_content: contentId,
+        version: 3,
+        lesson_id: 'lesson_original',
+        active: false,
+        is_current_version: true,
+        difficulty_level: DifficultyLevel.ADVANCED,
+        learning_technique: LearningTechnique.VISUAL,
+        order_preference: 5,
+        created_at: new Date('2025-01-15'),
+        metadata: { original: true },
+        ai_generated: false,
+        generation_log_id: null,
+        content_type: LessonContentType.TEXT,
+        parent_content_id: null,
+      });
+
+      const result = await lessonContentsRepository.updateLessonContent(
+        contentId,
+        partialDTO,
+        false
+      );
+
+      expect(prismaClient.lessonContents.update).toHaveBeenCalledOnce();
+      expect(result).toEqual(expectedOutput);
+    });
+
     it('Should throw error when trying to update non-existent lesson content', async () => {
       const contentId = 'non_existent_content';
-      const updateDTO: ContentLessonUpdateDTO = {
+      const updateDTO: Partial<ContentLessonUpdateDTO> = {
         lessonId: 'lesson_1',
         metadata: {},
         difficultyLevel: DifficultyLevel.BEGINNER,

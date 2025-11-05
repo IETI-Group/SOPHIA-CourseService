@@ -161,16 +161,24 @@ export class OptionsQuizzRepositoryPostgreSQL implements OptionsQuizzRepository 
     return this.buildDTO(record);
   }
 
-  async updateOption(optionId: string, dto: OptionQuizInDTO): Promise<OptionQuizOutDTO> {
+  async updateOption(optionId: string, dto: Partial<OptionQuizInDTO>): Promise<OptionQuizOutDTO> {
     const select = this.buildSelect();
+
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.quizQuestionId !== undefined) {
+      dataToUpdate.quiz_question_id = dto.quizQuestionId;
+    }
+    if (dto.option !== undefined) {
+      dataToUpdate.option = dto.option;
+    }
+    if (dto.isCorrect !== undefined) {
+      dataToUpdate.is_correct = dto.isCorrect;
+    }
 
     const record = await this.prismaClient.quizOptions.update({
       where: { id_option: optionId },
-      data: {
-        quiz_question_id: dto.quizQuestionId,
-        option: dto.option,
-        is_correct: dto.isCorrect,
-      },
+      data: dataToUpdate,
       select,
     });
 

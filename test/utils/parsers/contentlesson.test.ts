@@ -35,7 +35,7 @@ describe('contentLessonInDTOSchema', () => {
 });
 
 describe('contentLessonUpdateDTOSchema', () => {
-  it('should accept valid data', () => {
+  it('should accept valid data with all fields', () => {
     const result = contentLessonUpdateDTOSchema().safeParse({
       lessonId: 'lesson-123',
       metadata: { data: 'test' },
@@ -51,14 +51,32 @@ describe('contentLessonUpdateDTOSchema', () => {
     });
     expect(result.success).toBe(true);
     if (result.success) {
-      const data: ContentLessonUpdateDTO = result.data;
+      const data: Partial<ContentLessonUpdateDTO> = result.data;
       expect(data).toBeDefined();
     }
   });
 
-  it('should reject missing required fields', () => {
+  it('should accept partial data (some fields only)', () => {
     const result = contentLessonUpdateDTOSchema().safeParse({
-      lessonId: 'lesson-123',
+      active: false,
+      isCurrentVersion: false,
+      metadata: { updated: true },
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.active).toBe(false);
+      expect(result.data.isCurrentVersion).toBe(false);
+    }
+  });
+
+  it('should accept empty object for partial updates', () => {
+    const result = contentLessonUpdateDTOSchema().safeParse({});
+    expect(result.success).toBe(true);
+  });
+
+  it('should reject invalid field values', () => {
+    const result = contentLessonUpdateDTOSchema().safeParse({
+      lessonId: '', // Empty string is invalid
     });
     expect(result.success).toBe(false);
   });

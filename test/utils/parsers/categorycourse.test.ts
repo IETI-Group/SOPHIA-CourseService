@@ -31,7 +31,7 @@ describe('categoryCourseInDTOSchema', () => {
 });
 
 describe('categoryCourseUpdateDTOSchema', () => {
-  it('should accept valid data', () => {
+  it('should accept valid data with all fields', () => {
     const result = categoryCourseUpdateDTOSchema().safeParse({
       name: 'Programming',
       description: 'Programming courses',
@@ -40,14 +40,31 @@ describe('categoryCourseUpdateDTOSchema', () => {
     });
     expect(result.success).toBe(true);
     if (result.success) {
-      const data: CategoryCourseUpdateDTO = result.data;
+      const data: Partial<CategoryCourseUpdateDTO> = result.data;
       expect(data).toBeDefined();
     }
   });
 
-  it('should reject missing required fields', () => {
+  it('should accept partial data (some fields only)', () => {
     const result = categoryCourseUpdateDTOSchema().safeParse({
-      name: 'Programming',
+      name: 'Updated Category',
+      active: false,
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.name).toBe('Updated Category');
+      expect(result.data.active).toBe(false);
+    }
+  });
+
+  it('should accept empty object for partial updates', () => {
+    const result = categoryCourseUpdateDTOSchema().safeParse({});
+    expect(result.success).toBe(true);
+  });
+
+  it('should reject invalid field values', () => {
+    const result = categoryCourseUpdateDTOSchema().safeParse({
+      name: '', // Empty string is invalid
     });
     expect(result.success).toBe(false);
   });

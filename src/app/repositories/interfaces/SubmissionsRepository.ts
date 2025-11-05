@@ -18,7 +18,7 @@ export interface SubmissionsRepository {
   createSubmission(dto: SubmissionAssignmentInDTO): Promise<SubmissionAssignmentOutDTO>;
   updateSubmission(
     submissionId: string,
-    dto: SubmissionAssignmentUpdateDTO
+    dto: Partial<SubmissionAssignmentUpdateDTO>
   ): Promise<SubmissionAssignmentOutDTO>;
   deleteSubmissionById(submissionId: string): Promise<void>;
 }

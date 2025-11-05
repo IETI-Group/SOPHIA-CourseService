@@ -145,16 +145,26 @@ export class CategoriesRepositoryPostgreSQL implements CategoriesRepository {
 
   async updateCategory(
     categoryId: string,
-    dto: CategoryCourseUpdateDTO
+    dto: Partial<CategoryCourseUpdateDTO>
   ): Promise<CategoryCourseOutDTO> {
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.name !== undefined) {
+      dataToUpdate.name = dto.name;
+    }
+    if (dto.description !== undefined) {
+      dataToUpdate.description = dto.description;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.parentCategory !== undefined) {
+      dataToUpdate.parent_category = dto.parentCategory;
+    }
+
     const updated = await this.prismaClient.categories.update({
       where: { id_category: categoryId },
-      data: {
-        name: dto.name,
-        description: dto.description,
-        active: dto.active,
-        parent_category: dto.parentCategory,
-      },
+      data: dataToUpdate,
     });
 
     return this.buildDTO(updated);

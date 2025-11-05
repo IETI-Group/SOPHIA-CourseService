@@ -7,3 +7,7 @@ export const optionQuizInDTOSchema = () => {
     isCorrect: z.coerce.boolean(),
   });
 };
+
+export const optionQuizUpdateDTOSchema = () => {
+  return optionQuizInDTOSchema().partial();
+};

@@ -45,10 +45,10 @@ export class SectionsRepositoryPostgreSQL implements SectionsRepository {
     max: number | null
   ): void {
     if (min !== null || max !== null) {
-      const range: Prisma.IntFilter = {};
-      if (min !== null) range.gte = min;
-      if (max !== null) range.lte = max;
-      (whereClause[field] as Prisma.IntFilter) = range;
+      (whereClause[field] as Prisma.IntFilter) = {
+        ...(min !== null && { gte: min }),
+        ...(max !== null && { lte: max }),
+      };
     }
   }
 
@@ -59,10 +59,10 @@ export class SectionsRepositoryPostgreSQL implements SectionsRepository {
     end: Date | null
   ): void {
     if (start !== null || end !== null) {
-      const range: Prisma.DateTimeFilter = {};
-      if (start !== null) range.gte = start;
-      if (end !== null) range.lte = end;
-      (whereClause[field] as Prisma.DateTimeFilter) = range;
+      (whereClause[field] as Prisma.DateTimeFilter) = {
+        ...(start !== null && { gte: start }),
+        ...(end !== null && { lte: end }),
+      };
     }
   }
 
@@ -268,23 +268,41 @@ export class SectionsRepositoryPostgreSQL implements SectionsRepository {
 
   async updateSection(
     sectionId: string,
-    dto: SectionCourseUpdateDTO,
+    dto: Partial<SectionCourseUpdateDTO>,
     lightDTO: boolean
   ): Promise<SectionCourseOutLightDTO> {
     const select = this.buildSelect(lightDTO);
 
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.courseId !== undefined) {
+      dataToUpdate.course_id = dto.courseId;
+    }
+    if (dto.title !== undefined) {
+      dataToUpdate.title = dto.title;
+    }
+    if (dto.description !== undefined) {
+      dataToUpdate.description = dto.description;
+    }
+    if (dto.order !== undefined) {
+      dataToUpdate.order = dto.order;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.aiGenerated !== undefined) {
+      dataToUpdate.ai_generated = dto.aiGenerated;
+    }
+    if (dto.generationTaskId !== undefined) {
+      dataToUpdate.generation_task_id = dto.generationTaskId;
+    }
+    if (dto.suggestedByAi !== undefined) {
+      dataToUpdate.suggested_by_ai = dto.suggestedByAi;
+    }
+
     const updated = await this.prismaClient.sections.update({
       where: { id_section: sectionId },
-      data: {
-        course_id: dto.courseId,
-        title: dto.title,
-        description: dto.description,
-        order: dto.order,
-        active: dto.active,
-        ai_generated: dto.aiGenerated,
-        generation_task_id: dto.generationTaskId,
-        suggested_by_ai: dto.suggestedByAi,
-      },
+      data: dataToUpdate,
       select,
     });
 

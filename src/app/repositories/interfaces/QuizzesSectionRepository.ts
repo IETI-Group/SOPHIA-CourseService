@@ -19,7 +19,7 @@ export interface QuizzesSectionRepository {
   createQuiz(dto: QuizSectionInDTO, lightDTO: boolean): Promise<QuizSectionOutLightDTO>;
   updateQuiz(
     quizId: string,
-    dto: QuizSectionUpdateDTO,
+    dto: Partial<QuizSectionUpdateDTO>,
     lightDTO: boolean
   ): Promise<QuizSectionOutLightDTO>;
   deleteQuizById(quizId: string): Promise<void>;

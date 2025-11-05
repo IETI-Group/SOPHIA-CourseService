@@ -261,7 +261,7 @@ describe('Categories Repository', () => {
       const active = true;
       const parentCategory = null;
 
-      const updateDTO: CategoryCourseUpdateDTO = {
+      const updateDTO: Partial<CategoryCourseUpdateDTO> = {
         name,
         description,
         active,
@@ -297,7 +297,7 @@ describe('Categories Repository', () => {
       const active = true;
       const parentCategory = 'cat_programming';
 
-      const updateDTO: CategoryCourseUpdateDTO = {
+      const updateDTO: Partial<CategoryCourseUpdateDTO> = {
         name,
         description,
         active,
@@ -333,7 +333,7 @@ describe('Categories Repository', () => {
       const active = false;
       const parentCategory = null;
 
-      const updateDTO: CategoryCourseUpdateDTO = {
+      const updateDTO: Partial<CategoryCourseUpdateDTO> = {
         name,
         description,
         active,
@@ -363,6 +363,37 @@ describe('Categories Repository', () => {
       expect(result.active).toBe(false);
     });
 
+    it('Should update only some fields of a category', async () => {
+      const categoryId = 'cat_partial_update';
+      const partialDTO: Partial<CategoryCourseUpdateDTO> = {
+        active: true,
+        description: 'Only description and active status updated',
+      };
+
+      const expectedOutput: CategoryCourseOutDTO = {
+        idCategory: categoryId,
+        name: 'Original Name',
+        description: 'Only description and active status updated',
+        active: true,
+        parentCategory: null,
+      };
+
+      prismaClient.categories.update.mockResolvedValueOnce({
+        id_category: categoryId,
+        name: 'Original Name',
+        description: 'Only description and active status updated',
+        active: true,
+        parent_category: null,
+      });
+
+      const result = await categoriesRepository.updateCategory(categoryId, partialDTO);
+
+      expect(prismaClient.categories.update).toHaveBeenCalledOnce();
+      expect(result).toEqual(expectedOutput);
+      expect(result.name).toBe('Original Name');
+      expect(result.active).toBe(true);
+    });
+
     it('Should throw error when trying to update non-existent category', async () => {
       const categoryId = 'non_existent_cat';
       const name = 'Update';
@@ -370,7 +401,7 @@ describe('Categories Repository', () => {
       const active = true;
       const parentCategory = null;
 
-      const updateDTO: CategoryCourseUpdateDTO = {
+      const updateDTO: Partial<CategoryCourseUpdateDTO> = {
         name,
         description,
         active,
