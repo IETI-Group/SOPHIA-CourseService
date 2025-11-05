@@ -27,7 +27,7 @@ export class AssignmentsController {
   }
   putAssignment(
     _assignmentLessonId: string,
-    _dto: AssignmentLessonUpdateDTO
+    _dto: Partial<AssignmentLessonUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
@@ -48,7 +48,7 @@ export class AssignmentsController {
   }
   putSubmission(
     _submissionId: string,
-    _dto: SubmissionAssignmentUpdateDTO
+    _dto: Partial<SubmissionAssignmentUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }

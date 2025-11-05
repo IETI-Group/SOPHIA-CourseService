@@ -34,7 +34,7 @@ export class QuizzesController {
   }
   putQuiz(
     _quizId: string,
-    _dto: QuizSectionUpdateDTO,
+    _dto: Partial<QuizSectionUpdateDTO>,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
@@ -54,7 +54,10 @@ export class QuizzesController {
   postQuestionQuiz(_dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
-  putQuestion(_questionQuizId: string, _dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
+  putQuestion(
+    _questionQuizId: string,
+    _dto: Partial<QuestionQuizInDTO>
+  ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
   deleteQuestion(_questionQuizId: string): Promise<ApiResponse<unknown>> {
@@ -72,7 +75,7 @@ export class QuizzesController {
   postOptionQuiz(_dto: OptionQuizInDTO): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
-  putOption(_optionId: string, _dto: OptionQuizInDTO): Promise<ApiResponse<unknown>> {
+  putOption(_optionId: string, _dto: Partial<OptionQuizInDTO>): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
   deleteOption(_optionId: string): Promise<ApiResponse<unknown>> {
@@ -90,7 +93,10 @@ export class QuizzesController {
   postAttemptQuiz(_dto: AttemptQuizInDTO): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
-  putAttempt(_attemptId: string, _dto: AttemptQuizUpdateDTO): Promise<ApiResponse<unknown>> {
+  putAttempt(
+    _attemptId: string,
+    _dto: Partial<AttemptQuizUpdateDTO>
+  ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
   deleteAttempt(_attemptId: string): Promise<ApiResponse<unknown>> {

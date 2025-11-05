@@ -31,7 +31,7 @@ export class CoursesController {
   }
   async putCourse(
     _courseId: string,
-    _dto: CourseUpdateDTO,
+    _dto: Partial<CourseUpdateDTO>,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
@@ -53,7 +53,7 @@ export class CoursesController {
   }
   async putInscription(
     _inscriptionId: string,
-    _dto: InscriptionCourseUpdateDTO
+    _dto: Partial<InscriptionCourseUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
@@ -74,7 +74,7 @@ export class CoursesController {
   }
   async putFavorite(
     _favorite_CourseId: string,
-    _dto: FavoriteCourseInDTO
+    _dto: Partial<FavoriteCourseInDTO>
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }

@@ -11,7 +11,7 @@ export class TagsController {
   postTag(_dto: TagCourseInDTO): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
-  putTag(_tagId: string, _dto: TagCourseInDTO): Promise<ApiResponse<unknown>> {
+  putTag(_tagId: string, _dto: Partial<TagCourseInDTO>): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
   deleteTag(_tagId: string): Promise<ApiResponse<unknown>> {

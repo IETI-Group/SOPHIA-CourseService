@@ -14,7 +14,10 @@ export class CategoriesController {
   postCategory(_dto: CategoryCourseInDTO): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
-  putCategory(_categoryId: string, _dto: CategoryCourseUpdateDTO): Promise<ApiResponse<unknown>> {
+  putCategory(
+    _categoryId: string,
+    _dto: Partial<CategoryCourseUpdateDTO>
+  ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
   }
   deleteCategory(_categoryId: string): Promise<ApiResponse<unknown>> {

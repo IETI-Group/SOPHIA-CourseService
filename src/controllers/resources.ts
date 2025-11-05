@@ -17,7 +17,7 @@ export class ResourcesController {
   }
   putResources(
     _resourceId: string,
-    _dto: ResourcesInDTO,
+    _dto: Partial<ResourcesInDTO>,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');

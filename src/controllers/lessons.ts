@@ -32,7 +32,7 @@ export class LessonsController {
   }
   putLesson(
     _lessonId: string,
-    _dto: LessonSectionUpdateDTO,
+    _dto: Partial<LessonSectionUpdateDTO>,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');

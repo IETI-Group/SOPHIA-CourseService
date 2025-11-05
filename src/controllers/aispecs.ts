@@ -17,7 +17,7 @@ export class AISpecsController {
   }
   putAISpec(
     _aiSpecId: string,
-    _dto: AISpecsLessonInDTO,
+    _dto: Partial<AISpecsLessonInDTO>,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');

@@ -17,7 +17,7 @@ export class SectionsController {
   }
   putSection(
     _sectionId: string,
-    _dto: SectionCourseUpdateDTO,
+    _dto: Partial<SectionCourseUpdateDTO>,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
     throw new Error('Method not implemented');
