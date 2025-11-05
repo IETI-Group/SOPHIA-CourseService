@@ -1,9 +1,12 @@
 import type {
   CourseInDTO,
+  CourseService,
   CourseUpdateDTO,
   FavoriteCourseInDTO,
+  FavoriteService,
   InscriptionCourseInDTO,
   InscriptionCourseUpdateDTO,
+  InscriptionService,
 } from '../app/index.js';
 import type {
   ApiResponse,
@@ -16,11 +19,26 @@ import type {
 } from '../utils/index.js';
 
 export class CoursesController {
+  private readonly courseService: CourseService;
+  private readonly inscriptionService: InscriptionService;
+  private readonly favoriteService: FavoriteService;
+  constructor(
+    courseService: CourseService,
+    inscriptionService: InscriptionService,
+    favoriteService: FavoriteService
+  ) {
+    this.courseService = courseService;
+    this.inscriptionService = inscriptionService;
+    this.favoriteService = favoriteService;
+  }
   async getCourses(
     _filters: FiltersCourse,
     _sort: SortingCourses,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
+    this.courseService;
+    this.inscriptionService;
+    this.favoriteService;
     throw new Error('Method not implemented');
   }
   async getCourseById(_courseId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {

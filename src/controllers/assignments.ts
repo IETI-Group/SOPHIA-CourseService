@@ -1,8 +1,10 @@
 import type {
   AssignmentLessonInDTO,
   AssignmentLessonUpdateDTO,
+  AssignmentService,
   SubmissionAssignmentInDTO,
   SubmissionAssignmentUpdateDTO,
+  SubmissionService,
 } from '../app/index.js';
 import type {
   ApiResponse,
@@ -13,10 +15,20 @@ import type {
 } from '../utils/index.js';
 
 export class AssignmentsController {
+  private readonly assignmentService: AssignmentService;
+  private readonly submissionService: SubmissionService;
+
+  constructor(assignmentService: AssignmentService, submissionService: SubmissionService) {
+    this.assignmentService = assignmentService;
+    this.submissionService = submissionService;
+  }
+
   getAssignmentsLesson(
     _filters: FiltersAssignmentLesson,
     _sort: SortingAssignments
   ): Promise<ApiResponse<unknown>> {
+    this.assignmentService;
+    this.submissionService;
     throw new Error('Method not implemented');
   }
   getAssignmentById(_assignmentLessonId: string): Promise<ApiResponse<unknown>> {

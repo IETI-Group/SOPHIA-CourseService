@@ -1,10 +1,12 @@
 import type {
   AttemptQuizInDTO,
   AttemptQuizUpdateDTO,
+  AttemptService,
   OptionQuizInDTO,
   QuestionQuizInDTO,
   QuizSectionInDTO,
   QuizSectionUpdateDTO,
+  QuizService,
 } from '../app/index.js';
 import type {
   ApiResponse,
@@ -19,11 +21,21 @@ import type {
 } from '../utils/index.js';
 
 export class QuizzesController {
+  private readonly quizService: QuizService;
+  private readonly attemptService: AttemptService;
+
+  constructor(quizService: QuizService, attemptService: AttemptService) {
+    this.quizService = quizService;
+    this.attemptService = attemptService;
+  }
+
   getQuizzesSection(
     _filters: FiltersQuizSection,
     _sort: SortingSectionQuizzes,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
+    this.quizService;
+    this.attemptService;
     throw new Error('Method not implemented');
   }
   getQuizById(_quizId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {

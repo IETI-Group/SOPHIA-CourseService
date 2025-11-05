@@ -1,12 +1,17 @@
-import type { SectionCourseInDTO, SectionCourseUpdateDTO } from '../app/index.js';
+import type { SectionCourseInDTO, SectionCourseUpdateDTO, SectionService } from '../app/index.js';
 import type { ApiResponse, FiltersSection, SortingSections } from '../utils/index.js';
 
 export class SectionsController {
+  private readonly sectionService: SectionService;
+  constructor(sectionService: SectionService) {
+    this.sectionService = sectionService;
+  }
   getCourseSections(
     _filters: FiltersSection,
     _sort: SortingSections,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
+    this.sectionService;
     throw new Error('Method not implemented');
   }
   getSectionById(_sectionId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {

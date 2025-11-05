@@ -1,41 +1,73 @@
 import type { PrismaClient } from '@prisma/client/default.js';
 import { asClass, asValue, createContainer, InjectionMode } from 'awilix';
-import type {
-  AISpecsLessonRepository,
-  AssignmentsLessonRepository,
-  AttemptsQuizzRepository,
-  CategoriesRepository,
-  CoursesRepository,
-  FavoriteCoursesRepository,
-  InscriptionsCourseRepository,
-  LessonContentsRepository,
-  LessonsRepository,
-  OptionsQuizzRepository,
-  ProgressContentRepository,
-  QuestionsQuizzRepository,
-  QuizzesSectionRepository,
-  ResourcesRepository,
-  SectionsRepository,
-  SubmissionsRepository,
-  TagsCourseRepository,
+import {
+  type AISpecsLessonRepository,
+  AISpecsLessonRepositoryPostgreSQL,
+  type AssignmentsLessonRepository,
+  AssignmentsLessonRepositoryPostgreSQL,
+  type AttemptsQuizzRepository,
+  AttemptsQuizzRepositoryPostgreSQL,
+  type CategoriesRepository,
+  CategoriesRepositoryPostgreSQL,
+  type CoursesRepository,
+  CoursesRepositoryPostgreSQL,
+  type FavoriteCoursesRepository,
+  FavoriteCoursesRepositoryPostgreSQL,
+  type InscriptionsCourseRepository,
+  InscriptionsCourseRepositoryPostgreSQL,
+  type LessonContentsRepository,
+  LessonContentsRepositoryPostgreSQL,
+  type LessonsRepository,
+  LessonsRepositoryPostgreSQL,
+  type OptionsQuizzRepository,
+  OptionsQuizzRepositoryPostgreSQL,
+  type ProgressContentRepository,
+  ProgressContentRepositoryPostgreSQL,
+  type QuestionsQuizzRepository,
+  QuestionsQuizzRepositoryPostgreSQL,
+  type QuizzesSectionRepository,
+  QuizzesSectionRepositoryPostgreSQL,
+  type ResourcesRepository,
+  ResourcesRepositoryPostgreSQL,
+  type SectionsRepository,
+  SectionsRepositoryPostgreSQL,
+  type SubmissionsRepository,
+  SubmissionsRepositoryPostgreSQL,
+  type TagsCourseRepository,
+  TagsCourseRepositoryPostgreSQL,
 } from '../app/repositories/index.js';
-import { AISpecsLessonRepositoryPostgreSQL } from '../app/repositories/postgresql/AISpecsLessonRepositoryPostgreSQL.js';
-import { AssignmentsLessonRepositoryPostgreSQL } from '../app/repositories/postgresql/AssignmentsLessonRepositoryPostgreSQL.js';
-import { AttemptsQuizzRepositoryPostgreSQL } from '../app/repositories/postgresql/AttemptsQuizzRepositoryPostgreSQL.js';
-import { CategoriesRepositoryPostgreSQL } from '../app/repositories/postgresql/CategoriesRepositoryPostgreSQL.js';
-import { CoursesRepositoryPostgreSQL } from '../app/repositories/postgresql/CoursesRepositoryPostgreSQL.js';
-import { FavoriteCoursesRepositoryPostgreSQL } from '../app/repositories/postgresql/FavoriteCoursesRepositoryPostgreSQL.js';
-import { InscriptionsCourseRepositoryPostgreSQL } from '../app/repositories/postgresql/InscriptionsCourseRepositoryPostgreSQL.js';
-import { LessonContentsRepositoryPostgreSQL } from '../app/repositories/postgresql/LessonContentsRepositoryPostgreSQL.js';
-import { LessonsRepositoryPostgreSQL } from '../app/repositories/postgresql/LessonsRepositoryPostgreSQL.js';
-import { OptionsQuizzRepositoryPostgreSQL } from '../app/repositories/postgresql/OptionsQuizzRepositoryPostgreSQL.js';
-import { ProgressContentRepositoryPostgreSQL } from '../app/repositories/postgresql/ProgressContentRepositoryPostgreSQL.js';
-import { QuestionsQuizzRepositoryPostgreSQL } from '../app/repositories/postgresql/QuestionsQuizzRepositoryPostgreSQL.js';
-import { QuizzesSectionRepositoryPostgreSQL } from '../app/repositories/postgresql/QuizzesSectionRepositoryPostgreSQL.js';
-import { ResourcesRepositoryPostgreSQL } from '../app/repositories/postgresql/ResourcesRepositoryPostgreSQL.js';
-import { SectionsRepositoryPostgreSQL } from '../app/repositories/postgresql/SectionsRepositoryPostgreSQL.js';
-import { SubmissionsRepositoryPostgreSQL } from '../app/repositories/postgresql/SubmissionsRepositoryPostgreSQL.js';
-import { TagsCourseRepositoryPostgreSQL } from '../app/repositories/postgresql/TagsCourseRepositoryPostgreSQL.js';
+import {
+  type AISpecsService,
+  AISpecsServiceImpl,
+  type AssignmentService,
+  AssignmentServiceImpl,
+  type AttemptService,
+  AttemptServiceImpl,
+  type CategoryService,
+  CategoryServiceImpl,
+  type CourseService,
+  CourseServiceImpl,
+  type FavoriteService,
+  FavoriteServiceImpl,
+  type InscriptionService,
+  InscriptionServiceImpl,
+  type LessonContentService,
+  LessonContentServiceImpl,
+  type LessonService,
+  LessonServiceImpl,
+  type ProgressService,
+  ProgressServiceImpl,
+  type QuizService,
+  QuizServiceImpl,
+  type ResourceService,
+  ResourceServiceImpl,
+  type SectionService,
+  SectionServiceImpl,
+  type SubmissionService,
+  SubmissionServiceImpl,
+  type TagService,
+  TagServiceImpl,
+} from '../app/services/index.js';
 import {
   AISpecsController,
   AssignmentsController,
@@ -79,6 +111,21 @@ interface DIContainer {
   tagsController: TagsController;
   categoriesController: CategoriesController;
   aiSpecsController: AISpecsController;
+  courseService: CourseService;
+  inscriptionService: InscriptionService;
+  favoriteService: FavoriteService;
+  lessonContentService: LessonContentService;
+  lessonService: LessonService;
+  progressService: ProgressService;
+  aISpecsService: AISpecsService;
+  quizService: QuizService;
+  attemptService: AttemptService;
+  assignmentService: AssignmentService;
+  submissionService: SubmissionService;
+  sectionService: SectionService;
+  resourceService: ResourceService;
+  tagService: TagService;
+  categoryService: CategoryService;
 }
 
 const container = createContainer<DIContainer>({
@@ -170,6 +217,54 @@ container.register({
     lifetime: 'SINGLETON',
   }),
   aiSpecsController: asClass(AISpecsController, {
+    lifetime: 'SINGLETON',
+  }),
+
+  // Services
+
+  courseService: asClass(CourseServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  inscriptionService: asClass(InscriptionServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  favoriteService: asClass(FavoriteServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  lessonContentService: asClass(LessonContentServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  lessonService: asClass(LessonServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  progressService: asClass(ProgressServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  aISpecsService: asClass(AISpecsServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  quizService: asClass(QuizServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  attemptService: asClass(AttemptServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  assignmentService: asClass(AssignmentServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  submissionService: asClass(SubmissionServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  sectionService: asClass(SectionServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  resourceService: asClass(ResourceServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  tagService: asClass(TagServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  categoryService: asClass(CategoryServiceImpl, {
     lifetime: 'SINGLETON',
   }),
 });

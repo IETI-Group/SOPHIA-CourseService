@@ -1,10 +1,13 @@
 import type {
   ContentLessonInDTO,
   ContentLessonUpdateDTO,
+  LessonContentService,
   LessonSectionInDTO,
   LessonSectionUpdateDTO,
+  LessonService,
   ProgressContentInDTO,
   ProgressContentUpdateDTO,
+  ProgressService,
 } from '../app/index.js';
 import type {
   ApiResponse,
@@ -17,11 +20,28 @@ import type {
 } from '../utils/index.js';
 
 export class LessonsController {
+  private readonly lessonContentService: LessonContentService;
+  private readonly lessonService: LessonService;
+  private readonly progressService: ProgressService;
+
+  constructor(
+    lessonContentService: LessonContentService,
+    lessonService: LessonService,
+    progressService: ProgressService
+  ) {
+    this.lessonContentService = lessonContentService;
+    this.lessonService = lessonService;
+    this.progressService = progressService;
+  }
+
   getSectionLessons(
     _filters: FiltersLesson,
     _sort: SortingLessons,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
+    this.lessonService;
+    this.progressService;
+    this.lessonContentService;
     throw new Error('Method not implemented');
   }
   getLessonById(_lessonId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
