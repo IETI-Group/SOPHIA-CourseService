@@ -33,10 +33,10 @@ export const createAISpecsRouter = (controller?: AISpecsController): IRouter => 
     res.status(200).json(result);
   };
 
-  const createAISpec = (req: Request, res: Response) => {
+  const createAISpec = async (req: Request, res: Response) => {
     const dto: AISpecsLessonInDTO = aiSpecsLessonInDTOSchema().parse(req.body);
     const { lightDTO } = lightDTOSchema().parse(req.query);
-    const result = aiSpecsController.postAISpec(dto, lightDTO);
+    const result = await aiSpecsController.postAISpec(dto, lightDTO);
     res.status(201).json(result);
   };
 
