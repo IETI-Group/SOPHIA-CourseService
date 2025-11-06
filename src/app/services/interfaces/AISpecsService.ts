@@ -9,14 +9,14 @@ export interface AISpecsService {
   getAISpecs(
     filters: FiltersAISpecsLesson,
     sort: SortingAILessonSpecs,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
-  getAISpecById(aiSpecId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
-  postAISpec(dto: AISpecsLessonInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
+  getAISpecById(aiSpecId: string, lightDTO: boolean): Promise<ApiResponse<unknown>>;
+  postAISpec(dto: AISpecsLessonInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>>;
   putAISpec(
     aiSpecId: string,
     dto: Partial<AISpecsLessonInDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
   deleteAISpec(aiSpecId: string): Promise<ApiResponse<unknown>>;
 }

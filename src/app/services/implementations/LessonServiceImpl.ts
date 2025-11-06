@@ -1,4 +1,9 @@
-import type { ApiResponse, FiltersLesson, SortingLessons } from '../../../utils/index.js';
+import {
+  type ApiResponse,
+  type FiltersLesson,
+  parseApiResponse,
+  type SortingLessons,
+} from '../../../utils/index.js';
 import type { LessonSectionInDTO, LessonSectionUpdateDTO } from '../../models/index.js';
 import type { LessonsRepository } from '../../repositories/index.js';
 import type { LessonService } from '../index.js';
@@ -9,27 +14,33 @@ export class LessonServiceImpl implements LessonService {
     this.lessonsRepository = lessonsRepository;
   }
   getSectionLessons(
-    _filters: FiltersLesson,
-    _sort: SortingLessons,
-    _lightDTO?: boolean
+    filters: FiltersLesson,
+    sort: SortingLessons,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.lessonsRepository;
-    throw new Error('Method not implemented.');
+    return this.lessonsRepository.getLessons(filters, sort, lightDTO);
   }
-  getLessonById(_lessonId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getLessonById(lessonId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.lessonsRepository.getLessonById(lessonId, lightDTO);
+    return parseApiResponse(result, 'Lesson retrieved successfully');
   }
-  postSectionLesson(_dto: LessonSectionInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
-  }
-  putLesson(
-    _lessonId: string,
-    _dto: Partial<LessonSectionUpdateDTO>,
-    _lightDTO?: boolean
+  async postSectionLesson(
+    dto: LessonSectionInDTO,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.lessonsRepository.createLesson(dto, lightDTO);
+    return parseApiResponse(result, 'Lesson created successfully');
   }
-  deleteLesson(_lessonId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async putLesson(
+    lessonId: string,
+    dto: Partial<LessonSectionUpdateDTO>,
+    lightDTO: boolean
+  ): Promise<ApiResponse<unknown>> {
+    const result = await this.lessonsRepository.updateLesson(lessonId, dto, lightDTO);
+    return parseApiResponse(result, 'Lesson updated successfully');
+  }
+  async deleteLesson(lessonId: string): Promise<ApiResponse<unknown>> {
+    await this.lessonsRepository.deleteLessonById(lessonId);
+    return parseApiResponse(null, 'Lesson deleted successfully');
   }
 }

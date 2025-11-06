@@ -1,7 +1,8 @@
-import type {
-  ApiResponse,
-  FiltersLessonContent,
-  SortingLessonContent,
+import {
+  type ApiResponse,
+  type FiltersLessonContent,
+  parseApiResponse,
+  type SortingLessonContent,
 } from '../../../utils/index.js';
 import type { ContentLessonInDTO, ContentLessonUpdateDTO } from '../../models/index.js';
 import type { LessonContentsRepository } from '../../repositories/index.js';
@@ -13,30 +14,43 @@ export class LessonContentServiceImpl implements LessonContentService {
     this.lessonContentsRepository = lessonContentsRepository;
   }
   getLessonContents(
-    _filters: FiltersLessonContent,
-    _sort: SortingLessonContent,
-    _lightDTO?: boolean
+    filters: FiltersLessonContent,
+    sort: SortingLessonContent,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.lessonContentsRepository;
-    throw new Error('Method not implemented.');
+    return this.lessonContentsRepository.getLessonContents(filters, sort, lightDTO);
   }
-  getLessonContentsById(
-    _lessonContentId: string,
-    _lightDTO?: boolean
+  async getLessonContentsById(
+    lessonContentId: string,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.lessonContentsRepository.getLessonContentById(
+      lessonContentId,
+      lightDTO
+    );
+    return parseApiResponse(result, 'Lesson content retrieved successfully');
   }
-  postLessonContents(_dto: ContentLessonInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
-  }
-  putLessonContents(
-    _lessonContentId: string,
-    _dto: Partial<ContentLessonUpdateDTO>,
-    _lightDTO?: boolean
+  async postLessonContents(
+    dto: ContentLessonInDTO,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.lessonContentsRepository.createLessonContent(dto, lightDTO);
+    return parseApiResponse(result, 'Lesson content created successfully');
   }
-  deleteLessonContents(_lessonContentId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async putLessonContents(
+    lessonContentId: string,
+    dto: Partial<ContentLessonUpdateDTO>,
+    lightDTO: boolean
+  ): Promise<ApiResponse<unknown>> {
+    const result = await this.lessonContentsRepository.updateLessonContent(
+      lessonContentId,
+      dto,
+      lightDTO
+    );
+    return parseApiResponse(result, 'Lesson content updated successfully');
+  }
+  async deleteLessonContents(lessonContentId: string): Promise<ApiResponse<unknown>> {
+    await this.lessonContentsRepository.deleteLessonContentById(lessonContentId);
+    return parseApiResponse(null, 'Lesson content deleted successfully');
   }
 }

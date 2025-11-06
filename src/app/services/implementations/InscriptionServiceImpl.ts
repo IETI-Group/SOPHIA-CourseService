@@ -1,4 +1,9 @@
-import type { ApiResponse, FiltersInscription, SortingInscriptions } from '../../../utils/index.js';
+import {
+  type ApiResponse,
+  type FiltersInscription,
+  parseApiResponse,
+  type SortingInscriptions,
+} from '../../../utils/index.js';
 import type { InscriptionCourseInDTO, InscriptionCourseUpdateDTO } from '../../models/index.js';
 import type { InscriptionsCourseRepository } from '../../repositories/index.js';
 import type { InscriptionService } from '../index.js';
@@ -9,25 +14,28 @@ export class InscriptionServiceImpl implements InscriptionService {
     this.inscriptionsCourseRepository = inscriptionsCourseRepository;
   }
   getInscriptionsCourse(
-    _filters: FiltersInscription,
-    _sort: SortingInscriptions
+    filters: FiltersInscription,
+    sort: SortingInscriptions
   ): Promise<ApiResponse<unknown>> {
-    this.inscriptionsCourseRepository;
-    throw new Error('Method not implemented.');
+    return this.inscriptionsCourseRepository.getInscriptions(filters, sort);
   }
-  getInscriptionById(_inscriptionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getInscriptionById(inscriptionId: string): Promise<ApiResponse<unknown>> {
+    const result = await this.inscriptionsCourseRepository.getInscriptionById(inscriptionId);
+    return parseApiResponse(result, 'Inscription retrieved successfully');
   }
-  postInscriptionCourse(_dto: InscriptionCourseInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postInscriptionCourse(dto: InscriptionCourseInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.inscriptionsCourseRepository.createInscription(dto);
+    return parseApiResponse(result, 'Inscription created successfully');
   }
-  putInscription(
-    _inscriptionId: string,
-    _dto: Partial<InscriptionCourseUpdateDTO>
+  async putInscription(
+    inscriptionId: string,
+    dto: Partial<InscriptionCourseUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.inscriptionsCourseRepository.updateInscription(inscriptionId, dto);
+    return parseApiResponse(result, 'Inscription updated successfully');
   }
-  deleteInscription(_inscriptionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteInscription(inscriptionId: string): Promise<ApiResponse<unknown>> {
+    await this.inscriptionsCourseRepository.deleteInscriptionById(inscriptionId);
+    return parseApiResponse(null, 'Inscription deleted successfully');
   }
 }

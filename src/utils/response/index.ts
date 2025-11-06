@@ -53,3 +53,15 @@ export interface PaginatedLessons extends PaginatedResponse<LessonSectionOutLigh
 export interface PaginatedSubmissions extends PaginatedResponse<SubmissionAssignmentOutDTO[]> {}
 export interface PaginatedResources extends PaginatedResponse<ResourcesOutLightDTO[]> {}
 export interface PaginatedAssignments extends PaginatedResponse<AssignmentLessonOutDTO[]> {}
+
+export const parseApiResponse = (
+  data: unknown,
+  message = 'Request successful'
+): ApiResponse<unknown> => {
+  return {
+    success: true,
+    message,
+    data,
+    timestamp: new Date().toISOString(),
+  };
+};

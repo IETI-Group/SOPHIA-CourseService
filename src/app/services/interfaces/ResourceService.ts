@@ -5,14 +5,14 @@ export interface ResourceService {
   getResources(
     filters: FiltersResource,
     sort: SortingResources,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
-  getResourceById(resourceId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
-  postResources(dto: ResourcesInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
+  getResourceById(resourceId: string, lightDTO: boolean): Promise<ApiResponse<unknown>>;
+  postResources(dto: ResourcesInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>>;
   putResources(
     resourceId: string,
     dto: Partial<ResourcesInDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
   deleteResources(resourceId: string): Promise<ApiResponse<unknown>>;
 }

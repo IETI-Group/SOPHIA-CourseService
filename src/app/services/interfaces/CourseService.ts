@@ -5,14 +5,14 @@ export interface CourseService {
   getCourses(
     filters: FiltersCourse,
     sort: SortingCourses,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
-  getCourseById(courseId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
-  postCourse(dto: CourseInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
+  getCourseById(courseId: string, lightDTO: boolean): Promise<ApiResponse<unknown>>;
+  postCourse(dto: CourseInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>>;
   putCourse(
     courseId: string,
     dto: Partial<CourseUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
   deleteCourse(courseId: string): Promise<ApiResponse<unknown>>;
 }

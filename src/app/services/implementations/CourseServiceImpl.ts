@@ -1,4 +1,9 @@
-import type { ApiResponse, FiltersCourse, SortingCourses } from '../../../utils/index.js';
+import {
+  type ApiResponse,
+  type FiltersCourse,
+  parseApiResponse,
+  type SortingCourses,
+} from '../../../utils/index.js';
 import type { CourseInDTO, CourseUpdateDTO } from '../../models/index.js';
 import type { CoursesRepository } from '../../repositories/index.js';
 import type { CourseService } from '../index.js';
@@ -9,27 +14,30 @@ export class CourseServiceImpl implements CourseService {
     this.coursesRepository = coursesRepository;
   }
   getCourses(
-    _filters: FiltersCourse,
-    _sort: SortingCourses,
-    _lightDTO?: boolean
+    filters: FiltersCourse,
+    sort: SortingCourses,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.coursesRepository;
-    throw new Error('Method not implemented.');
+    return this.coursesRepository.getCourses(filters, sort, lightDTO);
   }
-  getCourseById(_courseId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getCourseById(courseId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.coursesRepository.getCourseById(courseId, lightDTO);
+    return parseApiResponse(result, 'Course retrieved successfully');
   }
-  postCourse(_dto: CourseInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postCourse(dto: CourseInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.coursesRepository.createCourse(dto, lightDTO);
+    return parseApiResponse(result, 'Course created successfully');
   }
-  putCourse(
-    _courseId: string,
-    _dto: Partial<CourseUpdateDTO>,
-    _lightDTO?: boolean
+  async putCourse(
+    courseId: string,
+    dto: Partial<CourseUpdateDTO>,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.coursesRepository.updateCourse(courseId, dto, lightDTO);
+    return parseApiResponse(result, 'Course updated successfully');
   }
-  deleteCourse(_courseId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteCourse(courseId: string): Promise<ApiResponse<unknown>> {
+    await this.coursesRepository.deleteCourseById(courseId);
+    return parseApiResponse(null, 'Course deleted successfully');
   }
 }

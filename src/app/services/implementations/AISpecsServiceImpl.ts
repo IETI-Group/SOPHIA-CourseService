@@ -1,7 +1,8 @@
-import type {
-  ApiResponse,
-  FiltersAISpecsLesson,
-  SortingAILessonSpecs,
+import {
+  type ApiResponse,
+  type FiltersAISpecsLesson,
+  parseApiResponse,
+  type SortingAILessonSpecs,
 } from '../../../utils/index.js';
 import type { AISpecsLessonInDTO } from '../../models/index.js';
 import type { AISpecsLessonRepository } from '../../repositories/index.js';
@@ -13,27 +14,30 @@ export class AISpecsServiceImpl implements AISpecsService {
     this.aiSpecsLessonRepository = aiSpecsLessonRepository;
   }
   getAISpecs(
-    _filters: FiltersAISpecsLesson,
-    _sort: SortingAILessonSpecs,
-    _lightDTO?: boolean
+    filters: FiltersAISpecsLesson,
+    sort: SortingAILessonSpecs,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.aiSpecsLessonRepository;
-    throw new Error('Method not implemented.');
+    return this.aiSpecsLessonRepository.getAISpecs(filters, sort, lightDTO);
   }
-  getAISpecById(_aiSpecId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getAISpecById(aiSpecId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.aiSpecsLessonRepository.getAISpecById(aiSpecId, lightDTO);
+    return parseApiResponse(result, 'AI Spec retrieved successfully');
   }
-  postAISpec(_dto: AISpecsLessonInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postAISpec(dto: AISpecsLessonInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.aiSpecsLessonRepository.createAISpec(dto, lightDTO);
+    return parseApiResponse(result, 'AI Spec created successfully');
   }
-  putAISpec(
-    _aiSpecId: string,
-    _dto: Partial<AISpecsLessonInDTO>,
-    _lightDTO?: boolean
+  async putAISpec(
+    aiSpecId: string,
+    dto: Partial<AISpecsLessonInDTO>,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.aiSpecsLessonRepository.updateAISpec(aiSpecId, dto, lightDTO);
+    return parseApiResponse(result, 'AI Spec updated successfully');
   }
-  deleteAISpec(_aiSpecId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteAISpec(aiSpecId: string): Promise<ApiResponse<unknown>> {
+    await this.aiSpecsLessonRepository.deleteAISpecById(aiSpecId);
+    return parseApiResponse(null, 'AI Spec deleted successfully');
   }
 }

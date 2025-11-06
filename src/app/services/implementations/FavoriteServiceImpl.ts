@@ -1,7 +1,8 @@
-import type {
-  ApiResponse,
-  FiltersFavoriteCourse,
-  SortingFavoriteCourses,
+import {
+  type ApiResponse,
+  type FiltersFavoriteCourse,
+  parseApiResponse,
+  type SortingFavoriteCourses,
 } from '../../../utils/index.js';
 import type { FavoriteCourseInDTO } from '../../models/index.js';
 import type { FavoriteCoursesRepository } from '../../repositories/index.js';
@@ -13,25 +14,28 @@ export class FavoriteServiceImpl implements FavoriteService {
     this.favoriteCoursesRepository = favoriteCoursesRepository;
   }
   getFavoriteCourses(
-    _filters: FiltersFavoriteCourse,
-    _sort: SortingFavoriteCourses
+    filters: FiltersFavoriteCourse,
+    sort: SortingFavoriteCourses
   ): Promise<ApiResponse<unknown>> {
-    this.favoriteCoursesRepository;
-    throw new Error('Method not implemented.');
+    return this.favoriteCoursesRepository.getFavoriteCourses(filters, sort);
   }
-  getFavorite(_favoriteCourseId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getFavorite(favoriteCourseId: string): Promise<ApiResponse<unknown>> {
+    const result = await this.favoriteCoursesRepository.getFavoriteCourseById(favoriteCourseId);
+    return parseApiResponse(result, 'Favorite retrieved successfully');
   }
-  postFavoriteCourse(_dto: FavoriteCourseInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postFavoriteCourse(dto: FavoriteCourseInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.favoriteCoursesRepository.createFavoriteCourse(dto);
+    return parseApiResponse(result, 'Favorite created successfully');
   }
-  putFavorite(
-    _favoriteCourseId: string,
-    _dto: Partial<FavoriteCourseInDTO>
+  async putFavorite(
+    favoriteCourseId: string,
+    dto: Partial<FavoriteCourseInDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.favoriteCoursesRepository.updateFavoriteCourse(favoriteCourseId, dto);
+    return parseApiResponse(result, 'Favorite updated successfully');
   }
-  deleteFavorite(_favoriteCourseId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteFavorite(favoriteCourseId: string): Promise<ApiResponse<unknown>> {
+    await this.favoriteCoursesRepository.deleteFavoriteCourseById(favoriteCourseId);
+    return parseApiResponse(null, 'Favorite deleted successfully');
   }
 }

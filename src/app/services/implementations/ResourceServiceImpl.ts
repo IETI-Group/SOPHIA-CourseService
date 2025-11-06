@@ -1,4 +1,9 @@
-import type { ApiResponse, FiltersResource, SortingResources } from '../../../utils/index.js';
+import {
+  type ApiResponse,
+  type FiltersResource,
+  parseApiResponse,
+  type SortingResources,
+} from '../../../utils/index.js';
 import type { ResourcesInDTO } from '../../models/index.js';
 import type { ResourcesRepository } from '../../repositories/index.js';
 import type { ResourceService } from '../index.js';
@@ -9,27 +14,30 @@ export class ResourceServiceImpl implements ResourceService {
     this.resourcesRepository = resourcesRepository;
   }
   getResources(
-    _filters: FiltersResource,
-    _sort: SortingResources,
-    _lightDTO?: boolean
+    filters: FiltersResource,
+    sort: SortingResources,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.resourcesRepository;
-    throw new Error('Method not implemented.');
+    return this.resourcesRepository.getResources(filters, sort, lightDTO);
   }
-  getResourceById(_resourceId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getResourceById(resourceId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.resourcesRepository.getResourceById(resourceId, lightDTO);
+    return parseApiResponse(result, 'Resource retrieved successfully');
   }
-  postResources(_dto: ResourcesInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postResources(dto: ResourcesInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.resourcesRepository.createResource(dto, lightDTO);
+    return parseApiResponse(result, 'Resource created successfully');
   }
-  putResources(
-    _resourceId: string,
-    _dto: Partial<ResourcesInDTO>,
-    _lightDTO?: boolean
+  async putResources(
+    resourceId: string,
+    dto: Partial<ResourcesInDTO>,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.resourcesRepository.updateResource(resourceId, dto, lightDTO);
+    return parseApiResponse(result, 'Resource updated successfully');
   }
-  deleteResources(_resourceId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteResources(resourceId: string): Promise<ApiResponse<unknown>> {
+    await this.resourcesRepository.deleteResourceById(resourceId);
+    return parseApiResponse(null, 'Resource deleted successfully');
   }
 }

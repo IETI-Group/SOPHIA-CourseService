@@ -18,14 +18,14 @@ export interface QuizService {
   getQuizzesSection(
     filters: FiltersQuizSection,
     sort: SortingSectionQuizzes,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
-  getQuizById(quizId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
-  postQuizSection(dto: QuizSectionInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
+  getQuizById(quizId: string, lightDTO: boolean): Promise<ApiResponse<unknown>>;
+  postQuizSection(dto: QuizSectionInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>>;
   putQuiz(
     quizId: string,
     dto: Partial<QuizSectionUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
   deleteQuiz(quizId: string): Promise<ApiResponse<unknown>>;
   getQuestionsQuiz(

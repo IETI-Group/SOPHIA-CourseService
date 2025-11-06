@@ -9,14 +9,14 @@ export interface LessonContentService {
   getLessonContents(
     filters: FiltersLessonContent,
     sort: SortingLessonContent,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
-  getLessonContentsById(lessonContentId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
-  postLessonContents(dto: ContentLessonInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
+  getLessonContentsById(lessonContentId: string, lightDTO: boolean): Promise<ApiResponse<unknown>>;
+  postLessonContents(dto: ContentLessonInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>>;
   putLessonContents(
     lessonContentId: string,
     dto: Partial<ContentLessonUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
   deleteLessonContents(lessonContentId: string): Promise<ApiResponse<unknown>>;
 }

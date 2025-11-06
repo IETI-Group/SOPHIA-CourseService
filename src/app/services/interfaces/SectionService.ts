@@ -5,14 +5,14 @@ export interface SectionService {
   getCourseSections(
     filters: FiltersSection,
     sort: SortingSections,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
-  getSectionById(sectionId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
-  postCourseSection(dto: SectionCourseInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>>;
+  getSectionById(sectionId: string, lightDTO: boolean): Promise<ApiResponse<unknown>>;
+  postCourseSection(dto: SectionCourseInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>>;
   putSection(
     sectionId: string,
     dto: Partial<SectionCourseUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>>;
   deleteSection(sectionId: string): Promise<ApiResponse<unknown>>;
 }

@@ -1,11 +1,12 @@
-import type {
-  ApiResponse,
-  FiltersOptionQuiz,
-  FiltersQuestionQuiz,
-  FiltersQuizSection,
-  SortingQuizOptions,
-  SortingQuizQuestions,
-  SortingSectionQuizzes,
+import {
+  type ApiResponse,
+  type FiltersOptionQuiz,
+  type FiltersQuestionQuiz,
+  type FiltersQuizSection,
+  parseApiResponse,
+  type SortingQuizOptions,
+  type SortingQuizQuestions,
+  type SortingSectionQuizzes,
 } from '../../../utils/index.js';
 import type {
   OptionQuizInDTO,
@@ -34,65 +35,74 @@ export class QuizServiceImpl implements QuizService {
     this.questionsQuizzRepository = questionsQuizzRepository;
   }
   getQuizzesSection(
-    _filters: FiltersQuizSection,
-    _sort: SortingSectionQuizzes,
-    _lightDTO?: boolean
+    filters: FiltersQuizSection,
+    sort: SortingSectionQuizzes,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    this.quizzesSectionRepository;
-    this.optionsQuizzRepository;
-    this.questionsQuizzRepository;
-    throw new Error('Method not implemented.');
+    return this.quizzesSectionRepository.getQuizzes(filters, sort, lightDTO);
   }
-  getQuizById(_quizId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getQuizById(quizId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.quizzesSectionRepository.getQuizById(quizId, lightDTO);
+    return parseApiResponse(result, 'Quiz retrieved successfully');
   }
-  postQuizSection(_dto: QuizSectionInDTO, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postQuizSection(dto: QuizSectionInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
+    const result = await this.quizzesSectionRepository.createQuiz(dto, lightDTO);
+    return parseApiResponse(result, 'Quiz created successfully');
   }
-  putQuiz(
-    _quizId: string,
-    _dto: Partial<QuizSectionUpdateDTO>,
-    _lightDTO?: boolean
+  async putQuiz(
+    quizId: string,
+    dto: Partial<QuizSectionUpdateDTO>,
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.quizzesSectionRepository.updateQuiz(quizId, dto, lightDTO);
+    return parseApiResponse(result, 'Quiz updated successfully');
   }
-  deleteQuiz(_quizId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteQuiz(quizId: string): Promise<ApiResponse<unknown>> {
+    await this.quizzesSectionRepository.deleteQuizById(quizId);
+    return parseApiResponse(null, 'Quiz deleted successfully');
   }
   getQuestionsQuiz(
-    _filters: FiltersQuestionQuiz,
-    _sort: SortingQuizQuestions
+    filters: FiltersQuestionQuiz,
+    sort: SortingQuizQuestions
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    return this.questionsQuizzRepository.getQuestionsQuiz(filters, sort);
   }
-  getQuestionById(_questionQuizId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getQuestionById(questionQuizId: string): Promise<ApiResponse<unknown>> {
+    const result = await this.questionsQuizzRepository.getQuestionQuizById(questionQuizId);
+    return parseApiResponse(result, 'Question retrieved successfully');
   }
-  postQuestionQuiz(_dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postQuestionQuiz(dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.questionsQuizzRepository.createQuestionQuiz(dto);
+    return parseApiResponse(result, 'Question created successfully');
   }
-  putQuestion(_questionQuizId: string, _dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async putQuestion(questionQuizId: string, dto: QuestionQuizInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.questionsQuizzRepository.updateQuestionQuiz(questionQuizId, dto);
+    return parseApiResponse(result, 'Question updated successfully');
   }
-  deleteQuestion(_questionQuizId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteQuestion(questionQuizId: string): Promise<ApiResponse<unknown>> {
+    await this.questionsQuizzRepository.deleteQuestionQuizById(questionQuizId);
+    return parseApiResponse(null, 'Question deleted successfully');
   }
   getOptionsQuiz(
-    _filters: FiltersOptionQuiz,
-    _sort: SortingQuizOptions
+    filters: FiltersOptionQuiz,
+    sort: SortingQuizOptions
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    return this.optionsQuizzRepository.getOptions(filters, sort);
   }
-  getOption(_optionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getOption(optionId: string): Promise<ApiResponse<unknown>> {
+    const result = await this.optionsQuizzRepository.getOptionById(optionId);
+    return parseApiResponse(result, 'Option retrieved successfully');
   }
-  postOptionQuiz(_dto: OptionQuizInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postOptionQuiz(dto: OptionQuizInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.optionsQuizzRepository.createOption(dto);
+    return parseApiResponse(result, 'Option created successfully');
   }
-  putOption(_optionId: string, _dto: Partial<OptionQuizInDTO>): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async putOption(optionId: string, dto: Partial<OptionQuizInDTO>): Promise<ApiResponse<unknown>> {
+    const result = await this.optionsQuizzRepository.updateOption(optionId, dto);
+    return parseApiResponse(result, 'Option updated successfully');
   }
-  deleteOption(_optionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteOption(optionId: string): Promise<ApiResponse<unknown>> {
+    await this.optionsQuizzRepository.deleteOptionById(optionId);
+    return parseApiResponse(null, 'Option deleted successfully');
   }
 }

@@ -1,7 +1,8 @@
-import type {
-  ApiResponse,
-  FiltersProgressContent,
-  SortingContentProgress,
+import {
+  type ApiResponse,
+  type FiltersProgressContent,
+  parseApiResponse,
+  type SortingContentProgress,
 } from '../../../utils/index.js';
 import type { ProgressContentInDTO, ProgressContentUpdateDTO } from '../../models/index.js';
 import type { ProgressContentRepository } from '../../repositories/index.js';
@@ -13,25 +14,28 @@ export class ProgressServiceImpl implements ProgressService {
     this.progressContentRepository = progressContentRepository;
   }
   getProgressContent(
-    _filters: FiltersProgressContent,
-    _sort: SortingContentProgress
+    filters: FiltersProgressContent,
+    sort: SortingContentProgress
   ): Promise<ApiResponse<unknown>> {
-    this.progressContentRepository;
-    throw new Error('Method not implemented.');
+    return this.progressContentRepository.getProgress(filters, sort);
   }
-  getProgressById(_progressId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getProgressById(progressId: string): Promise<ApiResponse<unknown>> {
+    const result = await this.progressContentRepository.getProgressById(progressId);
+    return parseApiResponse(result, 'Progress retrieved successfully');
   }
-  postProgressContent(_dto: ProgressContentInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postProgressContent(dto: ProgressContentInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.progressContentRepository.createProgress(dto);
+    return parseApiResponse(result, 'Progress created successfully');
   }
-  putProgress(
-    _progressId: string,
-    _dto: Partial<ProgressContentUpdateDTO>
+  async putProgress(
+    progressId: string,
+    dto: Partial<ProgressContentUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.progressContentRepository.updateProgress(progressId, dto);
+    return parseApiResponse(result, 'Progress updated successfully');
   }
-  deleteProgress(_progressId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteProgress(progressId: string): Promise<ApiResponse<unknown>> {
+    await this.progressContentRepository.deleteProgressById(progressId);
+    return parseApiResponse(null, 'Progress deleted successfully');
   }
 }

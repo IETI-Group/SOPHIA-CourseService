@@ -1,7 +1,8 @@
-import type {
-  ApiResponse,
-  FiltersAssignmentLesson,
-  SortingAssignments,
+import {
+  type ApiResponse,
+  type FiltersAssignmentLesson,
+  parseApiResponse,
+  type SortingAssignments,
 } from '../../../utils/index.js';
 import type { AssignmentLessonInDTO, AssignmentLessonUpdateDTO } from '../../models/index.js';
 import type { AssignmentsLessonRepository } from '../../repositories/index.js';
@@ -13,25 +14,28 @@ export class AssignmentServiceImpl implements AssignmentService {
     this.assignmentsLessonRepository = assignmentLessonRepository;
   }
   getAssignmentsLesson(
-    _filters: FiltersAssignmentLesson,
-    _sort: SortingAssignments
+    filters: FiltersAssignmentLesson,
+    sort: SortingAssignments
   ): Promise<ApiResponse<unknown>> {
-    this.assignmentsLessonRepository;
-    throw new Error('Method not implemented.');
+    return this.assignmentsLessonRepository.getAssignments(filters, sort);
   }
-  getAssignmentById(_assignmentLessonId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getAssignmentById(assignmentLessonId: string): Promise<ApiResponse<unknown>> {
+    const result = await this.assignmentsLessonRepository.getAssignmentById(assignmentLessonId);
+    return parseApiResponse(result, 'Assignment retrieved successfully');
   }
-  postAssignmentLesson(_dto: AssignmentLessonInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postAssignmentLesson(dto: AssignmentLessonInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.assignmentsLessonRepository.createAssignment(dto);
+    return parseApiResponse(result, 'Assignment created successfully');
   }
-  putAssignment(
-    _assignmentLessonId: string,
-    _dto: Partial<AssignmentLessonUpdateDTO>
+  async putAssignment(
+    assignmentLessonId: string,
+    dto: Partial<AssignmentLessonUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.assignmentsLessonRepository.updateAssignment(assignmentLessonId, dto);
+    return parseApiResponse(result, 'Assignment updated successfully');
   }
-  deleteAssignment(_assignmentLessonId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteAssignment(assignmentLessonId: string): Promise<ApiResponse<unknown>> {
+    await this.assignmentsLessonRepository.deleteAssignmentById(assignmentLessonId);
+    return parseApiResponse(null, 'Assignment deleted successfully');
   }
 }

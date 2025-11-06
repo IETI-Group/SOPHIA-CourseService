@@ -1,4 +1,9 @@
-import type { ApiResponse, FiltersSubmission, SortingSubmissions } from '../../../utils/index.js';
+import {
+  type ApiResponse,
+  type FiltersSubmission,
+  parseApiResponse,
+  type SortingSubmissions,
+} from '../../../utils/index.js';
 import type {
   SubmissionAssignmentInDTO,
   SubmissionAssignmentUpdateDTO,
@@ -12,25 +17,28 @@ export class SubmissionServiceImpl implements SubmissionService {
     this.submissionsRepository = submissionsRepository;
   }
   getSubmissionsAssignment(
-    _filters: FiltersSubmission,
-    _sort: SortingSubmissions
+    filters: FiltersSubmission,
+    sort: SortingSubmissions
   ): Promise<ApiResponse<unknown>> {
-    this.submissionsRepository;
-    throw new Error('Method not implemented.');
+    return this.submissionsRepository.getSubmissions(filters, sort);
   }
-  getSubmission(_submissionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async getSubmission(submissionId: string): Promise<ApiResponse<unknown>> {
+    const result = await this.submissionsRepository.getSubmissionById(submissionId);
+    return parseApiResponse(result, 'Submission retrieved successfully');
   }
-  postSubmissionAssignment(_dto: SubmissionAssignmentInDTO): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async postSubmissionAssignment(dto: SubmissionAssignmentInDTO): Promise<ApiResponse<unknown>> {
+    const result = await this.submissionsRepository.createSubmission(dto);
+    return parseApiResponse(result, 'Submission created successfully');
   }
-  putSubmission(
-    _submissionId: string,
-    _dto: Partial<SubmissionAssignmentUpdateDTO>
+  async putSubmission(
+    submissionId: string,
+    dto: Partial<SubmissionAssignmentUpdateDTO>
   ): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+    const result = await this.submissionsRepository.updateSubmission(submissionId, dto);
+    return parseApiResponse(result, 'Submission updated successfully');
   }
-  deleteSubmission(_submissionId: string): Promise<ApiResponse<unknown>> {
-    throw new Error('Method not implemented.');
+  async deleteSubmission(submissionId: string): Promise<ApiResponse<unknown>> {
+    await this.submissionsRepository.deleteSubmissionById(submissionId);
+    return parseApiResponse(null, 'Submission deleted successfully');
   }
 }
