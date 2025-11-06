@@ -13,14 +13,34 @@ import type {
   QuizSectionInDTO,
   QuizSectionUpdateDTO,
 } from '../../models/index.js';
+import type {
+  OptionsQuizzRepository,
+  QuestionsQuizzRepository,
+  QuizzesSectionRepository,
+} from '../../repositories/index.js';
 import type { QuizService } from '../index.js';
 
 export class QuizServiceImpl implements QuizService {
+  private readonly quizzesSectionRepository: QuizzesSectionRepository;
+  private readonly optionsQuizzRepository: OptionsQuizzRepository;
+  private readonly questionsQuizzRepository: QuestionsQuizzRepository;
+  constructor(
+    quizzesSectionRepository: QuizzesSectionRepository,
+    optionsQuizzRepository: OptionsQuizzRepository,
+    questionsQuizzRepository: QuestionsQuizzRepository
+  ) {
+    this.quizzesSectionRepository = quizzesSectionRepository;
+    this.optionsQuizzRepository = optionsQuizzRepository;
+    this.questionsQuizzRepository = questionsQuizzRepository;
+  }
   getQuizzesSection(
     _filters: FiltersQuizSection,
     _sort: SortingSectionQuizzes,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
+    this.quizzesSectionRepository;
+    this.optionsQuizzRepository;
+    this.questionsQuizzRepository;
     throw new Error('Method not implemented.');
   }
   getQuizById(_quizId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {

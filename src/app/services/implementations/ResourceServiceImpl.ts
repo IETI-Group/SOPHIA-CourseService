@@ -1,13 +1,19 @@
 import type { ApiResponse, FiltersResource, SortingResources } from '../../../utils/index.js';
 import type { ResourcesInDTO } from '../../models/index.js';
+import type { ResourcesRepository } from '../../repositories/index.js';
 import type { ResourceService } from '../index.js';
 
 export class ResourceServiceImpl implements ResourceService {
+  private readonly resourcesRepository: ResourcesRepository;
+  constructor(resourcesRepository: ResourcesRepository) {
+    this.resourcesRepository = resourcesRepository;
+  }
   getResources(
     _filters: FiltersResource,
     _sort: SortingResources,
     _lightDTO?: boolean
   ): Promise<ApiResponse<unknown>> {
+    this.resourcesRepository;
     throw new Error('Method not implemented.');
   }
   getResourceById(_resourceId: string, _lightDTO?: boolean): Promise<ApiResponse<unknown>> {
