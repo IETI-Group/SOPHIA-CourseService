@@ -84,7 +84,7 @@ import prisma from './db.js';
 
 interface DIContainer {
   logger: typeof logger;
-  prisma: PrismaClient;
+  prismaClient: PrismaClient;
   aiSpecsLessonRepository: AISpecsLessonRepository;
   assignmentsLessonRepository: AssignmentsLessonRepository;
   attemptsQuizzRepository: AttemptsQuizzRepository;
@@ -134,7 +134,7 @@ const container = createContainer<DIContainer>({
 
 container.register({
   logger: asValue(logger),
-  prisma: asValue(prisma),
+  prismaClient: asValue(prisma),
 
   // Repositories
 

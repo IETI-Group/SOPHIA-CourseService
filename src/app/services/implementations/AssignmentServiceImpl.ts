@@ -10,8 +10,8 @@ import type { AssignmentService } from '../index.js';
 
 export class AssignmentServiceImpl implements AssignmentService {
   private readonly assignmentsLessonRepository: AssignmentsLessonRepository;
-  constructor(assignmentLessonRepository: AssignmentsLessonRepository) {
-    this.assignmentsLessonRepository = assignmentLessonRepository;
+  constructor(assignmentsLessonRepository: AssignmentsLessonRepository) {
+    this.assignmentsLessonRepository = assignmentsLessonRepository;
   }
   getAssignmentsLesson(
     filters: FiltersAssignmentLesson,

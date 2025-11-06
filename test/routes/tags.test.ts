@@ -1,10 +1,18 @@
 import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import request from 'supertest';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
 import { ZodError } from 'zod';
 import type { TagsController } from '../../src/controllers/index.js';
 import { createTagsRouter } from '../../src/routes/tags.js';
+
+vi.mock('../../src/config/diContainer.js', () => {
+  return {
+    default: {
+      resolve: vi.fn(),
+    },
+  }
+});
 
 describe('Tags Routes', () => {
   let app: Express;

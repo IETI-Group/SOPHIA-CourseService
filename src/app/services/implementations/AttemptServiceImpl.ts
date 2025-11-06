@@ -10,8 +10,8 @@ import type { AttemptService } from '../index.js';
 
 export class AttemptServiceImpl implements AttemptService {
   private readonly attemptsQuizzRepository: AttemptsQuizzRepository;
-  constructor(attemptQuizRepository: AttemptsQuizzRepository) {
-    this.attemptsQuizzRepository = attemptQuizRepository;
+  constructor(attemptsQuizzRepository: AttemptsQuizzRepository) {
+    this.attemptsQuizzRepository = attemptsQuizzRepository;
   }
   getAttemptsQuiz(
     filters: FiltersAttemptQuiz,

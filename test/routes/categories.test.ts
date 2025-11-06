@@ -1,10 +1,18 @@
 import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import request from 'supertest';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
 import { ZodError } from 'zod';
 import type { CategoriesController } from '../../src/controllers/index.js';
 import { createCategoriesRouter } from '../../src/routes/categories.js';
+
+vi.mock('../../src/config/diContainer.js', () => {
+  return {
+    default: {
+      resolve: vi.fn(),
+    },
+  }
+});
 
 describe('Categories Routes', () => {
   let app: Express;
