@@ -254,24 +254,44 @@ export class QuizzesSectionRepositoryPostgreSQL implements QuizzesSectionReposit
 
   async updateQuiz(
     quizId: string,
-    dto: QuizSectionUpdateDTO,
+    dto: Partial<QuizSectionUpdateDTO>,
     lightDTO: boolean
   ): Promise<QuizSectionOutLightDTO> {
     const select = this.buildSelect(lightDTO);
 
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.sectionId !== undefined) {
+      dataToUpdate.section_id = dto.sectionId;
+    }
+    if (dto.description !== undefined) {
+      dataToUpdate.description = dto.description;
+    }
+    if (dto.title !== undefined) {
+      dataToUpdate.title = dto.title;
+    }
+    if (dto.aiGenerated !== undefined) {
+      dataToUpdate.ai_generated = dto.aiGenerated;
+    }
+    if (dto.generationTaskId !== undefined) {
+      dataToUpdate.generation_task_id = dto.generationTaskId;
+    }
+    if (dto.difficultyDistribution !== undefined) {
+      dataToUpdate.difficulty_distribution = dto.difficultyDistribution as never;
+    }
+    if (dto.adaptativeLogic !== undefined) {
+      dataToUpdate.adaptative_logic = dto.adaptativeLogic as never;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.durationMinutes !== undefined) {
+      dataToUpdate.duration_minutes = dto.durationMinutes;
+    }
+
     const quiz = await this.prismaClient.quizzes.update({
       where: { id_quiz: quizId },
-      data: {
-        section_id: dto.sectionId,
-        description: dto.description,
-        title: dto.title,
-        ai_generated: dto.aiGenerated,
-        generation_task_id: dto.generationTaskId,
-        difficulty_distribution: dto.difficultyDistribution as never,
-        adaptative_logic: dto.adaptativeLogic as never,
-        active: dto.active,
-        duration_minutes: dto.durationMinutes,
-      },
+      data: dataToUpdate,
       select,
     });
 

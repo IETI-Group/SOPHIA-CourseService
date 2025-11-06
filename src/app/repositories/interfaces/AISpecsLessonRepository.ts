@@ -15,7 +15,7 @@ export interface AISpecsLessonRepository {
   createAISpec(dto: AISpecsLessonInDTO, lightDTO: boolean): Promise<AISpecsLessonOutLightDTO>;
   updateAISpec(
     aiSpecId: string,
-    dto: AISpecsLessonInDTO,
+    dto: Partial<AISpecsLessonInDTO>,
     lightDTO: boolean
   ): Promise<AISpecsLessonOutLightDTO>;
   deleteAISpecById(aiSpecId: string): Promise<void>;

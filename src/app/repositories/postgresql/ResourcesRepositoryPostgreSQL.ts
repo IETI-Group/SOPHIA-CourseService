@@ -107,27 +107,26 @@ export class ResourcesRepositoryPostgreSQL implements ResourcesRepository {
     return whereClause;
   }
 
+  private readonly sortFieldMapping: Record<
+    SORT_RESOURCE,
+    keyof Prisma.ResourcesOrderByWithRelationInput | null
+  > = {
+    [SORT_RESOURCE.NAME]: 'name',
+    [SORT_RESOURCE.TYPE]: 'type',
+    [SORT_RESOURCE.ORDER]: 'order',
+    [SORT_RESOURCE.DURATION_SECONDS]: 'duration_seconds',
+    [SORT_RESOURCE.FILE_SIZE_MB]: 'file_size_mb',
+    [SORT_RESOURCE.DISCRIMINANT_RESOURCE]: null,
+  };
+
   private buildSort(sortParams: SortingResources): Prisma.ResourcesOrderByWithRelationInput[] {
     const orderBy: Prisma.ResourcesOrderByWithRelationInput[] = [];
     const direction = sortParams.sortDirection;
 
     for (const sortField of sortParams.sortFields) {
-      switch (sortField) {
-        case SORT_RESOURCE.NAME:
-          orderBy.push({ name: direction });
-          break;
-        case SORT_RESOURCE.TYPE:
-          orderBy.push({ type: direction });
-          break;
-        case SORT_RESOURCE.ORDER:
-          orderBy.push({ order: direction });
-          break;
-        case SORT_RESOURCE.DURATION_SECONDS:
-          orderBy.push({ duration_seconds: direction });
-          break;
-        case SORT_RESOURCE.FILE_SIZE_MB:
-          orderBy.push({ file_size_mb: direction });
-          break;
+      const field = this.sortFieldMapping[sortField];
+      if (field) {
+        orderBy.push({ [field]: direction });
       }
     }
 
@@ -368,24 +367,53 @@ export class ResourcesRepositoryPostgreSQL implements ResourcesRepository {
 
   async updateResource(
     resourceId: string,
-    dto: ResourcesInDTO,
+    dto: Partial<ResourcesInDTO>,
     lightDTO: boolean
   ): Promise<ResourcesOutLightDTO> {
     const select = this.buildSelect(lightDTO);
+
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.entityReference !== undefined) {
+      dataToUpdate.entityReference = dto.entityReference;
+    }
+    if (dto.discriminant !== undefined) {
+      dataToUpdate.discriminant = dto.discriminant;
+    }
+    if (dto.name !== undefined) {
+      dataToUpdate.name = dto.name;
+    }
+    if (dto.type !== undefined) {
+      dataToUpdate.type = dto.type;
+    }
+    if (dto.url !== undefined) {
+      dataToUpdate.url = dto.url;
+    }
+    if (dto.content !== undefined) {
+      dataToUpdate.content = dto.content;
+    }
+    if (dto.order !== undefined) {
+      dataToUpdate.order = dto.order;
+    }
+    if (dto.durationSeconds !== undefined) {
+      dataToUpdate.duration_seconds = dto.durationSeconds;
+    }
+    if (dto.fileSizeMb !== undefined) {
+      dataToUpdate.file_size_mb = dto.fileSizeMb;
+    }
+    if (dto.mimeType !== undefined) {
+      dataToUpdate.mime_type = dto.mimeType;
+    }
+    if (dto.thumnailUrl !== undefined) {
+      dataToUpdate.thumnail_url = dto.thumnailUrl;
+    }
+    if (dto.metadata !== undefined) {
+      dataToUpdate.metadata = dto.metadata as Prisma.InputJsonValue;
+    }
+
     const resource = await this.prismaClient.resources.update({
       where: { id_resource: resourceId },
-      data: {
-        name: dto.name,
-        type: dto.type,
-        url: dto.url,
-        content: dto.content,
-        order: dto.order,
-        duration_seconds: dto.durationSeconds,
-        file_size_mb: dto.fileSizeMb,
-        mime_type: dto.mimeType,
-        thumnail_url: dto.thumnailUrl,
-        metadata: dto.metadata as Prisma.InputJsonValue,
-      },
+      data: dataToUpdate,
       select,
     });
 

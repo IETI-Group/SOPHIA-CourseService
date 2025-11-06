@@ -1,7 +1,10 @@
 import { type PrismaClient, SubmissionStatus } from '@prisma/client';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
-import type { SubmissionsRepository } from '../../../../src/app/index.js';
+import type {
+  SubmissionAssignmentUpdateDTO,
+  SubmissionsRepository,
+} from '../../../../src/app/index.js';
 import { SubmissionsRepositoryPostgreSQL } from '../../../../src/app/repositories/postgresql/SubmissionsRepositoryPostgreSQL.js';
 import { SORT_SUBMISSION } from '../../../../src/utils/index.js';
 
@@ -189,7 +192,7 @@ describe('Submissions Repository', () => {
 
   describe('updateSubmission', () => {
     it('Should update an existing submission', async () => {
-      const submissionUpdate = {
+      const submissionUpdate: Partial<SubmissionAssignmentUpdateDTO> = {
         assignmentId: 'assignment-1',
         userId: 'user-1',
         feedback: 'Great job!',
@@ -227,8 +230,43 @@ describe('Submissions Repository', () => {
       });
     });
 
+    it('Should update only some fields of a submission', async () => {
+      const partialUpdate: Partial<SubmissionAssignmentUpdateDTO> = {
+        feedback: 'Needs improvement',
+        score: 75.0,
+      };
+
+      const existingData = {
+        id_submission: '2',
+        assignment_id: 'assignment-1',
+        user_id: 'user-2',
+        feedback: 'Needs improvement',
+        greated_at: new Date('2024-01-22'),
+        submitted_at: new Date('2024-01-12'),
+        active: true,
+        score: 75.0,
+        status: SubmissionStatus.SUBMITTED,
+      };
+
+      prismaClient.submissions.update.mockResolvedValue(existingData);
+
+      const result = await submissionsRepository.updateSubmission('2', partialUpdate);
+
+      expect(result).toEqual({
+        idSubmission: '2',
+        assignmentId: 'assignment-1',
+        userId: 'user-2',
+        feedback: 'Needs improvement',
+        gradedAt: new Date('2024-01-22'),
+        submittedAt: new Date('2024-01-12'),
+        active: true,
+        score: 75.0,
+        status: SubmissionStatus.SUBMITTED,
+      });
+    });
+
     it('Should throw error when updating non-existent submission', async () => {
-      const submissionUpdate = {
+      const submissionUpdate: Partial<SubmissionAssignmentUpdateDTO> = {
         assignmentId: 'assignment-1',
         userId: 'user-1',
         feedback: 'Great job!',

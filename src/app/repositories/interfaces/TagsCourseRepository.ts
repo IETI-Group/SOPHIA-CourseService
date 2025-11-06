@@ -5,6 +5,6 @@ export interface TagsCourseRepository {
   getTags(filters: FiltersTag, sort: SortingTags): Promise<PaginatedTags>;
   getTagById(tagId: string): Promise<TagCourseOutDTO>;
   createTag(dto: TagCourseInDTO): Promise<TagCourseOutDTO>;
-  updateTag(tagId: string, dto: TagCourseInDTO): Promise<TagCourseOutDTO>;
+  updateTag(tagId: string, dto: Partial<TagCourseInDTO>): Promise<TagCourseOutDTO>;
   deleteTagById(tagId: string): Promise<void>;
 }

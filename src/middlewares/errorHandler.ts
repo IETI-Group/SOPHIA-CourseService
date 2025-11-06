@@ -1,55 +1,35 @@
 import type { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
 import { logger } from '../utils/logger.js';
 
-export interface CustomError extends Error {
-  statusCode?: number;
-  status?: string;
-}
-
 export const errorHandler = (
-  err: CustomError,
+  err: unknown,
   req: Request,
   res: Response,
   _next: NextFunction
 ): void => {
-  let error = { ...err };
-  error.message = err.message;
+  const message = err instanceof Error ? err.message : 'Unknown error';
 
   logger.error({
-    message: err.message,
-    stack: err.stack,
+    message,
+    stack: err instanceof Error ? err.stack : undefined,
     url: req.url,
     method: req.method,
     ip: req.ip,
   });
 
-  if (err.name === 'ValidationError') {
-    const message = 'Validation Error';
-    error = {
-      name: 'ValidationError',
-      message,
-      statusCode: 400,
-    } as CustomError;
+  if (err instanceof ZodError) {
+    res.status(400).json({
+      success: false,
+      error: 'Validation error',
+      issues: err.issues,
+    });
+    return;
   }
 
-  if (err.name === 'MongoError' && (err as Error)) {
-    const message = 'Duplicate field value entered';
-    error = {
-      name: 'DuplicateFieldError',
-      message,
-      statusCode: 400,
-    } as CustomError;
-  }
-
-  if (err.name === 'CastError') {
-    const message = 'Resource not found';
-    error = { name: 'CastError', message, statusCode: 404 } as CustomError;
-  }
-
-  res.status(error.statusCode || 500).json({
+  res.status(500).json({
     success: false,
-    error: error.statusCode === 404 ? `Not found - ${req.originalUrl}` : 'Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    error: process.env.NODE_ENV === 'production' ? 'Internal server error' : message,
   });
 };
 

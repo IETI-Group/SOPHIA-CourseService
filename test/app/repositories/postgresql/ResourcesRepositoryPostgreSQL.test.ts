@@ -537,9 +537,43 @@ describe('Resources Repository', () => {
       expect(result).toHaveProperty('metadata');
     });
 
+    it('Should update only some fields of a resource', async () => {
+      const resourceId = 'resource_partial';
+      const partialUpdateDTO: Partial<ResourcesInDTO> = {
+        name: 'Updated Name Only',
+        order: 5,
+      };
+
+      const existingData = {
+        id_resource: resourceId,
+        name: 'Updated Name Only',
+        type: ResourceType.VIDEO,
+        url: 'https://example.com/original.mp4',
+        content: null,
+        order: 5,
+        duration_seconds: 300,
+        file_size_mb: 50.5,
+        mime_type: 'video/mp4',
+        thumnail_url: 'https://example.com/thumb.jpg',
+        metadata: { quality: 'HD' },
+        lesson: {
+          id_resource: resourceId,
+          lesson_content_id: 'lesson_1',
+        },
+      };
+
+      prismaClient.resources.update.mockResolvedValueOnce(existingData);
+
+      const result = await resourcesRepository.updateResource(resourceId, partialUpdateDTO, true);
+
+      expect(prismaClient.resources.update).toHaveBeenCalledOnce();
+      expect(result.name).toBe('Updated Name Only');
+      expect(result.order).toBe(5);
+    });
+
     it('Should throw error when trying to update non-existent resource', async () => {
       const resourceId = 'nonexistent';
-      const dto: ResourcesInDTO = {
+      const dto: Partial<ResourcesInDTO> = {
         entityReference: 'lesson_4',
         discriminant: DiscriminantResource.LESSON,
         name: 'Some Resource',

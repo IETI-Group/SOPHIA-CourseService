@@ -278,26 +278,49 @@ export class LessonContentsRepositoryPostgreSQL implements LessonContentsReposit
 
   async updateLessonContent(
     lessonContentId: string,
-    dto: ContentLessonUpdateDTO,
+    dto: Partial<ContentLessonUpdateDTO>,
     lightDTO: boolean
   ): Promise<ContentLessonOutLightDTO> {
     const select = this.buildSelect(lightDTO);
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.lessonId !== undefined) {
+      dataToUpdate.lesson_id = dto.lessonId;
+    }
+    if (dto.metadata !== undefined) {
+      dataToUpdate.metadata = dto.metadata as Prisma.InputJsonValue;
+    }
+    if (dto.difficultyLevel !== undefined) {
+      dataToUpdate.difficulty_level = dto.difficultyLevel;
+    }
+    if (dto.learningTechnique !== undefined) {
+      dataToUpdate.learning_technique = dto.learningTechnique;
+    }
+    if (dto.orderPreference !== undefined) {
+      dataToUpdate.order_preference = dto.orderPreference;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.isCurrentVersion !== undefined) {
+      dataToUpdate.is_current_version = dto.isCurrentVersion;
+    }
+    if (dto.aiGenerated !== undefined) {
+      dataToUpdate.ai_generated = dto.aiGenerated;
+    }
+    if (dto.generationLogId !== undefined) {
+      dataToUpdate.generation_log_id = dto.generationLogId;
+    }
+    if (dto.contentType !== undefined) {
+      dataToUpdate.content_type = dto.contentType;
+    }
+    if (dto.parentContentId !== undefined) {
+      dataToUpdate.parent_content_id = dto.parentContentId;
+    }
 
     const updated = await this.prismaClient.lessonContents.update({
       where: { id_lesson_content: lessonContentId },
-      data: {
-        lesson_id: dto.lessonId,
-        metadata: dto.metadata as Prisma.InputJsonValue,
-        difficulty_level: dto.difficultyLevel,
-        learning_technique: dto.learningTechnique,
-        order_preference: dto.orderPreference,
-        active: dto.active,
-        is_current_version: dto.isCurrentVersion,
-        ai_generated: dto.aiGenerated,
-        generation_log_id: dto.generationLogId,
-        content_type: dto.contentType,
-        parent_content_id: dto.parentContentId,
-      },
+      data: dataToUpdate,
       select,
     });
 

@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@prisma/client/default.js';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
-import type { TagsCourseRepository } from '../../../../src/app/index.js';
+import type { TagCourseInDTO, TagsCourseRepository } from '../../../../src/app/index.js';
 import { TagsCourseRepositoryPostgreSQL } from '../../../../src/app/repositories/postgresql/TagsCourseRepositoryPostgreSQL.js';
 import { SORT_TAG } from '../../../../src/utils/index.js';
 
@@ -148,7 +148,7 @@ describe('Tags Course Repository', () => {
 
   describe('updateTag', () => {
     it('Should update an existing tag', async () => {
-      const tagUpdate = {
+      const tagUpdate: Partial<TagCourseInDTO> = {
         categoryId: 'category-2',
         courseId: 'course-2',
       };
@@ -174,8 +174,34 @@ describe('Tags Course Repository', () => {
       });
     });
 
+    it('Should update only some fields of a tag', async () => {
+      const partialUpdate: Partial<TagCourseInDTO> = {
+        categoryId: 'category-3',
+      };
+
+      const existingData = {
+        category_id: 'category-3',
+        course_id: 'course-1',
+        created_at: new Date('2024-01-10'),
+        categories: {
+          name: 'TypeScript',
+        },
+      };
+
+      prismaClient.tags.update.mockResolvedValue(existingData as never);
+
+      const result = await tagsCourseRepository.updateTag('category-1_course-1', partialUpdate);
+
+      expect(result).toEqual({
+        categoryId: 'category-3',
+        courseId: 'course-1',
+        createdAt: new Date('2024-01-10'),
+        name: 'TypeScript',
+      });
+    });
+
     it('Should throw error when updating non-existent tag', async () => {
-      const tagUpdate = {
+      const tagUpdate: Partial<TagCourseInDTO> = {
         categoryId: 'category-2',
         courseId: 'course-2',
       };

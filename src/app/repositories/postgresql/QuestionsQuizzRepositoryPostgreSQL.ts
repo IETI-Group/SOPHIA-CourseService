@@ -189,17 +189,25 @@ export class QuestionsQuizzRepositoryPostgreSQL implements QuestionsQuizzReposit
 
   async updateQuestionQuiz(
     questionQuizId: string,
-    dto: QuestionQuizInDTO
+    dto: Partial<QuestionQuizInDTO>
   ): Promise<QuestionQuizOutDTO> {
     const select = this.buildSelect();
 
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.quizId !== undefined) {
+      dataToUpdate.quiz_id = dto.quizId;
+    }
+    if (dto.question !== undefined) {
+      dataToUpdate.question = dto.question;
+    }
+    if (dto.durationMinutes !== undefined) {
+      dataToUpdate.duration_minutes = dto.durationMinutes;
+    }
+
     const question = await this.prismaClient.quizQuestions.update({
       where: { id_quiz_question: questionQuizId },
-      data: {
-        quiz_id: dto.quizId,
-        question: dto.question,
-        duration_minutes: dto.durationMinutes,
-      },
+      data: dataToUpdate,
       select,
     });
 

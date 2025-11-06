@@ -318,6 +318,39 @@ describe('Quizzes Section Repository', () => {
       expect(result.title).toBe('Updated Quiz');
     });
 
+    it('Should update only some fields of quiz', async () => {
+      const mockQuiz = {
+        id_quiz: 'quiz-2',
+        section_id: 'section-1',
+        description: 'Original description',
+        created_at: new Date('2025-01-01'),
+        active: false,
+        title: 'Updated Title Only',
+        duration_minutes: 60,
+        ai_generated: false,
+        generation_task_id: null,
+        difficulty_distribution: null,
+        adaptative_logic: null,
+      };
+
+      prismaClient.quizzes.update.mockResolvedValueOnce(mockQuiz);
+
+      const result = await quizzesSectionRepository.updateQuiz(
+        'quiz-2',
+        {
+          title: 'Updated Title Only',
+          active: false,
+          durationMinutes: 60,
+        },
+        true
+      );
+
+      expect(prismaClient.quizzes.update).toHaveBeenCalledOnce();
+      expect(result.title).toBe('Updated Title Only');
+      expect(result.active).toBe(false);
+      expect(result.durationMinutes).toBe(60);
+    });
+
     it('Should throw error when trying to update non-existent quiz', async () => {
       prismaClient.quizzes.update.mockRejectedValueOnce(new Error('Not found'));
 

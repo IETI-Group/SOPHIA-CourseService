@@ -12,6 +12,9 @@ export interface QuestionsQuizzRepository {
   ): Promise<PaginatedQuizQuestions>;
   getQuestionQuizById(questionQuizId: string): Promise<QuestionQuizOutDTO>;
   createQuestionQuiz(dto: QuestionQuizInDTO): Promise<QuestionQuizOutDTO>;
-  updateQuestionQuiz(questionQuizId: string, dto: QuestionQuizInDTO): Promise<QuestionQuizOutDTO>;
+  updateQuestionQuiz(
+    questionQuizId: string,
+    dto: Partial<QuestionQuizInDTO>
+  ): Promise<QuestionQuizOutDTO>;
   deleteQuestionQuizById(questionQuizId: string): Promise<void>;
 }

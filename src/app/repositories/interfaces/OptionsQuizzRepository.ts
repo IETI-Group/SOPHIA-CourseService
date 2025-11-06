@@ -9,6 +9,6 @@ export interface OptionsQuizzRepository {
   getOptions(filters: FiltersOptionQuiz, sort: SortingQuizOptions): Promise<PaginatedQuizOptions>;
   getOptionById(optionId: string): Promise<OptionQuizOutDTO>;
   createOption(dto: OptionQuizInDTO): Promise<OptionQuizOutDTO>;
-  updateOption(optionId: string, dto: OptionQuizInDTO): Promise<OptionQuizOutDTO>;
+  updateOption(optionId: string, dto: Partial<OptionQuizInDTO>): Promise<OptionQuizOutDTO>;
   deleteOptionById(optionId: string): Promise<void>;
 }

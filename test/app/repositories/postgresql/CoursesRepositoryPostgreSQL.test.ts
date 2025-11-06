@@ -482,7 +482,7 @@ describe('Courses Repository', () => {
       const generationMetadata = null;
       const lastAIUpdateAt = null;
 
-      const updateDTO: CourseUpdateDTO = {
+      const updateDTO: Partial<CourseUpdateDTO> = {
         instructorId,
         title,
         description,
@@ -557,7 +557,7 @@ describe('Courses Repository', () => {
       const generationMetadata = { version: 3 };
       const lastAIUpdateAt = new Date('2025-06-15');
 
-      const updateDTO: CourseUpdateDTO = {
+      const updateDTO: Partial<CourseUpdateDTO> = {
         instructorId,
         title,
         description,
@@ -623,9 +623,72 @@ describe('Courses Repository', () => {
       expect(result).toEqual(expectedOutput);
     });
 
+    it('Should update only some fields of a course', async () => {
+      const courseId = 'course_partial_update';
+      const partialDTO: Partial<CourseUpdateDTO> = {
+        title: 'Only Title Updated',
+        price: 79.99,
+        active: true,
+      };
+
+      const expectedOutput: CourseHeavyDTO = {
+        idCourse: courseId,
+        instructorId: 'original_instructor',
+        title: 'Only Title Updated',
+        description: 'Original description',
+        price: 79.99,
+        level: CourseLevel.BEGINNER,
+        active: true,
+        status: CourseStatus.DRAFT,
+        averageReviews: 4.0,
+        durationHours: 15,
+        totalLessons: 25,
+        totalReviews: 50,
+        totalEnrollments: 300,
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-06-20'),
+        publishedAt: null,
+        aiGenerated: false,
+        generationTaskId: null,
+        generationMetadata: null,
+        lastAIUpdateAt: null,
+      };
+
+      prismaClient.courses.update.mockResolvedValueOnce({
+        id_course: courseId,
+        instructor_id: 'original_instructor',
+        title: 'Only Title Updated',
+        description: 'Original description',
+        price: 79.99,
+        level: CourseLevel.BEGINNER,
+        active: true,
+        status: CourseStatus.DRAFT,
+        average_reviews: 4.0,
+        duration_hours: 15,
+        total_lessons: 25,
+        total_reviews: 50,
+        total_enrollments: 300,
+        created_at: new Date('2025-01-01'),
+        updated_at: new Date('2025-06-20'),
+        published_at: null,
+        ai_generated: false,
+        generation_task_id: null,
+        generation_metadata: null,
+        last_ai_update_at: null,
+      });
+
+      const result = await coursesRepository.updateCourse(courseId, partialDTO, false);
+
+      expect(prismaClient.courses.update).toHaveBeenCalledOnce();
+      expect(result).toEqual(expectedOutput);
+      expect(result.title).toBe('Only Title Updated');
+      expect(result.price).toBe(79.99);
+      expect(result.instructorId).toBe('original_instructor');
+    });
+
     it('Should throw error when trying to update non-existent course', async () => {
       const courseId = 'non_existent_course';
-      const updateDTO: CourseUpdateDTO = {
+      const updateDTO: Partial<CourseUpdateDTO> = {
         instructorId: 'inst_1',
         title: 'Test',
         description: 'Test',

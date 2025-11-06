@@ -336,7 +336,7 @@ describe('Sections Repository', () => {
       const generationTaskId = null;
       const suggestedByAi = false;
 
-      const updateDTO: SectionCourseUpdateDTO = {
+      const updateDTO: Partial<SectionCourseUpdateDTO> = {
         courseId,
         title,
         description,
@@ -388,7 +388,7 @@ describe('Sections Repository', () => {
       const generationTaskId = 'task_updated_123';
       const suggestedByAi = true;
 
-      const updateDTO: SectionCourseUpdateDTO = {
+      const updateDTO: Partial<SectionCourseUpdateDTO> = {
         courseId,
         title,
         description,
@@ -433,9 +433,52 @@ describe('Sections Repository', () => {
       expect(result).toEqual(expectedOutput);
     });
 
+    it('Should update only some fields of a section', async () => {
+      const sectionId = 'section_partial_update';
+      const partialUpdateDTO: Partial<SectionCourseUpdateDTO> = {
+        title: 'Only Title Updated',
+        active: true,
+      };
+
+      const existingData = {
+        id_section: sectionId,
+        course_id: 'course_original',
+        title: 'Only Title Updated',
+        description: 'Original description',
+        active: true,
+        order: 3,
+        duration_hours: 7,
+        created_at: new Date('2025-01-15'),
+        ai_generated: false,
+        generation_task_id: null,
+        suggested_by_ai: false,
+      };
+
+      const expectedOutput: SectionCourseOutHeavyDTO = {
+        idSection: sectionId,
+        courseId: 'course_original',
+        title: 'Only Title Updated',
+        description: 'Original description',
+        durationHours: 7,
+        createdAt: new Date('2025-01-15'),
+        active: true,
+        order: 3,
+        aiGenerated: false,
+        generationTaskId: null,
+        suggestedByAi: false,
+      };
+
+      prismaClient.sections.update.mockResolvedValueOnce(existingData);
+
+      const result = await sectionsRepository.updateSection(sectionId, partialUpdateDTO, false);
+
+      expect(prismaClient.sections.update).toHaveBeenCalledOnce();
+      expect(result).toEqual(expectedOutput);
+    });
+
     it('Should throw error when trying to update non-existent section', async () => {
       const sectionId = 'non_existent_section';
-      const updateDTO: SectionCourseUpdateDTO = {
+      const updateDTO: Partial<SectionCourseUpdateDTO> = {
         courseId: 'course_1',
         title: 'Test',
         description: 'Test',

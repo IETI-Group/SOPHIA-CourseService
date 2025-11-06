@@ -14,7 +14,7 @@ export interface FavoriteCoursesRepository {
   createFavoriteCourse(dto: FavoriteCourseInDTO): Promise<FavoriteCourseOutDTO>;
   updateFavoriteCourse(
     favoriteCourseId: string,
-    dto: FavoriteCourseInDTO
+    dto: Partial<FavoriteCourseInDTO>
   ): Promise<FavoriteCourseOutDTO>;
   deleteFavoriteCourseById(favoriteCourseId: string): Promise<void>;
 }

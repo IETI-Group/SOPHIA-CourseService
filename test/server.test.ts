@@ -1,6 +1,14 @@
 import request from 'supertest';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import app from '../src/app.js';
+
+vi.mock('../src/config/diContainer.js', () => {
+  return {
+    default: {
+      resolve: vi.fn(),
+    },
+  };
+});
 
 describe('SOPHIA Course Service API', () => {
   describe('GET /', () => {

@@ -20,7 +20,11 @@ export class SubmissionsRepositoryPostgreSQL implements SubmissionsRepository {
     this.prismaClient = prismaClient;
   }
 
-  private addExactFilter<T>(value: T | null, field: string, where: Record<string, unknown>): void {
+  private addExactFilter<T>(
+    value: T | null | undefined,
+    field: string,
+    where: Record<string, unknown>
+  ): void {
     if (value !== null && value !== undefined) {
       where[field] = value;
     }
@@ -33,10 +37,10 @@ export class SubmissionsRepositoryPostgreSQL implements SubmissionsRepository {
     where: Record<string, unknown>
   ): void {
     if (min !== null || max !== null) {
-      const rangeFilter: Prisma.FloatNullableFilter = {};
-      if (min !== null) rangeFilter.gte = min;
-      if (max !== null) rangeFilter.lte = max;
-      where[field] = rangeFilter;
+      where[field] = {
+        ...(min !== null && { gte: min }),
+        ...(max !== null && { lte: max }),
+      };
     }
   }
 
@@ -47,10 +51,10 @@ export class SubmissionsRepositoryPostgreSQL implements SubmissionsRepository {
     where: Record<string, unknown>
   ): void {
     if (start !== null || end !== null) {
-      const rangeFilter: Prisma.DateTimeNullableFilter = {};
-      if (start !== null) rangeFilter.gte = start;
-      if (end !== null) rangeFilter.lte = end;
-      where[field] = rangeFilter;
+      where[field] = {
+        ...(start !== null && { gte: start }),
+        ...(end !== null && { lte: end }),
+      };
     }
   }
 
@@ -185,18 +189,32 @@ export class SubmissionsRepositoryPostgreSQL implements SubmissionsRepository {
 
   async updateSubmission(
     submissionId: string,
-    dto: SubmissionAssignmentUpdateDTO
+    dto: Partial<SubmissionAssignmentUpdateDTO>
   ): Promise<SubmissionAssignmentOutDTO> {
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.assignmentId !== undefined) {
+      dataToUpdate.assignment_id = dto.assignmentId;
+    }
+    if (dto.userId !== undefined) {
+      dataToUpdate.user_id = dto.userId;
+    }
+    if (dto.feedback !== undefined) {
+      dataToUpdate.feedback = dto.feedback;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.score !== undefined) {
+      dataToUpdate.score = dto.score;
+    }
+    if (dto.status !== undefined) {
+      dataToUpdate.status = dto.status as never;
+    }
+
     const submission = await this.prismaClient.submissions.update({
       where: { id_submission: submissionId },
-      data: {
-        assignment_id: dto.assignmentId,
-        user_id: dto.userId,
-        feedback: dto.feedback,
-        active: dto.active,
-        score: dto.score,
-        status: dto.status as never,
-      },
+      data: dataToUpdate,
     });
 
     return this.buildDTO(submission);

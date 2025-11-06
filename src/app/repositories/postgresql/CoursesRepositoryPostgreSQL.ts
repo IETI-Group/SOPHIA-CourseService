@@ -346,26 +346,49 @@ export class CoursesRepositoryPostgreSQL implements CoursesRepository {
 
   async updateCourse(
     courseId: string,
-    dto: CourseUpdateDTO,
+    dto: Partial<CourseUpdateDTO>,
     lightDTO: boolean
   ): Promise<CourseLightDTO> {
     const select = this.buildSelect(lightDTO);
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.instructorId !== undefined) {
+      dataToUpdate.instructor_id = dto.instructorId;
+    }
+    if (dto.title !== undefined) {
+      dataToUpdate.title = dto.title;
+    }
+    if (dto.description !== undefined) {
+      dataToUpdate.description = dto.description;
+    }
+    if (dto.price !== undefined) {
+      dataToUpdate.price = dto.price;
+    }
+    if (dto.level !== undefined) {
+      dataToUpdate.level = dto.level;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.status !== undefined) {
+      dataToUpdate.status = dto.status;
+    }
+    if (dto.aiGenerated !== undefined) {
+      dataToUpdate.ai_generated = dto.aiGenerated;
+    }
+    if (dto.generationTaskId !== undefined) {
+      dataToUpdate.generation_task_id = dto.generationTaskId;
+    }
+    if (dto.generationMetadata !== undefined) {
+      dataToUpdate.generation_metadata = dto.generationMetadata as Prisma.InputJsonValue;
+    }
+    if (dto.lastAIUpdateAt !== undefined) {
+      dataToUpdate.last_ai_update_at = dto.lastAIUpdateAt;
+    }
 
     const updated = await this.prismaClient.courses.update({
       where: { id_course: courseId },
-      data: {
-        instructor_id: dto.instructorId,
-        title: dto.title,
-        description: dto.description,
-        price: dto.price,
-        level: dto.level,
-        active: dto.active,
-        status: dto.status,
-        ai_generated: dto.aiGenerated,
-        generation_task_id: dto.generationTaskId,
-        generation_metadata: dto.generationMetadata as Prisma.InputJsonValue,
-        last_ai_update_at: dto.lastAIUpdateAt,
-      },
+      data: dataToUpdate,
       select,
     });
 

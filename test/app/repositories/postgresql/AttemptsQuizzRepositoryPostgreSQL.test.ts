@@ -215,7 +215,7 @@ describe('Attempts Quizz Repository', () => {
   describe('updateAttempt', () => {
     it('Should update an existing attempt', async () => {
       const attemptId = 'attempt_123';
-      const dto: AttemptQuizUpdateDTO = {
+      const dto: Partial<AttemptQuizUpdateDTO> = {
         quizId: 'quiz_1',
         userId: 'user_1',
         grade: 95.5,
@@ -239,9 +239,35 @@ describe('Attempts Quizz Repository', () => {
       expect(result.grade).toBe(95.5);
     });
 
+    it('Should update only some fields of an attempt', async () => {
+      const attemptId = 'attempt_456';
+      const partialDto: Partial<AttemptQuizUpdateDTO> = {
+        grade: 88.0,
+      };
+
+      const mockUpdated = {
+        id_quiz_attempt: 'attempt_456',
+        quiz_id: 'quiz_2',
+        user_id: 'user_2',
+        submitted_at: new Date('2025-01-15'),
+        grade: 88.0,
+        duration_minutes: 40,
+      };
+
+      prismaClient.quizAttempts.update.mockResolvedValueOnce(mockUpdated);
+
+      const result = await attemptsQuizzRepository.updateAttempt(attemptId, partialDto);
+
+      expect(prismaClient.quizAttempts.update).toHaveBeenCalledOnce();
+      expect(result.idQuizAttempt).toBe('attempt_456');
+      expect(result.grade).toBe(88.0);
+      expect(result.quizId).toBe('quiz_2');
+      expect(result.userId).toBe('user_2');
+    });
+
     it('Should throw error when trying to update non-existent attempt', async () => {
       const attemptId = 'nonexistent';
-      const dto: AttemptQuizUpdateDTO = {
+      const dto: Partial<AttemptQuizUpdateDTO> = {
         quizId: 'quiz_1',
         userId: 'user_1',
         grade: 95.5,

@@ -29,6 +29,8 @@ export const envConfig = {
   api: {
     version: process.env.API_VERSION || 'v1',
     prefix: process.env.API_PREFIX || '/api',
+    basePath: `${process.env.API_PREFIX || '/api'}/${process.env.API_VERSION || 'v1'}`,
+    versionNumber: process.env.API_VERSION_NUMBER || '1.0.0',
   },
 
   database: {

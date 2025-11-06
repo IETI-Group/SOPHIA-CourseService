@@ -243,22 +243,40 @@ export class ProgressContentRepositoryPostgreSQL implements ProgressContentRepos
 
   async updateProgress(
     progressId: string,
-    dto: ProgressContentUpdateDTO
+    dto: Partial<ProgressContentUpdateDTO>
   ): Promise<ProgressContentOutDTO> {
     const select = this.buildSelect();
 
+    const dataToUpdate: Record<string, unknown> = {};
+
+    if (dto.userId !== undefined) {
+      dataToUpdate.user_id = dto.userId;
+    }
+    if (dto.lessonContentId !== undefined) {
+      dataToUpdate.lesson_content_id = dto.lessonContentId;
+    }
+    if (dto.timeSpendMinutes !== undefined) {
+      dataToUpdate.time_spend_minutes = dto.timeSpendMinutes;
+    }
+    if (dto.completionPercentage !== undefined) {
+      dataToUpdate.completion_percentage = dto.completionPercentage;
+      if (dto.completionPercentage === 100) {
+        dataToUpdate.completed_at = new Date();
+      }
+    }
+    if (dto.effectivinessScore !== undefined) {
+      dataToUpdate.effectiviness_score = dto.effectivinessScore;
+    }
+    if (dto.active !== undefined) {
+      dataToUpdate.active = dto.active;
+    }
+    if (dto.userRating !== undefined) {
+      dataToUpdate.user_rating = dto.userRating;
+    }
+
     const record = await this.prismaClient.lessonContentProgress.update({
       where: { id_content_progress: progressId },
-      data: {
-        user_id: dto.userId,
-        lesson_content_id: dto.lessonContentId,
-        time_spend_minutes: dto.timeSpendMinutes,
-        completion_percentage: dto.completionPercentage,
-        effectiviness_score: dto.effectivinessScore,
-        active: dto.active,
-        user_rating: dto.userRating,
-        completed_at: dto.completionPercentage === 100 ? new Date() : undefined,
-      },
+      data: dataToUpdate,
       select,
     });
 

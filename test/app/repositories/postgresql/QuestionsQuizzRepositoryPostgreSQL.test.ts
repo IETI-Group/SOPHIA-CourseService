@@ -167,6 +167,24 @@ describe('Questions Quizz Repository', () => {
       expect(result.durationMinutes).toBe(7);
     });
 
+    it('Should update only duration of quiz question', async () => {
+      const mockQuestion = {
+        id_quiz_question: 'question-2',
+        quiz_id: 'quiz-1',
+        question: 'What is JavaScript?',
+        duration_minutes: 10,
+      };
+
+      prismaClient.quizQuestions.update.mockResolvedValueOnce(mockQuestion);
+
+      const result = await questionsQuizzRepository.updateQuestionQuiz('question-2', {
+        durationMinutes: 10,
+      });
+
+      expect(prismaClient.quizQuestions.update).toHaveBeenCalledOnce();
+      expect(result.durationMinutes).toBe(10);
+    });
+
     it('Should throw error when trying to update non-existent quiz question', async () => {
       prismaClient.quizQuestions.update.mockRejectedValueOnce(new Error('Not found'));
 

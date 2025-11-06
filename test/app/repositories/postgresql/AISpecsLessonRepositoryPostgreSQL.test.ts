@@ -347,7 +347,7 @@ describe('AI Specs Lesson Repository', () => {
       const contentStructure = { updated: true };
       const estimatedVideoDurationMinutes = 20;
 
-      const updateDTO: AISpecsLessonInDTO = {
+      const updateDTO: Partial<AISpecsLessonInDTO> = {
         lessonContentId,
         generationPromptSummary,
         contentStructure,
@@ -397,7 +397,7 @@ describe('AI Specs Lesson Repository', () => {
       const interactiveElements = { new_quiz: true };
       const exerciseParameters = { level: 'advanced' };
 
-      const updateDTO: AISpecsLessonInDTO = {
+      const updateDTO: Partial<AISpecsLessonInDTO> = {
         lessonContentId,
         generationPromptSummary,
         contentStructure,
@@ -440,6 +440,50 @@ describe('AI Specs Lesson Repository', () => {
       expect(result).toEqual(expectedOutput);
     });
 
+    it('Should update only some fields of an AI Spec', async () => {
+      const aiSpecId = 'spec_partial_update';
+      const updatedPromptSummary = 'Only prompt updated';
+      const updatedDuration = 15;
+
+      const partialUpdateDTO: Partial<AISpecsLessonInDTO> = {
+        generationPromptSummary: updatedPromptSummary,
+        estimatedVideoDurationMinutes: updatedDuration,
+      };
+
+      const existingData = {
+        id_lesson_spec: aiSpecId,
+        created_at: new Date('2025-03-15'),
+        lesson_content_id: 'lesson_original',
+        generation_prompt_summary: updatedPromptSummary,
+        content_structure: { original: true },
+        estimated_video_duration_mins: updatedDuration,
+        video_script: 'Original script',
+        video_generation_instructions: { original: true },
+        interactive_elements: null,
+        exercise_parameters: null,
+      };
+
+      const expectedOutput: AISpecsLessonOutHeavyDTO = {
+        idLessonSpec: aiSpecId,
+        createdAt: new Date('2025-03-15'),
+        lessonContentId: 'lesson_original',
+        generationPromptSummary: updatedPromptSummary,
+        contentStructure: { original: true },
+        estimatedVideoDurationMinutes: updatedDuration,
+        videoScript: 'Original script',
+        videoGenerationInstructions: { original: true },
+        interactiveElements: null,
+        exerciseParameters: null,
+      };
+
+      prismaClient.lessonAISpecs.update.mockResolvedValueOnce(existingData);
+
+      const result = await aiSpecsLessonRepository.updateAISpec(aiSpecId, partialUpdateDTO, false);
+
+      expect(prismaClient.lessonAISpecs.update).toHaveBeenCalledOnce();
+      expect(result).toEqual(expectedOutput);
+    });
+
     it('Should throw error when trying to update non-existent AI spec', async () => {
       const aiSpecId = 'non_existent_spec';
       const lessonContentId = 'lesson_update';
@@ -447,7 +491,7 @@ describe('AI Specs Lesson Repository', () => {
       const contentStructure = { test: true };
       const estimatedVideoDurationMinutes = 10;
 
-      const updateDTO: AISpecsLessonInDTO = {
+      const updateDTO: Partial<AISpecsLessonInDTO> = {
         lessonContentId,
         generationPromptSummary,
         contentStructure,
