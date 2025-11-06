@@ -34,20 +34,20 @@ export class CoursesController {
   async getCourses(
     filters: FiltersCourse,
     sort: SortingCourses,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.courseService.getCourses(filters, sort, lightDTO);
   }
-  async getCourseById(courseId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  async getCourseById(courseId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.courseService.getCourseById(courseId, lightDTO);
   }
-  async postCourse(dto: CourseInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  async postCourse(dto: CourseInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.courseService.postCourse(dto, lightDTO);
   }
   async putCourse(
     courseId: string,
     dto: Partial<CourseUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.courseService.putCourse(courseId, dto, lightDTO);
   }

@@ -7,7 +7,7 @@ vi.mock('../src/config/diContainer.js', () => {
     default: {
       resolve: vi.fn(),
     },
-  }
+  };
 });
 
 describe('SOPHIA Course Service API', () => {

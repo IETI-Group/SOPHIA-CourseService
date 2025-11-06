@@ -9,20 +9,20 @@ export class ResourcesController {
   getResources(
     filters: FiltersResource,
     sort: SortingResources,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.resourceService.getResources(filters, sort, lightDTO);
   }
-  getResourceById(resourceId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  getResourceById(resourceId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.resourceService.getResourceById(resourceId, lightDTO);
   }
-  postResources(dto: ResourcesInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  postResources(dto: ResourcesInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.resourceService.postResources(dto, lightDTO);
   }
   putResources(
     resourceId: string,
     dto: Partial<ResourcesInDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.resourceService.putResources(resourceId, dto, lightDTO);
   }

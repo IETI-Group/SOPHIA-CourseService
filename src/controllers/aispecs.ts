@@ -10,20 +10,20 @@ export class AISpecsController {
   getAISpecs(
     filters: FiltersAISpecsLesson,
     sort: SortingAILessonSpecs,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.aISpecsService.getAISpecs(filters, sort, lightDTO);
   }
-  getAISpecById(aiSpecId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  getAISpecById(aiSpecId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.aISpecsService.getAISpecById(aiSpecId, lightDTO);
   }
-  postAISpec(dto: AISpecsLessonInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  postAISpec(dto: AISpecsLessonInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.aISpecsService.postAISpec(dto, lightDTO);
   }
   putAISpec(
     aiSpecId: string,
     dto: Partial<AISpecsLessonInDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.aISpecsService.putAISpec(aiSpecId, dto, lightDTO);
   }

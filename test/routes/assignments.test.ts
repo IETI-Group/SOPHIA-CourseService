@@ -11,7 +11,7 @@ vi.mock('../../src/config/diContainer.js', () => {
     default: {
       resolve: vi.fn(),
     },
-  }
+  };
 });
 
 describe('Assignments Routes', () => {

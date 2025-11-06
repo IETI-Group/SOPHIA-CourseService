@@ -9,20 +9,20 @@ export class SectionsController {
   getCourseSections(
     filters: FiltersSection,
     sort: SortingSections,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.sectionService.getCourseSections(filters, sort, lightDTO);
   }
-  getSectionById(sectionId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  getSectionById(sectionId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.sectionService.getSectionById(sectionId, lightDTO);
   }
-  postCourseSection(dto: SectionCourseInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  postCourseSection(dto: SectionCourseInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.sectionService.postCourseSection(dto, lightDTO);
   }
   putSection(
     sectionId: string,
     dto: Partial<SectionCourseUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.sectionService.putSection(sectionId, dto, lightDTO);
   }

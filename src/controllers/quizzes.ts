@@ -32,20 +32,20 @@ export class QuizzesController {
   getQuizzesSection(
     filters: FiltersQuizSection,
     sort: SortingSectionQuizzes,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.quizService.getQuizzesSection(filters, sort, lightDTO);
   }
-  getQuizById(quizId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  getQuizById(quizId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.quizService.getQuizById(quizId, lightDTO);
   }
-  postQuizSection(dto: QuizSectionInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  postQuizSection(dto: QuizSectionInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.quizService.postQuizSection(dto, lightDTO);
   }
   putQuiz(
     quizId: string,
     dto: Partial<QuizSectionUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.quizService.putQuiz(quizId, dto, lightDTO);
   }

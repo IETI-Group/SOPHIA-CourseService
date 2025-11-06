@@ -37,20 +37,20 @@ export class LessonsController {
   getSectionLessons(
     filters: FiltersLesson,
     sort: SortingLessons,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.lessonService.getSectionLessons(filters, sort, lightDTO);
   }
-  getLessonById(lessonId: string, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  getLessonById(lessonId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.lessonService.getLessonById(lessonId, lightDTO);
   }
-  postSectionLesson(dto: LessonSectionInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  postSectionLesson(dto: LessonSectionInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.lessonService.postSectionLesson(dto, lightDTO);
   }
   putLesson(
     lessonId: string,
     dto: Partial<LessonSectionUpdateDTO>,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.lessonService.putLesson(lessonId, dto, lightDTO);
   }
@@ -60,23 +60,20 @@ export class LessonsController {
   getLessonContents(
     filters: FiltersLessonContent,
     sort: SortingLessonContent,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.lessonContentService.getLessonContents(filters, sort, lightDTO);
   }
-  getLessonContentsById(
-    lessonContentId: string,
-    lightDTO?: boolean
-  ): Promise<ApiResponse<unknown>> {
+  getLessonContentsById(lessonContentId: string, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.lessonContentService.getLessonContentsById(lessonContentId, lightDTO);
   }
-  postLessonContents(dto: ContentLessonInDTO, lightDTO?: boolean): Promise<ApiResponse<unknown>> {
+  postLessonContents(dto: ContentLessonInDTO, lightDTO: boolean): Promise<ApiResponse<unknown>> {
     return this.lessonContentService.postLessonContents(dto, lightDTO);
   }
   putLessonContents(
     lessonContentId: string,
     dto: ContentLessonUpdateDTO,
-    lightDTO?: boolean
+    lightDTO: boolean
   ): Promise<ApiResponse<unknown>> {
     return this.lessonContentService.putLessonContents(lessonContentId, dto, lightDTO);
   }
