@@ -2,16 +2,16 @@ name: Lint Check
 
 on:
   push:
-    branches: [ "main", "develop", "feat/*", "fix/*" ]
+    branches: [ "main", "develop", "feat/*", "fix/*", "chore/*" ]
   pull_request:
-    branches: [ "main", "develop", "feat/*", "fix/*" ]
+    branches: [ "main", "develop", "feat/*", "fix/*", "chore/*" ]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
 
     steps:
       - name: Checkout
