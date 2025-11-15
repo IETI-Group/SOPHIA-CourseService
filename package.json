@@ -15,6 +15,7 @@
     "test": "vitest",
     "test:run": "vitest --run",
     "coverage": "vitest --coverage",
+    "coverage:run": "vitest --coverage --run",
     "doc": "typedoc --out docs ./src --entryPointStrategy expand",
     "prisma:migrate:deploy": "prisma migrate deploy --schema=./src/schemas/prisma/schema.prisma",
     "prisma:generate": "prisma generate --schema=./src/schemas/prisma/schema.prisma",
