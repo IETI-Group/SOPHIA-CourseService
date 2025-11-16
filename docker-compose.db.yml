@@ -17,6 +17,6 @@ services:
       timeout: 5s
       retries: 5
 
-# Volúmenes para persistencia de datos
+
 volumes:
   postgres_dev_data:

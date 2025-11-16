@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: sophia-courseservice-app
+    ports:
+      - ${PORT:-3001}:80
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - NODE_ENV=production
+      - PORT=80
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_DIRECT_URL=${DB_DIRECT_URL}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - API_VERSION=${API_VERSION}
+      - API_PREFIX=${API_PREFIX}
+      - DEFAULT_PAGE_SIZE=${DEFAULT_PAGE_SIZE}
+      - MAX_PAGE_SIZE=${MAX_PAGE_SIZE}
+      - DEFAULT_SORT_ORDER=${DEFAULT_SORT_ORDER}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: unless-stopped
