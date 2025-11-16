@@ -12,7 +12,7 @@ services:
       - postgres_dev_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-dev_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-dev_user} -d ${DB_NAME:-dev_db} -h localhost -p 5432"]
       interval: 10s
       timeout: 5s
       retries: 5
