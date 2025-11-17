@@ -2,7 +2,10 @@
 node_modules
 npm-debug.log
 dist
+logs
+*.tsbuildinfo
 .git
+.github
 .gitignore
 README.md
 .env
