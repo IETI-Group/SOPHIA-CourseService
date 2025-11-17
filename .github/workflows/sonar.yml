@@ -1,4 +1,4 @@
-name: Lint Check
+name: Sonar Scan
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main", "develop", "feat/*", "fix/*", "chore/*" ]
 
 jobs:
-  lint:
+  sonar:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -31,6 +31,14 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+    
+      - name: Generate Prisma Client
+        run: pnpm prisma:generate
 
-      - name: Run linter
-        run: pnpm check
+      - name: Run coverage
+        run: pnpm coverage:run
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

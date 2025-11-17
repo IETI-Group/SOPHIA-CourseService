@@ -1,4 +1,4 @@
-name: Lint Check
+name: Build Check
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main", "develop", "feat/*", "fix/*", "chore/*" ]
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,5 +32,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run linter
-        run: pnpm check
+      - name: Generate Prisma Client
+        run: pnpm prisma:generate
+
+      - name: Build project
+        run: pnpm build

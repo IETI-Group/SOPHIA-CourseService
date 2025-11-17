@@ -51,4 +51,4 @@ const startServer = (): void => {
 
 startServer();
 
-export {default} from './app.js'; 
+export { default } from './app.js';
