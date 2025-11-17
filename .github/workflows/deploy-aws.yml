@@ -2,9 +2,8 @@ name: Deploy to AWS ECS
 
 on:
   push:
-    branches: [ "main", "develop", "feat/*", "fix/*", "chore/*" ]
-  pull_request:
-    branches: [ "main", "develop", "feat/*", "fix/*", "chore/*" ]
+    branches:
+      - main
   workflow_dispatch:
 
 env:
