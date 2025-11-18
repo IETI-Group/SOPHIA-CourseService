@@ -39,4 +39,4 @@ EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:80/api/v1/health || exit 1
 
-CMD ["sh", "-c", "pnpm prisma:create && pnpm start"]
+CMD ["sh", "-c", "pnpm prisma:migrate:deploy && pnpm start"]
