@@ -79,6 +79,7 @@ import {
   SectionsController,
   TagsController,
 } from '../controllers/index.js';
+import { SophiaMcpServer, registerAllTools } from '../mcp/index.js';
 import { logger } from '../utils/logger.js';
 import prisma from './db.js';
 
@@ -126,6 +127,7 @@ interface DIContainer {
   resourceService: ResourceService;
   tagService: TagService;
   categoryService: CategoryService;
+  mcpServer: SophiaMcpServer;
 }
 
 const container = createContainer<DIContainer>({
@@ -267,6 +269,24 @@ container.register({
   categoryService: asClass(CategoryServiceImpl, {
     lifetime: 'SINGLETON',
   }),
+});
+
+// Register MCP Server
+const mcpServer = new SophiaMcpServer(
+  container.resolve('courseService'),
+  container.resolve('sectionService'),
+  container.resolve('lessonService'),
+  container.resolve('lessonContentService'),
+  container.resolve('quizService'),
+  container.resolve('assignmentService')
+);
+
+// Register all MCP tools
+registerAllTools(mcpServer);
+
+// Register MCP server in container
+container.register({
+  mcpServer: asValue(mcpServer),
 });
 
 export default container;
