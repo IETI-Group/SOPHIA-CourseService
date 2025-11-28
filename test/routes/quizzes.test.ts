@@ -78,7 +78,7 @@ describe('Quizzes Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid sectionId due to catch', async () => {
+    it('should throw error if invalid sectionId', async () => {
       const invalidSectionId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -93,12 +93,7 @@ describe('Quizzes Routes', () => {
         .get(`/api/sections/${invalidSectionId}/quizzes`)
         .query({ sectionId: invalidSectionId });
 
-      expect(response.status).toBe(200);
-      expect(mockQuizzesController.getQuizzesSection).toHaveBeenCalledWith(
-        expect.objectContaining({ sectionId: null }),
-        expect.any(Object),
-        true
-      );
+      expect(response.status).toBe(400);
     });
   });
 
@@ -327,7 +322,7 @@ describe('Quizzes Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid quizId due to catch', async () => {
+    it('should throw error if invalid quizId', async () => {
       const invalidQuizId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -342,11 +337,7 @@ describe('Quizzes Routes', () => {
         .get(`/api/quizzes/${invalidQuizId}/questions`)
         .query({ quizId: invalidQuizId });
 
-      expect(response.status).toBe(200);
-      expect(mockQuizzesController.getQuestionsQuiz).toHaveBeenCalledWith(
-        expect.objectContaining({ quizId: null }),
-        expect.any(Object)
-      );
+      expect(response.status).toBe(400);
     });
   });
 
@@ -567,7 +558,7 @@ describe('Quizzes Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid questionId due to catch', async () => {
+    it('should throw error if invalid questionId', async () => {
       const invalidQuestionId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -582,11 +573,7 @@ describe('Quizzes Routes', () => {
         .get(`/api/questions/${invalidQuestionId}/options`)
         .query({ quizQuestionId: invalidQuestionId });
 
-      expect(response.status).toBe(200);
-      expect(mockQuizzesController.getOptionsQuiz).toHaveBeenCalledWith(
-        expect.objectContaining({ quizQuestionId: null }),
-        expect.any(Object)
-      );
+      expect(response.status).toBe(400);
     });
   });
 
@@ -798,7 +785,7 @@ describe('Quizzes Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid quizId due to catch', async () => {
+    it('should throw error if invalid quizId', async () => {
       const invalidQuizId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -813,11 +800,7 @@ describe('Quizzes Routes', () => {
         .get(`/api/quizzes/${invalidQuizId}/attempts`)
         .query({ quizId: invalidQuizId });
 
-      expect(response.status).toBe(200);
-      expect(mockQuizzesController.getAttemptsQuiz).toHaveBeenCalledWith(
-        expect.objectContaining({ quizId: null }),
-        expect.any(Object)
-      );
+      expect(response.status).toBe(400);
     });
   });
 

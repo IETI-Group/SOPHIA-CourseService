@@ -1,6 +1,6 @@
-import type { SophiaMcpServer } from '../mcpServer.js';
 import { z } from 'zod/v4';
 import type { PaginatedResponse } from '../../utils/response/index.js';
+import type { SophiaMcpServer } from '../mcpServer.js';
 
 /**
  * Register section-related MCP tools
@@ -22,9 +22,9 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
         order: z.number().min(0).describe('Order position within the course'),
         aiGenerated: z.boolean().default(false).describe('Whether AI-generated'),
         generationTaskId: z.string().min(1).max(200).nullable().optional().describe('AI task ID'),
-        suggestedByAi: z.boolean().default(false).describe('Whether suggested by AI')
+        suggestedByAi: z.boolean().default(false).describe('Whether suggested by AI'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() }
+      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
     },
     async (args) => {
       try {
@@ -36,20 +36,20 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
             order: args.order,
             aiGenerated: args.aiGenerated,
             generationTaskId: args.generationTaskId || null,
-            suggestedByAi: args.suggestedByAi
+            suggestedByAi: args.suggestedByAi,
           },
           true
         );
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result
+          structuredContent: result,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           content: [{ type: 'text', text: `Error: ${errorMessage}` }],
-          isError: true
+          isError: true,
         };
       }
     }
@@ -69,9 +69,9 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
         page: z.number().min(1).default(1).describe('Page number'),
         size: z.number().min(1).max(100).default(10).describe('Page size'),
         sortBy: z.enum(['title', 'order', 'createdAt']).default('order'),
-        sortOrder: z.enum(['asc', 'desc']).default('asc')
+        sortOrder: z.enum(['asc', 'desc']).default('asc'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) }
+      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) },
     },
     async (args) => {
       try {
@@ -91,17 +91,21 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
         };
 
         const sort: Record<string, 'asc' | 'desc'> = { [args.sortBy]: args.sortOrder };
-        const result = await sectionService.getCourseSections(filters, sort, true) as PaginatedResponse<any>;
+        const result = (await sectionService.getCourseSections(
+          filters,
+          sort,
+          true
+        )) as PaginatedResponse<any>;
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result
+          structuredContent: result,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           content: [{ type: 'text', text: `Error: ${errorMessage}` }],
-          isError: true
+          isError: true,
         };
       }
     }
@@ -115,23 +119,26 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
       description: 'Get detailed information about a specific section',
       inputSchema: {
         sectionId: z.string().min(1).describe('Section ID'),
-        includeFullDetails: z.boolean().default(false).describe('Include full details')
+        includeFullDetails: z.boolean().default(false).describe('Include full details'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() }
+      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
     },
     async (args) => {
       try {
-        const result = await sectionService.getSectionById(args.sectionId, !args.includeFullDetails);
-        
+        const result = await sectionService.getSectionById(
+          args.sectionId,
+          !args.includeFullDetails
+        );
+
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result
+          structuredContent: result,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           content: [{ type: 'text', text: `Error: ${errorMessage}` }],
-          isError: true
+          isError: true,
         };
       }
     }

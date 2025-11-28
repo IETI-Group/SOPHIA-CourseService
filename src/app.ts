@@ -1,10 +1,10 @@
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import cors from 'cors';
 import express, { type Application } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { envConfig } from './config/env.config.js';
 import container from './config/diContainer.js';
+import { envConfig } from './config/env.config.js';
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import routes from './routes/index.js';
 import { logger } from './utils/logger.js';

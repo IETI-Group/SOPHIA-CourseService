@@ -79,7 +79,7 @@ import {
   SectionsController,
   TagsController,
 } from '../controllers/index.js';
-import { SophiaMcpServer, registerAllTools } from '../mcp/index.js';
+import { registerAllTools, SophiaMcpServer } from '../mcp/index.js';
 import { logger } from '../utils/logger.js';
 import prisma from './db.js';
 

@@ -80,7 +80,7 @@ describe('Lessons Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid sectionId due to catch', async () => {
+    it('should throw error if invalid sectionId', async () => {
       const invalidSectionId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -95,12 +95,7 @@ describe('Lessons Routes', () => {
         .get(`/api/sections/${invalidSectionId}/lessons`)
         .query({ sectionId: invalidSectionId });
 
-      expect(response.status).toBe(200);
-      expect(mockLessonsController.getSectionLessons).toHaveBeenCalledWith(
-        expect.objectContaining({ sectionId: null }),
-        expect.any(Object),
-        true
-      );
+      expect(response.status).toBe(400);
     });
   });
 
@@ -346,7 +341,7 @@ describe('Lessons Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid lessonId due to catch', async () => {
+    it('should throw error if invalid lessonId', async () => {
       const invalidLessonId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -361,12 +356,7 @@ describe('Lessons Routes', () => {
         .get(`/api/lessons/${invalidLessonId}/contents`)
         .query({ lessonId: invalidLessonId });
 
-      expect(response.status).toBe(200);
-      expect(mockLessonsController.getLessonContents).toHaveBeenCalledWith(
-        expect.objectContaining({ lessonId: null }),
-        expect.any(Object),
-        true
-      );
+      expect(response.status).toBe(400);
     });
   });
 
@@ -608,7 +598,7 @@ describe('Lessons Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid contentId due to catch', async () => {
+    it('should throw error if invalid contentId', async () => {
       const invalidContentId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -623,11 +613,7 @@ describe('Lessons Routes', () => {
         .get(`/api/contents/${invalidContentId}/progress`)
         .query({ lessonContentId: invalidContentId });
 
-      expect(response.status).toBe(200);
-      expect(mockLessonsController.getProgressContent).toHaveBeenCalledWith(
-        expect.objectContaining({ lessonContentId: null }),
-        expect.any(Object)
-      );
+      expect(response.status).toBe(400);
     });
   });
 
