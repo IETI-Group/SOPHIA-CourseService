@@ -1,14 +1,14 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { CourseService } from '../app/services/interfaces/CourseService.js';
-import type { SectionService } from '../app/services/interfaces/SectionService.js';
-import type { LessonService } from '../app/services/interfaces/LessonService.js';
-import type { LessonContentService } from '../app/services/interfaces/LessonContentService.js';
-import type { QuizService } from '../app/services/interfaces/QuizService.js';
 import type { AssignmentService } from '../app/services/interfaces/AssignmentService.js';
+import type { CourseService } from '../app/services/interfaces/CourseService.js';
+import type { LessonContentService } from '../app/services/interfaces/LessonContentService.js';
+import type { LessonService } from '../app/services/interfaces/LessonService.js';
+import type { QuizService } from '../app/services/interfaces/QuizService.js';
+import type { SectionService } from '../app/services/interfaces/SectionService.js';
 
 /**
  * SOPHIA Course Service MCP Server
- * 
+ *
  * Exposes course creation and management capabilities through the Model Context Protocol.
  * This allows AI assistants to interact with the course service to:
  * - Create and manage courses

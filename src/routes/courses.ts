@@ -67,7 +67,9 @@ export const createCoursesRouter = (controller?: CoursesController): IRouter => 
   };
 
   const getInscriptionsByCourse = async (req: Request, res: Response) => {
+    const courseId = idSchema().parse(req.params.courseId);
     const filters: FiltersInscription = filtersInscriptionSchema().parse(req.query);
+    filters.courseId = courseId;
     const sorting: SortingInscriptions = sortingInscriptionsSchema().parse(req.query);
     const result = await coursesController.getInscriptionsCourse(filters, sorting);
     res.status(200).json(result);
@@ -99,7 +101,9 @@ export const createCoursesRouter = (controller?: CoursesController): IRouter => 
   };
 
   const getFavoritesByCourse = async (req: Request, res: Response) => {
+    const courseId = idSchema().parse(req.params.courseId);
     const filters: FiltersFavoriteCourse = filtersFavoriteCourseSchema().parse(req.query);
+    filters.courseId = courseId;
     const sorting: SortingFavoriteCourses = sortingFavoriteCoursesSchema().parse(req.query);
     const result = await coursesController.getFavoriteCourses(filters, sorting);
     res.status(200).json(result);

@@ -42,7 +42,9 @@ export const createQuizzesRouter = (controller?: QuizzesController): IRouter => 
   const quizzesController = controller ?? container.resolve<QuizzesController>('quizzesController');
 
   const getQuizzesBySection = async (req: Request, res: Response) => {
+    const sectionId = idSchema().parse(req.params.sectionId);
     const filters: FiltersQuizSection = filtersQuizSectionSchema().parse(req.query);
+    filters.sectionId = sectionId;
     const sorting: SortingSectionQuizzes = sortingSectionQuizzesSchema().parse(req.query);
     const { lightDTO } = lightDTOSchema().parse(req.query);
     const result = await quizzesController.getQuizzesSection(filters, sorting, lightDTO);
@@ -78,7 +80,9 @@ export const createQuizzesRouter = (controller?: QuizzesController): IRouter => 
   };
 
   const getQuestionsByQuiz = async (req: Request, res: Response) => {
+    const quizId = idSchema().parse(req.params.quizId);
     const filters: FiltersQuestionQuiz = filtersQuestionQuizSchema().parse(req.query);
+    filters.quizId = quizId;
     const sorting: SortingQuizQuestions = sortingQuizQuestionsSchema().parse(req.query);
     const result = await quizzesController.getQuestionsQuiz(filters, sorting);
     res.status(200).json(result);
@@ -110,7 +114,9 @@ export const createQuizzesRouter = (controller?: QuizzesController): IRouter => 
   };
 
   const getOptionsByQuestion = async (req: Request, res: Response) => {
+    const questionId = idSchema().parse(req.params.questionId);
     const filters: FiltersOptionQuiz = filtersOptionQuizSchema().parse(req.query);
+    filters.quizQuestionId = questionId;
     const sorting: SortingQuizOptions = sortingQuizOptionsSchema().parse(req.query);
     const result = await quizzesController.getOptionsQuiz(filters, sorting);
     res.status(200).json(result);
@@ -142,7 +148,9 @@ export const createQuizzesRouter = (controller?: QuizzesController): IRouter => 
   };
 
   const getAttemptsByQuiz = async (req: Request, res: Response) => {
+    const quizId = idSchema().parse(req.params.quizId);
     const filters: FiltersAttemptQuiz = filtersAttemptQuizSchema().parse(req.query);
+    filters.quizId = quizId;
     const sorting: SortingQuizAttempts = sortingQuizAttemptsSchema().parse(req.query);
     const result = await quizzesController.getAttemptsQuiz(filters, sorting);
     res.status(200).json(result);

@@ -1,7 +1,7 @@
-import type { SophiaMcpServer } from '../mcpServer.js';
 import { z } from 'zod/v4';
-import { COURSE_LEVEL, COURSE_STATUS } from '../../schemas/types_db.js';
+import type { COURSE_LEVEL, COURSE_STATUS } from '../../schemas/types_db.js';
 import type { PaginatedResponse } from '../../utils/response/index.js';
+import type { SophiaMcpServer } from '../mcpServer.js';
 
 /**
  * Register course-related MCP tools
@@ -17,26 +17,38 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
       title: 'Create Course',
       description: 'Create a new course in the SOPHIA platform',
       inputSchema: {
-        instructorId: z.string().min(1).max(200).nullable().describe('ID of the instructor, or null'),
+        instructorId: z
+          .string()
+          .min(1)
+          .max(200)
+          .nullable()
+          .describe('ID of the instructor, or null'),
         title: z.string().min(1).max(500).describe('Course title'),
         description: z.string().min(1).max(5000).describe('Detailed course description'),
         price: z.number().min(0).describe('Course price'),
-        level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT']).describe('Difficulty level'),
+        level: z
+          .enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'])
+          .describe('Difficulty level'),
         aiGenerated: z.boolean().default(false).describe('Whether AI-generated'),
         generationTaskId: z.string().min(1).max(200).nullable().optional().describe('AI task ID'),
         generationMetadata: z.any().optional().describe('AI metadata'),
-        lastAIUpdateAt: z.string().datetime().nullable().optional().describe('Last AI update datetime')
+        lastAIUpdateAt: z
+          .string()
+          .datetime()
+          .nullable()
+          .optional()
+          .describe('Last AI update datetime'),
       },
       outputSchema: {
         success: z.boolean(),
         message: z.string(),
-        data: z.any().optional()
-      }
+        data: z.any().optional(),
+      },
     },
     async (args) => {
       try {
         const lastAIUpdateAt = args.lastAIUpdateAt ? new Date(args.lastAIUpdateAt) : null;
-        
+
         const result = await courseService.postCourse(
           {
             instructorId: args.instructorId,
@@ -47,20 +59,20 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
             aiGenerated: args.aiGenerated,
             generationTaskId: args.generationTaskId || null,
             generationMetadata: args.generationMetadata || null,
-            lastAIUpdateAt
+            lastAIUpdateAt,
           },
           true
         );
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result
+          structuredContent: result,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           content: [{ type: 'text', text: `Error: ${errorMessage}` }],
-          isError: true
+          isError: true,
         };
       }
     }
@@ -84,17 +96,17 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
         page: z.number().min(1).default(1),
         size: z.number().min(1).max(100).default(10),
         sortBy: z.enum(['title', 'price', 'createdAt', 'updatedAt']).default('createdAt'),
-        sortOrder: z.enum(['asc', 'desc']).default('desc')
+        sortOrder: z.enum(['asc', 'desc']).default('desc'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) }
+      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) },
     },
     async (args) => {
       try {
         const filters: any = {
           title: args.title || null,
           instructorId: args.instructorId || null,
-          level: args.level as COURSE_LEVEL || null,
-          status: args.status as COURSE_STATUS || null,
+          level: (args.level as COURSE_LEVEL) || null,
+          status: (args.status as COURSE_STATUS) || null,
           priceMin: args.priceMin ?? null,
           priceMax: args.priceMax ?? null,
           active: args.active ?? null,
@@ -121,17 +133,21 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
         };
 
         const sort: Record<string, 'asc' | 'desc'> = { [args.sortBy]: args.sortOrder };
-        const result = await courseService.getCourses(filters, sort, true) as PaginatedResponse<any>;
+        const result = (await courseService.getCourses(
+          filters,
+          sort,
+          true
+        )) as PaginatedResponse<any>;
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result
+          structuredContent: result,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           content: [{ type: 'text', text: `Error: ${errorMessage}` }],
-          isError: true
+          isError: true,
         };
       }
     }
@@ -145,23 +161,23 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
       description: 'Get detailed information about a specific course',
       inputSchema: {
         courseId: z.string().min(1).describe('Course ID'),
-        includeFullDetails: z.boolean().default(false).describe('Include full details')
+        includeFullDetails: z.boolean().default(false).describe('Include full details'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() }
+      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
     },
     async (args) => {
       try {
         const result = await courseService.getCourseById(args.courseId, !args.includeFullDetails);
-        
+
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result
+          structuredContent: result,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return {
           content: [{ type: 'text', text: `Error: ${errorMessage}` }],
-          isError: true
+          isError: true,
         };
       }
     }

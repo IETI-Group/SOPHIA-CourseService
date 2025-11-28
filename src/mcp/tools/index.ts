@@ -1,7 +1,7 @@
 import type { SophiaMcpServer } from '../mcpServer.js';
 import { registerCourseTools } from './courseTools.js';
-import { registerSectionTools } from './sectionTools.js';
 import { registerLessonTools } from './lessonTools.js';
+import { registerSectionTools } from './sectionTools.js';
 
 /**
  * Register all MCP tools for the SOPHIA Course Service

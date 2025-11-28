@@ -322,7 +322,7 @@ describe('Courses Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid courseId due to catch', async () => {
+    it('should throw error if invalid courseId', async () => {
       const invalidCourseId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -337,11 +337,7 @@ describe('Courses Routes', () => {
         .get(`/api/courses/${invalidCourseId}/inscriptions`)
         .query({ courseId: invalidCourseId });
 
-      expect(response.status).toBe(200);
-      expect(mockCoursesController.getInscriptionsCourse).toHaveBeenCalledWith(
-        expect.objectContaining({ courseId: null }),
-        expect.any(Object)
-      );
+      expect(response.status).toBe(400);
     });
   });
 
@@ -564,7 +560,7 @@ describe('Courses Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid courseId due to catch', async () => {
+    it('should throw error if invalid courseId', async () => {
       const invalidCourseId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -579,11 +575,7 @@ describe('Courses Routes', () => {
         .get(`/api/courses/${invalidCourseId}/favorites`)
         .query({ courseId: invalidCourseId });
 
-      expect(response.status).toBe(200);
-      expect(mockCoursesController.getFavoriteCourses).toHaveBeenCalledWith(
-        expect.objectContaining({ courseId: null }),
-        expect.any(Object)
-      );
+      expect(response.status).toBe(400);
     });
   });
 
