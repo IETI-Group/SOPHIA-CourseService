@@ -99,3 +99,8 @@ export const lessonContentMCPFiltersSchema = () => {
     sortOrder: z.enum(['asc', 'desc']).default('asc'),
   });
 };
+
+export type LessonMCP = z.infer<ReturnType<typeof lessonsInMCPSchema>>;
+export type FiltersLessonMCP = z.infer<ReturnType<typeof lessonsMCPFiltersSchema>>;
+export type LessonContentMCP = z.infer<ReturnType<typeof lessonContentInMCPSchema>>;
+export type FiltersLessonContentMCP = z.infer<ReturnType<typeof lessonContentMCPFiltersSchema>>;

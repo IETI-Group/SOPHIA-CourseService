@@ -1,10 +1,12 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import type { COURSE_LEVEL, COURSE_STATUS } from '../../schemas/types_db.js';
 import {
   apiResponseSchema,
+  type CourseMCP,
   coursesInMCPSchema,
   coursesMCPFiltersSchema,
   type FiltersCourse,
+  type FiltersCourseMCP,
   type SORT_COURSES,
   type SortingCourses,
 } from '../../utils/index.js';
@@ -27,7 +29,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
       inputSchema: coursesInMCPSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: CourseMCP) => {
       try {
         const lastAIUpdateAt = args.lastAIUpdateAt ? new Date(args.lastAIUpdateAt) : null;
 
@@ -69,7 +71,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
       inputSchema: coursesMCPFiltersSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: FiltersCourseMCP) => {
       try {
         const filters: FiltersCourse = {
           title: args.title || null,
@@ -136,7 +138,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
       },
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: { courseId: string; includeFullDetails?: boolean }) => {
       try {
         const result = await courseService.getCourseById(args.courseId, !args.includeFullDetails);
 

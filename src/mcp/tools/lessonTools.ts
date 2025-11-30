@@ -9,6 +9,10 @@ import {
   apiResponseSchema,
   type FiltersLesson,
   type FiltersLessonContent,
+  type FiltersLessonContentMCP,
+  type FiltersLessonMCP,
+  type LessonContentMCP,
+  type LessonMCP,
   lessonContentInMCPSchema,
   lessonContentMCPFiltersSchema,
   lessonsInMCPSchema,
@@ -36,7 +40,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
       inputSchema: lessonsInMCPSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: LessonMCP) => {
       try {
         const result = await lessonService.postSectionLesson(
           {
@@ -76,7 +80,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
       inputSchema: lessonsMCPFiltersSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: FiltersLessonMCP) => {
       try {
         const filters: FiltersLesson = {
           sectionId: args.sectionId,
@@ -131,7 +135,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
       inputSchema: lessonContentInMCPSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: LessonContentMCP) => {
       try {
         const result = await lessonContentService.postLessonContents(
           {
@@ -171,7 +175,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
       inputSchema: lessonContentMCPFiltersSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: FiltersLessonContentMCP) => {
       try {
         const filters: FiltersLessonContent = {
           lessonId: args.lessonId,

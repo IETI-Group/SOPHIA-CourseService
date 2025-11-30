@@ -24,3 +24,6 @@ export const sectionCoureFilterMCPFiltersSchema = () => {
     sortOrder: z.enum(['asc', 'desc']).default('asc'),
   });
 };
+
+export type FiltersSectionMCP = z.infer<ReturnType<typeof sectionCoureFilterMCPFiltersSchema>>;
+export type SectionCourseMCP = z.infer<ReturnType<typeof sectionCourseMCPSchema>>;

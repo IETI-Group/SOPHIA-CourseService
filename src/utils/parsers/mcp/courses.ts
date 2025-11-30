@@ -30,3 +30,6 @@ export const coursesInMCPSchema = () => {
     lastAIUpdateAt: z.iso.datetime().nullable().optional().describe('Last AI update datetime'),
   });
 };
+
+export type CourseMCP = z.infer<ReturnType<typeof coursesInMCPSchema>>;
+export type FiltersCourseMCP = z.infer<ReturnType<typeof coursesMCPFiltersSchema>>;

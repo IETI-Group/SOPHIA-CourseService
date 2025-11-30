@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import {
   apiResponseSchema,
+  type FiltersSection,
+  type FiltersSectionMCP,
+  type SectionCourseMCP,
   SORT_SECTION,
   type SortingSections,
   sectionCoureFilterMCPFiltersSchema,
@@ -25,7 +28,7 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
       inputSchema: sectionCourseMCPSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: SectionCourseMCP) => {
       try {
         const result = await sectionService.postCourseSection(
           {
@@ -63,9 +66,9 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
       inputSchema: sectionCoureFilterMCPFiltersSchema(),
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: FiltersSectionMCP) => {
       try {
-        const filters = {
+        const filters: FiltersSection = {
           courseId: args.courseId,
           title: args.title || null,
           active: args.active ?? null,
@@ -119,7 +122,7 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
       },
       outputSchema: apiResponseSchema,
     },
-    async (args) => {
+    async (args: { sectionId: string; includeFullDetails: boolean }) => {
       try {
         const result = await sectionService.getSectionById(
           args.sectionId,
