@@ -34,7 +34,13 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
         aiGenerated: z.boolean().default(false).describe('Whether AI-generated'),
         generationTaskId: z.string().min(1).max(200).nullable().optional().describe('AI task ID'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
+      outputSchema: {
+        success: z.boolean(),
+        message: z.string(),
+        data: z.any().optional(),
+        timestamp: z.string().optional(),
+        pagination: z.any().optional(),
+      },
     },
     async (args) => {
       try {
@@ -55,7 +61,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: result as any,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -86,7 +92,13 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
         sortBy: z.enum(['title', 'order', 'createdAt']).default('order'),
         sortOrder: z.enum(['asc', 'desc']).default('asc'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) },
+      outputSchema: {
+        success: z.boolean(),
+        message: z.string(),
+        data: z.array(z.any()),
+        timestamp: z.string().optional(),
+        pagination: z.any().optional(),
+      },
     },
     async (args) => {
       try {
@@ -116,7 +128,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: result as any,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -178,7 +190,13 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
           .optional()
           .describe('Parent content ID for versioning'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
+      outputSchema: {
+        success: z.boolean(),
+        message: z.string(),
+        data: z.any().optional(),
+        timestamp: z.string().optional(),
+        pagination: z.any().optional(),
+      },
     },
     async (args) => {
       try {
@@ -199,7 +217,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: result as any,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -241,7 +259,13 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
         sortBy: z.enum(['orderPreference', 'createdAt', 'version']).default('orderPreference'),
         sortOrder: z.enum(['asc', 'desc']).default('asc'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) },
+      outputSchema: {
+        success: z.boolean(),
+        message: z.string(),
+        data: z.array(z.any()),
+        timestamp: z.string().optional(),
+        pagination: z.any().optional(),
+      },
     },
     async (args) => {
       try {
@@ -272,7 +296,7 @@ export function registerLessonTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: result as any,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';

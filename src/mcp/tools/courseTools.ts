@@ -43,6 +43,8 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
         success: z.boolean(),
         message: z.string(),
         data: z.any().optional(),
+        timestamp: z.string().optional(),
+        pagination: z.any().optional(),
       },
     },
     async (args) => {
@@ -66,7 +68,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: result as any,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -141,7 +143,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: result as any,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -171,7 +173,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: result as any,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
