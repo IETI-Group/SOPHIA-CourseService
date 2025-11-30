@@ -149,22 +149,61 @@ Obtiene un curso por su ID.
 **Query Parameters:**
 | Parámetro | Tipo | Requerido | Descripción |
 |-----------|------|-----------|-------------|
-| lightDTO | boolean | No | Usar DTO ligero |
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
 
-**Respuesta (200):**
+**Respuesta (200) - lightDTO=true:**
 ```json
 {
   "success": true,
   "message": "Course retrieved successfully",
   "data": {
     "idCourse": "uuid",
+    "instructorId": "uuid-instructor",
     "title": "Introduction to AI",
     "description": "Full description...",
     "price": 49.99,
     "level": "BEGINNER",
     "active": true,
-    "sections": [],
-    "createdAt": "2025-01-01T00:00:00.000Z"
+    "status": "PUBLISHED",
+    "averageReviews": 4.5,
+    "durationHours": 10,
+    "totalLessons": 20,
+    "totalReviews": 100,
+    "totalEnrollments": 500,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-02T00:00:00.000Z",
+    "publishedAt": "2025-01-03T00:00:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Course retrieved successfully",
+  "data": {
+    "idCourse": "uuid",
+    "instructorId": "uuid-instructor",
+    "title": "Introduction to AI",
+    "description": "Full description...",
+    "price": 49.99,
+    "level": "BEGINNER",
+    "active": true,
+    "status": "PUBLISHED",
+    "averageReviews": 4.5,
+    "durationHours": 10,
+    "totalLessons": 20,
+    "totalReviews": 100,
+    "totalEnrollments": 500,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-02T00:00:00.000Z",
+    "publishedAt": "2025-01-03T00:00:00.000Z",
+    "aiGenerated": false,
+    "generationTaskId": null,
+    "generationMetadata": {},
+    "lastAIUpdateAt": null
   },
   "timestamp": "2025-11-20T10:30:00.000Z"
 }
@@ -334,9 +373,14 @@ Obtiene todas las lecciones de una sección.
 |-----------|------|-------------|
 | sectionId | string | ID de la sección |
 
-**Query Parameters:** lightDTO, filters, sorting
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
 
-**Respuesta (200):**
+**Respuesta (200) - lightDTO=true:**
 ```json
 {
   "success": true,
@@ -345,9 +389,38 @@ Obtiene todas las lecciones de una sección.
     {
       "idLesson": "uuid",
       "title": "Lesson 1",
+      "description": "Intro to topic",
       "lessonType": "THEORY",
       "durationMinutes": 15,
-      "order": 1
+      "order": 1,
+      "active": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "sectionId": "uuid-section"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Lessons retrieved successfully",
+  "data": [
+    {
+      "idLesson": "uuid",
+      "title": "Lesson 1",
+      "description": "Intro to topic",
+      "lessonType": "THEORY",
+      "durationMinutes": 15,
+      "order": 1,
+      "active": true,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "sectionId": "uuid-section",
+      "aiGenerated": false,
+      "generationTaskId": null,
+      "estimatedDifficulty": 1.0
     }
   ],
   "timestamp": "2025-11-20T10:30:00.000Z"
@@ -391,6 +464,325 @@ Crea una nueva lección.
 
 ---
 
+### GET /api/v1/lessons/:id
+Obtiene una lección por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la lección |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+
+**Respuesta (200) - lightDTO=true:**
+```json
+{
+  "success": true,
+  "message": "Lesson retrieved successfully",
+  "data": {
+    "idLesson": "uuid",
+    "title": "Lesson 1",
+    "description": "Intro to topic",
+    "lessonType": "THEORY",
+    "durationMinutes": 15,
+    "order": 1,
+    "active": true,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "sectionId": "uuid-section"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Lesson retrieved successfully",
+  "data": {
+    "idLesson": "uuid",
+    "title": "Lesson 1",
+    "description": "Intro to topic",
+    "lessonType": "THEORY",
+    "durationMinutes": 15,
+    "order": 1,
+    "active": true,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "sectionId": "uuid-section",
+    "aiGenerated": false,
+    "generationTaskId": null,
+    "estimatedDifficulty": 1.0
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/lessons/:id
+Actualiza una lección.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la lección |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "title": "Updated Lesson Title",
+  "durationMinutes": 20
+}
+```
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Lesson updated successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/lessons/:id
+Elimina una lección.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la lección |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Lesson deleted successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+## Lesson Contents
+
+### GET /api/v1/lessons/:lessonId/contents
+Obtiene el contenido de una lección.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| lessonId | string | ID de la lección |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200) - lightDTO=true:**
+```json
+{
+  "success": true,
+  "message": "Lesson contents retrieved successfully",
+  "data": [
+    {
+      "idLessonContent": "uuid",
+      "version": 1,
+      "lessonId": "uuid-lesson",
+      "active": true,
+      "isCurrentVersion": true,
+      "difficultyLevel": "BEGINNER",
+      "learningTechnique": "VISUAL",
+      "orderPreference": 1,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "metadata": {}
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Lesson contents retrieved successfully",
+  "data": [
+    {
+      "idLessonContent": "uuid",
+      "version": 1,
+      "lessonId": "uuid-lesson",
+      "active": true,
+      "isCurrentVersion": true,
+      "difficultyLevel": "BEGINNER",
+      "learningTechnique": "VISUAL",
+      "orderPreference": 1,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "metadata": {},
+      "aiGenerated": false,
+      "generationLogId": null,
+      "contentType": "TEXT",
+      "parentContentId": null
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/contents/:id
+Obtiene un contenido específico por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del contenido |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+
+**Respuesta (200) - lightDTO=true:**
+```json
+{
+  "success": true,
+  "message": "Content retrieved successfully",
+  "data": {
+    "idLessonContent": "uuid",
+    "version": 1,
+    "lessonId": "uuid-lesson",
+    "active": true,
+    "isCurrentVersion": true,
+    "difficultyLevel": "BEGINNER",
+    "learningTechnique": "VISUAL",
+    "orderPreference": 1,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "metadata": {}
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Content retrieved successfully",
+  "data": {
+    "idLessonContent": "uuid",
+    "version": 1,
+    "lessonId": "uuid-lesson",
+    "active": true,
+    "isCurrentVersion": true,
+    "difficultyLevel": "BEGINNER",
+    "learningTechnique": "VISUAL",
+    "orderPreference": 1,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "metadata": {},
+    "aiGenerated": false,
+    "generationLogId": null,
+    "contentType": "TEXT",
+    "parentContentId": null
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### POST /api/v1/lessons/:lessonId/contents
+Crea nuevo contenido para una lección.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| lessonId | string | ID de la lección |
+
+**Request Body:**
+```json
+{
+  "lessonId": "uuid-lesson",
+  "metadata": {},
+  "difficultyLevel": "BEGINNER",
+  "learningTechnique": "VISUAL",
+  "orderPreference": 1,
+  "aiGenerated": false,
+  "generationLogId": null,
+  "contentType": "TEXT",
+  "parentContentId": null
+}
+```
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "Content created successfully",
+  "data": "uuid-del-contenido",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/contents/:id
+Actualiza un contenido.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del contenido |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "metadata": { "text": "Updated content..." },
+  "active": true
+}
+```
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Content updated successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/contents/:id
+Elimina un contenido.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del contenido |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Content deleted successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
 ## Quizzes
 
 ### GET /api/v1/sections/:sectionId/quizzes
@@ -401,7 +793,14 @@ Obtiene los cuestionarios de una sección.
 |-----------|------|-------------|
 | sectionId | string | ID de la sección |
 
-**Respuesta (200):**
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200) - lightDTO=true:**
 ```json
 {
   "success": true,
@@ -414,6 +813,80 @@ Obtiene los cuestionarios de una sección.
       "active": true
     }
   ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Quizzes retrieved successfully",
+  "data": [
+    {
+      "idQuiz": "uuid",
+      "title": "Final Exam",
+      "description": "Comprehensive test covering all modules",
+      "durationMinutes": 60,
+      "active": true,
+      "aiGenerated": false,
+      "generationTaskId": null,
+      "difficultyDistribution": {},
+      "adaptativeLogic": {},
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/quizzes/:id
+Obtiene un cuestionario por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del cuestionario |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+
+**Respuesta (200) - lightDTO=true:**
+```json
+{
+  "success": true,
+  "message": "Quiz retrieved successfully",
+  "data": {
+    "idQuiz": "uuid",
+    "title": "Final Exam",
+    "durationMinutes": 60,
+    "active": true
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Quiz retrieved successfully",
+  "data": {
+    "idQuiz": "uuid",
+    "title": "Final Exam",
+    "description": "Comprehensive test covering all modules",
+    "durationMinutes": 60,
+    "active": true,
+    "aiGenerated": false,
+    "generationTaskId": null,
+    "difficultyDistribution": {},
+    "adaptativeLogic": {},
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  },
   "timestamp": "2025-11-20T10:30:00.000Z"
 }
 ```
@@ -442,6 +915,54 @@ Crea un nuevo cuestionario.
   "success": true,
   "message": "Quiz created successfully",
   "data": "uuid-del-quiz",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/quizzes/:id
+Actualiza un cuestionario.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del cuestionario |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "title": "Updated Quiz Title",
+  "active": false
+}
+```
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Quiz updated successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/quizzes/:id
+Elimina un cuestionario.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del cuestionario |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Quiz deleted successfully",
+  "data": null,
   "timestamp": "2025-11-20T10:30:00.000Z"
 }
 ```
@@ -510,9 +1031,14 @@ Crea una nueva tarea.
 ### GET /api/v1/resources
 Obtiene todos los recursos.
 
-**Query Parameters:** Filters, Sorting
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
 
-**Respuesta (200):**
+**Respuesta (200) - lightDTO=true:**
 ```json
 {
   "success": true,
@@ -526,6 +1052,83 @@ Obtiene todos los recursos.
       "fileSizeMb": 2.5
     }
   ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Resources retrieved successfully",
+  "data": [
+    {
+      "idResource": "uuid",
+      "name": "Course Syllabus",
+      "type": "PDF",
+      "url": "https://storage...",
+      "fileSizeMb": 2.5,
+      "content": null,
+      "order": 1,
+      "durationSeconds": 0,
+      "mimeType": "application/pdf",
+      "thumnailUrl": null,
+      "metadata": {}
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/resources/:id
+Obtiene un recurso por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del recurso |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+
+**Respuesta (200) - lightDTO=true:**
+```json
+{
+  "success": true,
+  "message": "Resource retrieved successfully",
+  "data": {
+    "idResource": "uuid",
+    "name": "Course Syllabus",
+    "type": "PDF",
+    "url": "https://storage...",
+    "fileSizeMb": 2.5
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "Resource retrieved successfully",
+  "data": {
+    "idResource": "uuid",
+    "name": "Course Syllabus",
+    "type": "PDF",
+    "url": "https://storage...",
+    "fileSizeMb": 2.5,
+    "content": null,
+    "order": 1,
+    "durationSeconds": 0,
+    "mimeType": "application/pdf",
+    "thumnailUrl": null,
+    "metadata": {}
+  },
   "timestamp": "2025-11-20T10:30:00.000Z"
 }
 ```
@@ -617,7 +1220,19 @@ Obtiene todas las categorías.
 ### GET /api/v1/lessons/:lessonId/ai-specs
 Obtiene especificaciones de IA para una lección.
 
-**Respuesta (200):**
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| lessonId | string | ID de la lección |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200) - lightDTO=true:**
 ```json
 {
   "success": true,
@@ -630,6 +1245,155 @@ Obtiene especificaciones de IA para una lección.
       "createdAt": "2025-01-01T00:00:00.000Z"
     }
   ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "AI Specs retrieved successfully",
+  "data": [
+    {
+      "idLessonSpec": "uuid",
+      "generationPromptSummary": "Create a lesson about...",
+      "contentStructure": {},
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "estimatedVideoDurationMins": 10,
+      "videoScript": "Script content...",
+      "videoGenerationInstructions": {},
+      "interactiveElements": {},
+      "exerciseParameters": {}
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/ai-specs/:id
+Obtiene una especificación de IA por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la especificación |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| lightDTO | boolean | No | Usar DTO ligero (default: true) |
+
+**Respuesta (200) - lightDTO=true:**
+```json
+{
+  "success": true,
+  "message": "AI Spec retrieved successfully",
+  "data": {
+    "idLessonSpec": "uuid",
+    "generationPromptSummary": "Create a lesson about...",
+    "contentStructure": {},
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+**Respuesta (200) - lightDTO=false:**
+```json
+{
+  "success": true,
+  "message": "AI Spec retrieved successfully",
+  "data": {
+    "idLessonSpec": "uuid",
+    "generationPromptSummary": "Create a lesson about...",
+    "contentStructure": {},
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "estimatedVideoDurationMins": 10,
+    "videoScript": "Script content...",
+    "videoGenerationInstructions": {},
+    "interactiveElements": {},
+    "exerciseParameters": {}
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### POST /api/v1/lessons/:lessonId/ai-specs
+Crea una nueva especificación de IA.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| lessonId | string | ID de la lección |
+
+**Request Body:**
+```json
+{
+  "lessonContentId": "uuid-contenido",
+  "generationPromptSummary": "Prompt used...",
+  "contentStructure": {},
+  "estimatedVideoDuration": 300
+}
+```
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "AI Spec created successfully",
+  "data": "uuid-de-la-spec",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/ai-specs/:id
+Actualiza una especificación de IA.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la especificación |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "generationPromptSummary": "Updated prompt..."
+}
+```
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "AI Spec updated successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/ai-specs/:id
+Elimina una especificación de IA.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la especificación |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "AI Spec deleted successfully",
+  "data": null,
   "timestamp": "2025-11-20T10:30:00.000Z"
 }
 ```
