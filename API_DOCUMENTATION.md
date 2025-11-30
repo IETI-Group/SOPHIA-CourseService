@@ -184,7 +184,9 @@ Crea un nuevo curso.
   "price": 99.99,
   "level": "ADVANCED",
   "aiGenerated": false,
-  "generationMetadata": {}
+  "generationMetadata": {},
+  "generationTaskId": null,
+  "lastAIUpdateAt": null
 }
 ```
 
@@ -193,6 +195,8 @@ Crea un nuevo curso.
 - `description`: String requerido
 - `price`: Number requerido
 - `level`: Enum requerido (BEGINNER, INTERMEDIATE, ADVANCED, EXPERT)
+- `generationTaskId`: String o null requerido
+- `lastAIUpdateAt`: Date o null requerido
 
 **Respuesta (201):**
 ```json
@@ -298,11 +302,13 @@ Crea una nueva sección en un curso.
 **Request Body:**
 ```json
 {
+  "courseId": "uuid-del-curso",
   "title": "Module 1",
   "description": "Introduction",
   "order": 1,
-  "durationHours": 2,
-  "active": true
+  "aiGenerated": false,
+  "generationTaskId": null,
+  "suggestedByAi": false
 }
 ```
 
@@ -361,12 +367,15 @@ Crea una nueva lección.
 **Request Body:**
 ```json
 {
+  "sectionId": "uuid-de-la-seccion",
   "title": "Lesson 1",
   "description": "Intro to topic",
   "order": 1,
   "durationMinutes": 15,
   "lessonType": "THEORY",
-  "estimatedDifficulty": 1.0
+  "estimatedDifficulty": 1.0,
+  "aiGenerated": false,
+  "generationTaskId": null
 }
 ```
 
@@ -417,10 +426,13 @@ Crea un nuevo cuestionario.
 **Request Body:**
 ```json
 {
+  "sectionId": "uuid-de-la-seccion",
   "title": "Quiz 1",
   "description": "Test your knowledge",
-  "durationMinutes": 30,
-  "active": true
+  "aiGenerated": false,
+  "generationTaskId": null,
+  "difficultyDistribution": {},
+  "adaptativeLogic": {}
 }
 ```
 
@@ -471,13 +483,13 @@ Crea una nueva tarea.
 **Request Body:**
 ```json
 {
+  "lessonId": "uuid-de-la-leccion",
   "title": "Project Submission",
   "instructions": "Upload your code...",
   "maxFileSizeMb": 10,
   "allowedTypes": "PDF",
   "dueDate": "2025-12-31T23:59:59.000Z",
-  "maxScore": 100,
-  "active": true
+  "maxScore": 100
 }
 ```
 
@@ -526,11 +538,17 @@ Crea un nuevo recurso.
 **Request Body:**
 ```json
 {
+  "entityReference": "uuid-referencia",
+  "discriminant": "COURSE",
   "name": "Intro Video",
   "type": "VIDEO",
   "url": "https://video...",
+  "content": null,
+  "order": 1,
   "durationSeconds": 120,
   "fileSizeMb": 50,
+  "mimeType": "video/mp4",
+  "thumnailUrl": null,
   "metadata": {}
 }
 ```
@@ -667,6 +685,27 @@ enum ResourceType {
   SIMULATION = 'SIMULATION',
   NOTEBOOK = 'NOTEBOOK',
   DATASET = 'DATASET'
+}
+```
+
+### Assignment Type
+```typescript
+enum AssignmentType {
+  PDF = 'PDF',
+  PICTURE = 'PICTURE',
+  CODE = 'CODE',
+  LINK = 'LINK',
+  TEXT = 'TEXT'
+}
+```
+
+### Discriminant Resource
+```typescript
+enum DiscriminantResource {
+  SUBMISSION = 'SUBMISSION',
+  QUIZ_QUESTION = 'QUIZ_QUESTION',
+  QUIZ_OPTION = 'QUIZ_OPTION',
+  LESSON = 'LESSON'
 }
 ```
 

@@ -5,4 +5,5 @@ export const apiResponseSchema = z.object({
   message: z.string(),
   data: z.any().optional(),
   timestamp: z.string(),
+  pagination: z.any().optional(),
 });
