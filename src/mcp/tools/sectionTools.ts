@@ -1,4 +1,11 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
+import {
+  apiResponseSchema,
+  SORT_SECTION,
+  type SortingSections,
+  sectionCoureFilterMCPFiltersSchema,
+  sectionCourseMCPSchema,
+} from '../../utils/index.js';
 import type { PaginatedResponse } from '../../utils/response/index.js';
 import type { SophiaMcpServer } from '../mcpServer.js';
 
@@ -15,16 +22,8 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
     {
       title: 'Create Section (Module)',
       description: 'Create a new section (module) within a course',
-      inputSchema: {
-        courseId: z.string().min(1).max(200).describe('ID of the parent course'),
-        title: z.string().min(1).max(500).describe('Section title'),
-        description: z.string().min(1).max(5000).describe('Section description'),
-        order: z.number().min(0).describe('Order position within the course'),
-        aiGenerated: z.boolean().default(false).describe('Whether AI-generated'),
-        generationTaskId: z.string().min(1).max(200).nullable().optional().describe('AI task ID'),
-        suggestedByAi: z.boolean().default(false).describe('Whether suggested by AI'),
-      },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
+      inputSchema: sectionCourseMCPSchema(),
+      outputSchema: apiResponseSchema,
     },
     async (args) => {
       try {
@@ -43,7 +42,7 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: { ...result },
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -61,21 +60,12 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
     {
       title: 'List Sections',
       description: 'List sections for a course with optional filtering',
-      inputSchema: {
-        courseId: z.string().describe('Filter by course ID'),
-        title: z.string().optional().describe('Filter by title'),
-        active: z.boolean().optional().describe('Filter by active status'),
-        aiGenerated: z.boolean().optional().describe('Filter AI-generated sections'),
-        page: z.number().min(1).default(1).describe('Page number'),
-        size: z.number().min(1).max(100).default(10).describe('Page size'),
-        sortBy: z.enum(['title', 'order', 'createdAt']).default('order'),
-        sortOrder: z.enum(['asc', 'desc']).default('asc'),
-      },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) },
+      inputSchema: sectionCoureFilterMCPFiltersSchema(),
+      outputSchema: apiResponseSchema,
     },
     async (args) => {
       try {
-        const filters: any = {
+        const filters = {
           courseId: args.courseId,
           title: args.title || null,
           active: args.active ?? null,
@@ -90,16 +80,22 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
           createdAtEnd: null,
         };
 
-        const sort: Record<string, 'asc' | 'desc'> = { [args.sortBy]: args.sortOrder };
-        const result = (await sectionService.getCourseSections(
+        const sortOrder: 'asc' | 'desc' = args.sortOrder;
+        const sort: SortingSections = {
+          sortFields: [(args.sortBy as SORT_SECTION) || SORT_SECTION.TITLE],
+          sortDirection: sortOrder,
+          page: args.page,
+          size: args.size,
+        };
+        const result: PaginatedResponse<unknown> = (await sectionService.getCourseSections(
           filters,
           sort,
           true
-        )) as PaginatedResponse<any>;
+        )) as PaginatedResponse<unknown>;
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: { ...result },
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -121,7 +117,7 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
         sectionId: z.string().min(1).describe('Section ID'),
         includeFullDetails: z.boolean().default(false).describe('Include full details'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
+      outputSchema: apiResponseSchema,
     },
     async (args) => {
       try {
@@ -132,7 +128,7 @@ export function registerSectionTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: { ...result },
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';

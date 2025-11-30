@@ -17,15 +17,15 @@ import type { SectionService } from '../app/services/interfaces/SectionService.j
  * - Create quizzes and assignments
  */
 export class SophiaMcpServer {
-  private mcpServer: McpServer;
+  private readonly mcpServer: McpServer;
 
   constructor(
-    private courseService: CourseService,
-    private sectionService: SectionService,
-    private lessonService: LessonService,
-    private lessonContentService: LessonContentService,
-    private quizService: QuizService,
-    private assignmentService: AssignmentService
+    private readonly courseService: CourseService,
+    private readonly sectionService: SectionService,
+    private readonly lessonService: LessonService,
+    private readonly lessonContentService: LessonContentService,
+    private readonly quizService: QuizService,
+    private readonly assignmentService: AssignmentService
   ) {
     this.mcpServer = new McpServer({
       name: 'sophia-course-service',

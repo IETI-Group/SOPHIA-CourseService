@@ -209,7 +209,7 @@ describe('Parser Schemas', () => {
   describe('booleanSchema', () => {
     describe('should validate correctly', () => {
       it('should accept true boolean', () => {
-        const schema = booleanSchema();
+        const schema = booleanSchema({ coerce: false });
         const result = schema.safeParse(true);
 
         expect(result.success).toBe(true);
@@ -219,7 +219,7 @@ describe('Parser Schemas', () => {
       });
 
       it('should accept false boolean', () => {
-        const schema = booleanSchema();
+        const schema = booleanSchema({ coerce: false });
         const result = schema.safeParse(false);
 
         expect(result.success).toBe(true);
@@ -238,9 +238,9 @@ describe('Parser Schemas', () => {
         }
       });
 
-      it('should coerce number 1 to boolean when coerce is true', () => {
+      it('should coerce string to boolean when coerce is true', () => {
         const schema = booleanSchema({ coerce: true });
-        const result = schema.safeParse(1);
+        const result = schema.safeParse('true');
 
         expect(result.success).toBe(true);
         if (result.success) {

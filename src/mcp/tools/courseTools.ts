@@ -1,6 +1,14 @@
 import { z } from 'zod/v4';
 import type { COURSE_LEVEL, COURSE_STATUS } from '../../schemas/types_db.js';
-import type { PaginatedResponse } from '../../utils/response/index.js';
+import {
+  apiResponseSchema,
+  coursesInMCPSchema,
+  coursesMCPFiltersSchema,
+  type FiltersCourse,
+  type SORT_COURSES,
+  type SortingCourses,
+} from '../../utils/index.js';
+import type { ApiResponse } from '../../utils/response/index.js';
 import type { SophiaMcpServer } from '../mcpServer.js';
 
 /**
@@ -16,34 +24,8 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
     {
       title: 'Create Course',
       description: 'Create a new course in the SOPHIA platform',
-      inputSchema: {
-        instructorId: z
-          .string()
-          .min(1)
-          .max(200)
-          .nullable()
-          .describe('ID of the instructor, or null'),
-        title: z.string().min(1).max(500).describe('Course title'),
-        description: z.string().min(1).max(5000).describe('Detailed course description'),
-        price: z.number().min(0).describe('Course price'),
-        level: z
-          .enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'])
-          .describe('Difficulty level'),
-        aiGenerated: z.boolean().default(false).describe('Whether AI-generated'),
-        generationTaskId: z.string().min(1).max(200).nullable().optional().describe('AI task ID'),
-        generationMetadata: z.any().optional().describe('AI metadata'),
-        lastAIUpdateAt: z
-          .string()
-          .datetime()
-          .nullable()
-          .optional()
-          .describe('Last AI update datetime'),
-      },
-      outputSchema: {
-        success: z.boolean(),
-        message: z.string(),
-        data: z.any().optional(),
-      },
+      inputSchema: coursesInMCPSchema(),
+      outputSchema: apiResponseSchema,
     },
     async (args) => {
       try {
@@ -66,7 +48,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: { ...result },
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -84,25 +66,12 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
     {
       title: 'List Courses',
       description: 'List courses with optional filtering and sorting',
-      inputSchema: {
-        title: z.string().optional().describe('Filter by title'),
-        instructorId: z.string().optional().describe('Filter by instructor ID'),
-        level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT']).optional(),
-        status: z.enum(['DRAFT', 'UNDER_REVIEW', 'PUBLISHED', 'ARCHIVED']).optional(),
-        priceMin: z.number().optional(),
-        priceMax: z.number().optional(),
-        active: z.boolean().optional(),
-        aiGenerated: z.boolean().optional(),
-        page: z.number().min(1).default(1),
-        size: z.number().min(1).max(100).default(10),
-        sortBy: z.enum(['title', 'price', 'createdAt', 'updatedAt']).default('createdAt'),
-        sortOrder: z.enum(['asc', 'desc']).default('desc'),
-      },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.array(z.any()) },
+      inputSchema: coursesMCPFiltersSchema(),
+      outputSchema: apiResponseSchema,
     },
     async (args) => {
       try {
-        const filters: any = {
+        const filters: FiltersCourse = {
           title: args.title || null,
           instructorId: args.instructorId || null,
           level: (args.level as COURSE_LEVEL) || null,
@@ -132,16 +101,18 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
           totalEnrollmentsMax: null,
         };
 
-        const sort: Record<string, 'asc' | 'desc'> = { [args.sortBy]: args.sortOrder };
-        const result = (await courseService.getCourses(
-          filters,
-          sort,
-          true
-        )) as PaginatedResponse<any>;
+        const sortOrder: 'asc' | 'desc' = args.sortOrder;
+        const sort: SortingCourses = {
+          sortFields: [args.sortBy as SORT_COURSES],
+          sortDirection: sortOrder,
+          page: args.page,
+          size: args.size,
+        };
+        const result: ApiResponse<unknown> = await courseService.getCourses(filters, sort, true);
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: { ...result },
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -163,7 +134,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
         courseId: z.string().min(1).describe('Course ID'),
         includeFullDetails: z.boolean().default(false).describe('Include full details'),
       },
-      outputSchema: { success: z.boolean(), message: z.string(), data: z.any().optional() },
+      outputSchema: apiResponseSchema,
     },
     async (args) => {
       try {
@@ -171,7 +142,7 @@ export function registerCourseTools(sophiaServer: SophiaMcpServer) {
 
         return {
           content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-          structuredContent: result,
+          structuredContent: { ...result },
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';

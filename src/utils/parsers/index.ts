@@ -9,6 +9,7 @@ export * from './favoritecourse/index.js';
 export * from './filters.js';
 export * from './inscriptioncourse/index.js';
 export * from './lessonsection/index.js';
+export * from './mcp/index.js';
 export * from './optionquiz/index.js';
 export * from './progresscontent/index.js';
 export * from './questionquiz/index.js';

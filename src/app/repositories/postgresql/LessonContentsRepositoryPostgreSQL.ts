@@ -163,6 +163,7 @@ export class LessonContentsRepositoryPostgreSQL implements LessonContentsReposit
       orderPreference: record.order_preference,
       createdAt: record.created_at,
     };
+    console.log('lightDTO in buildDTO:', lightDTO);
 
     if (lightDTO) {
       return baseDTO;
