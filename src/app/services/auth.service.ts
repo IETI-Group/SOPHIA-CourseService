@@ -1,11 +1,11 @@
-import { env } from '../../../../SOPHIA-Coordinator/src/config/env.js';
-import { HttpClientService } from '../../../../SOPHIA-Coordinator/src/services/http-client.service.js';
+import { envConfig } from '../../config/env.config.js';
+import { HttpClientService } from '../services/http-client.service.js';
 
 class AuthService {
   private readonly httpClient: HttpClientService;
 
   constructor() {
-    this.httpClient = new HttpClientService(env.authServiceUrl);
+    this.httpClient = new HttpClientService(envConfig.authServiceUrl);
   }
 
   // Helper para extraer solo Authorization
