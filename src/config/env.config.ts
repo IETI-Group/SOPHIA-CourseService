@@ -48,25 +48,13 @@ export const envConfig = {
     expiresIn: process.env.JWT_EXPIRE || '30d',
   },
 
-  cognito: {
-    userPoolId: process.env.COGNITO_USER_POOL_ID || 'us-east-2_7jlqVno1e',
-    region: process.env.COGNITO_REGION || 'us-east-2',
-    clientId: process.env.AUTH_CLIENT_ID,
-    clientSecret: process.env.AUTH_CLIENT_SECRET,
-    domain: process.env.COGNITO_DOMAIN || 'us-east-27jlqvno1e.auth.us-east-2.amazoncognito.com',
-    callbackUrl: process.env.COGNITO_CALLBACK_URL || 'http://localhost:3000/api/v1/auth/callback',
-    logoutUrl: process.env.COGNITO_LOGOUT_URL || 'http://localhost:3000',
-    issuer:
-      process.env.COGNITO_ISSUER ||
-      'https://cognito-idp.us-east-2.amazonaws.com/us-east-2_7jlqVno1e',
-    jwksUri:
-      process.env.COGNITO_JWKS_URI ||
-      'https://cognito-idp.us-east-2.amazonaws.com/us-east-2_7jlqVno1e/.well-known/jwks.json',
-  },
+  authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:3003/api/v1',
 
   apiKeys: {
     key: process.env.API_KEY,
   },
+
+  serviceTimeout: Number.parseInt(process.env.SERVICE_TIMEOUT || '30000', 10),
 } as const;
 
 /**
@@ -83,11 +71,8 @@ export const validateEnvConfig = (): void => {
     if (!process.env.DATABASE_URL) {
       criticalVars.push('DATABASE_URL');
     }
-    if (!process.env.AUTH_CLIENT_ID) {
-      criticalVars.push('AUTH_CLIENT_ID');
-    }
-    if (!process.env.AUTH_CLIENT_SECRET) {
-      criticalVars.push('AUTH_CLIENT_SECRET');
+    if (!envConfig.authServiceUrl) {
+      throw new Error('AUTH_SERVICE_URL must be set in production');
     }
   }
 

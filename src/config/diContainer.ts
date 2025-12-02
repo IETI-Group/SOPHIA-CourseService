@@ -36,7 +36,6 @@ import {
   type TagsCourseRepository,
   TagsCourseRepositoryPostgreSQL,
 } from '../app/repositories/index.js';
-import { CognitoAuthService } from '../app/services/cognitoAuth.service.js';
 import {
   type AISpecsService,
   AISpecsServiceImpl,
@@ -128,7 +127,6 @@ interface DIContainer {
   resourceService: ResourceService;
   tagService: TagService;
   categoryService: CategoryService;
-  cognitoAuthService: CognitoAuthService;
   mcpServer: SophiaMcpServer;
 }
 
@@ -269,9 +267,6 @@ container.register({
     lifetime: 'SINGLETON',
   }),
   categoryService: asClass(CategoryServiceImpl, {
-    lifetime: 'SINGLETON',
-  }),
-  cognitoAuthService: asClass(CognitoAuthService, {
     lifetime: 'SINGLETON',
   }),
 });

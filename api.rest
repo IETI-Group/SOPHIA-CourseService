@@ -1,0 +1,20 @@
+# API REST Cursos
+# Usar extension de REST Client para VSCode para probar las peticiones
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+# Variables
+
+@host = http://localhost:3000
+@prefix = /api/v1
+@auth_token = token_here
+
+### Obtener todos los cursos
+GET {{host}}{{prefix}}/courses
+Authorization: Bearer {{auth_token}}
+
+### Obtener un curso específico   
+GET {{host}}{{prefix}}/courses/10
+Authorization: Bearer {{auth_token}}
+
+### Eliminar un curso
+DELETE {{host}}{{prefix}}/courses/10
+Authorization: Bearer {{auth_token}}

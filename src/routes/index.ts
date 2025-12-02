@@ -2,7 +2,7 @@ import { type IRouter, Router } from 'express';
 import { authenticate } from '../middlewares/auth.js';
 import aispecs from './aispecs.js';
 import assignments from './assignments.js';
-import auth from './auth.js';
+import auth from './auth.routes.js';
 import categories from './categories.js';
 import courses from './courses.js';
 import healthRoutes from './health.js';

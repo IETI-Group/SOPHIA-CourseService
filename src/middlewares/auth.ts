@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { CognitoAuthService } from '../app/services/cognitoAuth.service.js';
-import container from '../config/diContainer.js';
+import { HttpClientService } from '../app/services/http-client.service.js';
+import { envConfig } from '../config/env.config.js';
 import { logger } from '../utils/logger.js';
 
 declare global {
@@ -19,6 +19,8 @@ declare global {
   }
 }
 
+const authClient = new HttpClientService(envConfig.authServiceUrl);
+
 export const authenticate = async (
   req: Request,
   res: Response,
@@ -36,15 +38,22 @@ export const authenticate = async (
       return;
     }
 
-    const token = authHeader.substring(7); // Remover 'Bearer '
+    // Verificar el token con el servicio de autenticación
+    const token = authHeader.substring(7);
+    const response = await authClient.post<{
+      data: { valid: boolean; user: Express.Request['user'] };
+    }>('/auth/verify', { token });
 
-    const authService = container.resolve<CognitoAuthService>('cognitoAuthService');
-
-    const userInfo = await authService.getUserInfo(token);
-
-    req.user = userInfo;
-
-    next();
+    if (response.data?.data?.valid && response.data?.data?.user) {
+      req.user = response.data.data.user;
+      next();
+    } else {
+      res.status(401).json({
+        success: false,
+        message: 'Invalid or expired token',
+        error: 'UNAUTHORIZED',
+      });
+    }
   } catch (error) {
     logger.error('Authentication failed:', error);
     res.status(401).json({
@@ -68,11 +77,13 @@ export const optionalAuthenticate = async (
   }
 
   const token = authHeader.substring(7);
-  const authService = container.resolve<CognitoAuthService>('cognitoAuthService');
-
   try {
-    const userInfo = await authService.getUserInfo(token);
-    req.user = userInfo;
+    const response = await authClient.post<{
+      data: { valid: boolean; user: Express.Request['user'] };
+    }>('/auth/verify', { token });
+    if (response.data?.data?.valid && response.data?.data?.user) {
+      req.user = response.data.data.user;
+    }
   } catch (error) {
     logger.debug('Optional authentication failed:', error);
   }

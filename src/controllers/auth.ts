@@ -1,158 +1,62 @@
-import type { Request, Response } from 'express';
-import type { CognitoAuthService } from '../app/services/cognitoAuth.service.js';
-import container from '../config/diContainer.js';
-import { logger } from '../utils/logger.js';
+import type { NextFunction, Request, Response } from 'express';
+import { authService } from '../app/services/auth.service.js';
 
 export class AuthController {
-  private readonly authService: CognitoAuthService;
-
-  constructor() {
-    this.authService = container.resolve<CognitoAuthService>('cognitoAuthService');
+  // Helper para construir la config de request con headers y query
+  private buildRequestConfig(req: Request) {
+    return {
+      queryParams: req.query,
+      headers: req.headers as Record<string, string>,
+    };
   }
 
-  login = (_req: Request, res: Response): void => {
+  login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const state = Math.random().toString(36).substring(7);
-
-      const loginUrl = this.authService.getLoginUrl(state);
-
-      res.json({
-        success: true,
-        data: {
-          loginUrl,
-          state,
-        },
-        message: 'Redirect to this URL to login with Cognito',
-      });
+      const { queryParams, headers } = this.buildRequestConfig(req);
+      const response = await authService.login(queryParams, headers);
+      res.json(response.data);
     } catch (error) {
-      logger.error('Error generating login URL:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Failed to generate login URL',
-        error: 'INTERNAL_SERVER_ERROR',
-      });
+      next(error);
     }
   };
 
-  callback = async (req: Request, res: Response): Promise<void> => {
+  callback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { code } = req.query;
-
-      if (!code || typeof code !== 'string') {
-        res.status(400).json({
-          success: false,
-          message: 'Authorization code is required',
-          error: 'BAD_REQUEST',
-        });
-        return;
-      }
-
-      const tokens = await this.authService.exchangeCodeForTokens(code);
-
-      const userInfo = await this.authService.getUserInfo(tokens.id_token);
-
-      res.json({
-        success: true,
-        data: {
-          accessToken: tokens.access_token,
-          idToken: tokens.id_token,
-          refreshToken: tokens.refresh_token,
-          expiresIn: tokens.expires_in,
-          tokenType: tokens.token_type,
-          user: userInfo,
-        },
-        message: 'Authentication successful',
-      });
+      const { queryParams, headers } = this.buildRequestConfig(req);
+      const response = await authService.callback(queryParams, headers);
+      res.json(response.data);
     } catch (error) {
-      logger.error('Error in auth callback:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Authentication failed',
-        error: 'AUTHENTICATION_FAILED',
-      });
+      next(error);
     }
   };
 
-  logout = (_req: Request, res: Response): void => {
+  logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const logoutUrl = this.authService.getLogoutUrl();
-
-      res.json({
-        success: true,
-        data: {
-          logoutUrl,
-        },
-        message: 'Redirect to this URL to logout',
-      });
+      const { queryParams, headers } = this.buildRequestConfig(req);
+      const response = await authService.logout(queryParams, headers);
+      res.json(response.data);
     } catch (error) {
-      logger.error('Error generating logout URL:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Failed to generate logout URL',
-        error: 'INTERNAL_SERVER_ERROR',
-      });
+      next(error);
     }
   };
 
-  me = (req: Request, res: Response): void => {
+  me = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (!req.user) {
-        res.status(401).json({
-          success: false,
-          message: 'Not authenticated',
-          error: 'UNAUTHORIZED',
-        });
-        return;
-      }
-
-      res.json({
-        success: true,
-        data: req.user,
-        message: 'User information retrieved successfully',
-      });
+      const { headers } = this.buildRequestConfig(req);
+      const response = await authService.me(headers);
+      res.json(response.data);
     } catch (error) {
-      logger.error('Error getting user info:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Failed to get user information',
-        error: 'INTERNAL_SERVER_ERROR',
-      });
+      next(error);
     }
   };
 
-  verify = async (req: Request, res: Response): Promise<void> => {
+  verify = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { token } = req.body;
-
-      if (!token || typeof token !== 'string') {
-        res.status(400).json({
-          success: false,
-          message: 'Token is required',
-          error: 'BAD_REQUEST',
-        });
-        return;
-      }
-
-      const userInfo = await this.authService.getUserInfo(token);
-
-      res.json({
-        success: true,
-        data: {
-          valid: true,
-          user: userInfo,
-        },
-        message: 'Token is valid',
-      });
+      const { headers } = this.buildRequestConfig(req);
+      const response = await authService.verify(req.body, headers);
+      res.json(response.data);
     } catch (error) {
-      logger.error('Token verification failed:', error);
-      res.status(401).json({
-        success: false,
-        data: {
-          valid: false,
-        },
-        message: 'Invalid or expired token',
-        error: 'INVALID_TOKEN',
-      });
+      next(error);
     }
   };
 }
