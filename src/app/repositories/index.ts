@@ -4,6 +4,8 @@ export type { AttemptsQuizzRepository } from './interfaces/AttemptsQuizzReposito
 export type { CategoriesRepository } from './interfaces/CategoriesRepository.js';
 export type { CoursesRepository } from './interfaces/CoursesRepository.js';
 export type { FavoriteCoursesRepository } from './interfaces/FavoriteCoursesRepository.js';
+export type { ForumMessagesRepository } from './interfaces/ForumMessagesRepository.js';
+export type { ForumsRepository } from './interfaces/ForumsRepository.js';
 export type { InscriptionsCourseRepository } from './interfaces/InscriptionsCourseRepository.js';
 export type { LessonContentsRepository } from './interfaces/LessonContentsRepository.js';
 export type { LessonsRepository } from './interfaces/LessonsRepository.js';
@@ -21,6 +23,8 @@ export { AttemptsQuizzRepositoryPostgreSQL } from './postgresql/AttemptsQuizzRep
 export { CategoriesRepositoryPostgreSQL } from './postgresql/CategoriesRepositoryPostgreSQL.js';
 export { CoursesRepositoryPostgreSQL } from './postgresql/CoursesRepositoryPostgreSQL.js';
 export { FavoriteCoursesRepositoryPostgreSQL } from './postgresql/FavoriteCoursesRepositoryPostgreSQL.js';
+export { ForumMessagesRepositoryPostgreSQL } from './postgresql/ForumMessagesRepositoryPostgreSQL.js';
+export { ForumsRepositoryPostgreSQL } from './postgresql/ForumsRepositoryPostgreSQL.js';
 export { InscriptionsCourseRepositoryPostgreSQL } from './postgresql/InscriptionsCourseRepositoryPostgreSQL.js';
 export { LessonContentsRepositoryPostgreSQL } from './postgresql/LessonContentsRepositoryPostgreSQL.js';
 export { LessonsRepositoryPostgreSQL } from './postgresql/LessonsRepositoryPostgreSQL.js';

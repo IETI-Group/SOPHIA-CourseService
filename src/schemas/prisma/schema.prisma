@@ -98,6 +98,7 @@ enum DiscriminantResource {
   QUIZ_QUESTION
   QUIZ_OPTION
   LESSON
+  COURSE_INFO
 }
 
 model Courses {
@@ -127,6 +128,8 @@ model Courses {
   inscriptions_in Inscriptions[]
   tags_in         Tags[]
   sections        Sections[]
+  course_info_resources CourseInfoResources[]
+  course_forum    CourseForum[]
 
   @@index([instructor_id])
   @@index([status])
@@ -443,6 +446,16 @@ model Resources {
   quiz_question QuizQuestionResources?
   submission    SubmissionResources?
   lesson        LessonResources?
+  course_info   CourseInfoResources?
+}
+
+model CourseInfoResources {
+  id_resource    String @id
+  course_id      String @db.VarChar(36)
+
+  // Relations
+  parent Resources   @relation(fields: [id_resource], references: [id_resource], onDelete: Cascade)
+  course Courses     @relation(fields: [course_id], references: [id_course], onDelete: Cascade)
 }
 
 model QuizOptionResources {
@@ -479,4 +492,38 @@ model LessonResources {
   // Relations
   parent Resources      @relation(fields: [id_resource], references: [id_resource], onDelete: Cascade)
   lesson LessonContents @relation(fields: [lesson_content_id], references: [id_lesson_content], onDelete: Cascade)
+}
+
+model CourseForum {
+  id_forum     String   @id @default(uuid())
+  course_id    String   @db.VarChar(36)
+  created_at   DateTime @default(now())
+  active       Boolean  @default(true)
+  comments_count Int      @default(0)
+
+
+  // Relations
+  course Courses @relation(fields: [course_id], references: [id_course], onDelete: Cascade)
+  messages ForumMessages[]
+
+  @@index([course_id])
+}
+
+model ForumMessages {
+  id_message   String   @id @default(uuid())
+  forum_id     String   @db.VarChar(36)
+  user_id      String
+  content      String   @db.Text
+  created_at   DateTime @default(now())
+  parent_message_id String? @db.VarChar(36)
+
+  // Relations
+  forum CourseForum @relation(fields: [forum_id], references: [id_forum], onDelete: Cascade)
+  parent ForumMessages? @relation("MessageReplies", fields: [parent_message_id], references: [id_message], onDelete: SetNull)
+
+  replies ForumMessages[] @relation("MessageReplies")
+
+  @@index([forum_id])
+  @@index([user_id])
+  @@index([parent_message_id])
 }

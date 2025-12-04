@@ -538,3 +538,59 @@ export const filtersResourceSchema = () => {
       };
     });
 };
+
+export const filtersForumSchema = () => {
+  return z
+    .object({
+      courseId: z.string().min(1).max(200).nullable().catch(null),
+      active: z.coerce.boolean().nullable().catch(null),
+      createdAtStart: z.coerce.date().nullable().catch(null),
+      createdAtEnd: z.coerce.date().nullable().catch(null),
+      updatedAtStart: z.coerce.date().nullable().catch(null),
+      updatedAtEnd: z.coerce.date().nullable().catch(null),
+      commentsCountMax: z.coerce.number().min(0).nullable().catch(null),
+      commentsCountMin: z.coerce.number().min(0).nullable().catch(null),
+    })
+    .partial()
+    .transform((data) => {
+      return {
+        courseId: data.courseId ?? null,
+        active: data.active ?? null,
+        createdAtStart: data.createdAtStart ?? null,
+        createdAtEnd: data.createdAtEnd ?? null,
+        updatedAtStart: data.updatedAtStart ?? null,
+        updatedAtEnd: data.updatedAtEnd ?? null,
+        commentsCountMin: data.commentsCountMin ?? null,
+        commentsCountMax: data.commentsCountMax ?? null,
+      };
+    });
+};
+
+export const filtersForumMessageSchema = () => {
+  return z
+    .object({
+      forumId: z.string().min(1).max(200).nullable().catch(null),
+      userId: z.string().min(1).max(200).nullable().catch(null),
+      parentMessageId: z.string().min(1).max(200).nullable().catch(null),
+      content: z.string().min(1).nullable().catch(null),
+      active: z.coerce.boolean().nullable().catch(null),
+      createdAtStart: z.coerce.date().nullable().catch(null),
+      createdAtEnd: z.coerce.date().nullable().catch(null),
+      updatedAtStart: z.coerce.date().nullable().catch(null),
+      updatedAtEnd: z.coerce.date().nullable().catch(null),
+    })
+    .partial()
+    .transform((data) => {
+      return {
+        forumId: data.forumId ?? null,
+        userId: data.userId ?? null,
+        parentMessageId: data.parentMessageId ?? null,
+        content: data.content ?? null,
+        active: data.active ?? null,
+        createdAtStart: data.createdAtStart ?? null,
+        createdAtEnd: data.createdAtEnd ?? null,
+        updatedAtStart: data.updatedAtStart ?? null,
+        updatedAtEnd: data.updatedAtEnd ?? null,
+      };
+    });
+};

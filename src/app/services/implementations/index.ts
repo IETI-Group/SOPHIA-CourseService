@@ -4,6 +4,8 @@ export * from './AttemptServiceImpl.js';
 export * from './CategoryServiceImpl.js';
 export * from './CourseServiceImpl.js';
 export * from './FavoriteServiceImpl.js';
+export * from './ForumMessageServiceImpl.js';
+export * from './ForumServiceImpl.js';
 export * from './InscriptionServiceImpl.js';
 export * from './LessonContentServiceImpl.js';
 export * from './LessonServiceImpl.js';

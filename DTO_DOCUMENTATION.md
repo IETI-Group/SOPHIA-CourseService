@@ -5,6 +5,7 @@
 - [Assignment](#assignment)
 - [Category](#category)
 - [Course](#course)
+- [Forum](#forum)
 - [Lesson](#lesson)
 - [Quiz](#quiz)
 - [Resource](#resource)
@@ -276,6 +277,87 @@ interface FavoriteCourseOutDTO extends FavoriteCourseInDTO {
   courseAverageReviews: number;
   courseTotalEnrollments: number;
   courseLevel: COURSE_LEVEL;
+}
+```
+
+---
+
+## Forum
+
+### ForumInDTO
+DTO de entrada para foros.
+```typescript
+interface ForumInDTO {
+  courseId: string;
+  active: boolean;
+}
+```
+
+### ForumUpdateDTO
+DTO para actualizar foros (extiende InDTO).
+```typescript
+interface ForumUpdateDTO extends ForumInDTO {
+  commentsCount: number;
+}
+```
+
+### ForumLightDTO
+DTO de salida ligero para foros.
+```typescript
+interface ForumLightDTO {
+  idForum: string;
+  courseId: string;
+  active: boolean;
+  commentsCount: number;
+  createdAt: Date;
+}
+```
+
+### ForumHeavyDTO
+DTO de salida completo para foros (extiende LightDTO).
+```typescript
+interface ForumHeavyDTO extends ForumLightDTO {
+  // Actualmente no hay campos adicionales
+}
+```
+
+### ForumMessageInDTO
+DTO de entrada para mensajes de foro.
+```typescript
+interface ForumMessageInDTO {
+  forumId: string;
+  userId: string;
+  content: string;
+  parentMessageId: string | null;
+}
+```
+
+### ForumMessageUpdateDTO
+DTO para actualizar mensajes de foro.
+```typescript
+interface ForumMessageUpdateDTO {
+  content: string;
+}
+```
+
+### ForumMessageLightDTO
+DTO de salida ligero para mensajes de foro.
+```typescript
+interface ForumMessageLightDTO {
+  idMessage: string;
+  forumId: string;
+  userId: string;
+  content: string;
+  parentMessageId: string | null;
+  createdAt: Date;
+}
+```
+
+### ForumMessageHeavyDTO
+DTO de salida completo para mensajes de foro (extiende LightDTO).
+```typescript
+interface ForumMessageHeavyDTO extends ForumMessageLightDTO {
+  updatedAt: Date | null;
 }
 ```
 

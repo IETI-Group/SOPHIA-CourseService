@@ -13,6 +13,10 @@ import {
   CoursesRepositoryPostgreSQL,
   type FavoriteCoursesRepository,
   FavoriteCoursesRepositoryPostgreSQL,
+  type ForumMessagesRepository,
+  ForumMessagesRepositoryPostgreSQL,
+  type ForumsRepository,
+  ForumsRepositoryPostgreSQL,
   type InscriptionsCourseRepository,
   InscriptionsCourseRepositoryPostgreSQL,
   type LessonContentsRepository,
@@ -49,6 +53,10 @@ import {
   CourseServiceImpl,
   type FavoriteService,
   FavoriteServiceImpl,
+  type ForumMessageService,
+  ForumMessageServiceImpl,
+  type ForumService,
+  ForumServiceImpl,
   type InscriptionService,
   InscriptionServiceImpl,
   type LessonContentService,
@@ -92,6 +100,8 @@ interface DIContainer {
   categoriesRepository: CategoriesRepository;
   coursesRepository: CoursesRepository;
   favoriteCoursesRepository: FavoriteCoursesRepository;
+  forumsRepository: ForumsRepository;
+  forumMessagesRepository: ForumMessagesRepository;
   inscriptionsCourseRepository: InscriptionsCourseRepository;
   lessonContentsRepository: LessonContentsRepository;
   lessonsRepository: LessonsRepository;
@@ -115,6 +125,8 @@ interface DIContainer {
   courseService: CourseService;
   inscriptionService: InscriptionService;
   favoriteService: FavoriteService;
+  forumService: ForumService;
+  forumMessageService: ForumMessageService;
   lessonContentService: LessonContentService;
   lessonService: LessonService;
   progressService: ProgressService;
@@ -156,6 +168,12 @@ container.register({
     lifetime: 'SINGLETON',
   }),
   favoriteCoursesRepository: asClass(FavoriteCoursesRepositoryPostgreSQL, {
+    lifetime: 'SINGLETON',
+  }),
+  forumsRepository: asClass(ForumsRepositoryPostgreSQL, {
+    lifetime: 'SINGLETON',
+  }),
+  forumMessagesRepository: asClass(ForumMessagesRepositoryPostgreSQL, {
     lifetime: 'SINGLETON',
   }),
   inscriptionsCourseRepository: asClass(InscriptionsCourseRepositoryPostgreSQL, {
@@ -231,6 +249,12 @@ container.register({
     lifetime: 'SINGLETON',
   }),
   favoriteService: asClass(FavoriteServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  forumService: asClass(ForumServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  forumMessageService: asClass(ForumMessageServiceImpl, {
     lifetime: 'SINGLETON',
   }),
   lessonContentService: asClass(LessonContentServiceImpl, {
