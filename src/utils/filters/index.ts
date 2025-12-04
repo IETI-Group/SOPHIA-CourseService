@@ -253,3 +253,23 @@ interface FiltersResourceBase {
   fileSizeMbMax: number;
 }
 export type FiltersResource = Nullable<FiltersResourceBase>;
+
+interface FiltersForumBase {
+  courseId: string;
+  active: boolean;
+  commentsCountMin: number;
+  commentsCountMax: number;
+  createdAtStart: Date;
+  createdAtEnd: Date;
+}
+export type FiltersForum = Nullable<FiltersForumBase>;
+
+interface FiltersForumMessageBase {
+  forumId: string;
+  userId: string;
+  content: string;
+  parentMessageId: string;
+  createdAtStart: Date;
+  createdAtEnd: Date;
+}
+export type FiltersForumMessage = Nullable<FiltersForumMessageBase>;

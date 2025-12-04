@@ -67,6 +67,8 @@ export class ResourcesRepositoryPostgreSQL implements ResourcesRepository {
         return { quiz_question: { isNot: null } };
       case DiscriminantResource.SUBMISSION:
         return { submission: { isNot: null } };
+      case DiscriminantResource.COURSE_INFO:
+        return { course_info: { isNot: null } };
       default:
         return {};
     }
@@ -101,6 +103,7 @@ export class ResourcesRepositoryPostgreSQL implements ResourcesRepository {
         { quiz_option: { quiz_option_id: filters.entityReference } },
         { quiz_question: { quiz_question_id: filters.entityReference } },
         { submission: { submission_id: filters.entityReference } },
+        { course_info: { course_id: filters.entityReference } },
       ];
     }
 
@@ -165,6 +168,7 @@ export class ResourcesRepositoryPostgreSQL implements ResourcesRepository {
     if (record.quiz_option) return DiscriminantResource.QUIZ_OPTION;
     if (record.quiz_question) return DiscriminantResource.QUIZ_QUESTION;
     if (record.submission) return DiscriminantResource.SUBMISSION;
+    if (record.course_info) return DiscriminantResource.COURSE_INFO;
     return DiscriminantResource.LESSON;
   }
 
@@ -272,6 +276,14 @@ export class ResourcesRepositoryPostgreSQL implements ResourcesRepository {
           data: {
             id_resource: resourceId,
             submission_id: entityReference,
+          },
+        });
+        break;
+      case DiscriminantResource.COURSE_INFO:
+        await this.prismaClient.courseInfoResources.create({
+          data: {
+            id_resource: resourceId,
+            course_id: entityReference,
           },
         });
         break;

@@ -4,20 +4,30 @@ import type {
   CourseInDTO,
   CourseUpdateDTO,
   FavoriteCourseInDTO,
+  ForumInDTO,
+  ForumMessageInDTO,
+  ForumMessageUpdateDTO,
+  ForumUpdateDTO,
   InscriptionCourseInDTO,
   InscriptionCourseUpdateDTO,
 } from '../../src/app/models/index.js';
 import type { CourseService } from '../../src/app/services/interfaces/CourseService.js';
 import type { FavoriteService } from '../../src/app/services/interfaces/FavoriteService.js';
+import type { ForumMessageService } from '../../src/app/services/interfaces/ForumMessageService.js';
+import type { ForumService } from '../../src/app/services/interfaces/ForumService.js';
 import type { InscriptionService } from '../../src/app/services/interfaces/InscriptionService.js';
 import { CoursesController } from '../../src/controllers/courses.js';
 import type {
   COURSE_LEVEL,
   FiltersCourse,
   FiltersFavoriteCourse,
+  FiltersForum,
+  FiltersForumMessage,
   FiltersInscription,
   SORT_COURSES,
   SORT_FAVORITE_COURSE,
+  SORT_FORUM,
+  SORT_FORUM_MESSAGE,
   SORT_INSCRIPTION,
 } from '../../src/utils/index.js';
 
@@ -25,13 +35,17 @@ describe('CoursesController', () => {
   const mockCourseService = mockDeep<CourseService>();
   const mockInscriptionService = mockDeep<InscriptionService>();
   const mockFavoriteService = mockDeep<FavoriteService>();
+  const mockForumService = mockDeep<ForumService>();
+  const mockForumMessageService = mockDeep<ForumMessageService>();
   let controller: CoursesController;
 
   beforeEach(() => {
     controller = new CoursesController(
       mockCourseService,
       mockInscriptionService,
-      mockFavoriteService
+      mockFavoriteService,
+      mockForumService,
+      mockForumMessageService
     );
   });
 
@@ -39,6 +53,8 @@ describe('CoursesController', () => {
     mockReset(mockCourseService);
     mockReset(mockInscriptionService);
     mockReset(mockFavoriteService);
+    mockReset(mockForumService);
+    mockReset(mockForumMessageService);
   });
 
   it('should call courseService.getCourses with filters, sort and lightDTO', async () => {
@@ -268,5 +284,203 @@ describe('CoursesController', () => {
     await controller.deleteFavorite(favorite_CourseId);
 
     expect(mockFavoriteService.deleteFavorite).toHaveBeenCalledWith(favorite_CourseId);
+  });
+
+  // Forum tests
+  it('should call forumService.getForums with filters, sort and lightDTO', async () => {
+    const filters: FiltersForum = {
+      courseId: null,
+      active: null,
+      createdAtStart: null,
+      createdAtEnd: null,
+      commentsCountMin: null,
+      commentsCountMax: null,
+    };
+    const sort: {
+      page: number;
+      size: number;
+      sortDirection: 'asc' | 'desc';
+      sortFields: SORT_FORUM[];
+    } = {
+      page: 1,
+      size: 10,
+      sortDirection: 'asc',
+      sortFields: [],
+    };
+    const lightDTO: boolean = true;
+
+    await controller.getForums(filters, sort, lightDTO);
+
+    expect(mockForumService.getForums).toHaveBeenCalledWith(filters, sort, lightDTO);
+  });
+
+  it('should call forumService.getForumById with forumId and lightDTO', async () => {
+    const forumId: string = 'forum-123';
+    const lightDTO: boolean = false;
+
+    await controller.getForumById(forumId, lightDTO);
+
+    expect(mockForumService.getForumById).toHaveBeenCalledWith(forumId, lightDTO);
+  });
+
+  it('should call forumService.getForumByCourseId with courseId and lightDTO', async () => {
+    const courseId: string = 'course-123';
+    const lightDTO: boolean = true;
+
+    await controller.getForumByCourseId(courseId, lightDTO);
+
+    expect(mockForumService.getForumByCourseId).toHaveBeenCalledWith(courseId, lightDTO);
+  });
+
+  it('should call forumService.postForum with dto and lightDTO', async () => {
+    const dto: ForumInDTO = {
+      courseId: 'course-123',
+      active: true,
+    };
+    const lightDTO: boolean = true;
+
+    await controller.postForum(dto, lightDTO);
+
+    expect(mockForumService.postForum).toHaveBeenCalledWith(dto, lightDTO);
+  });
+
+  it('should call forumService.putForum with forumId, dto and lightDTO', async () => {
+    const forumId: string = 'forum-123';
+    const dto: Partial<ForumUpdateDTO> = {
+      active: true,
+      commentsCount: 1,
+    };
+    const lightDTO: boolean = false;
+
+    await controller.putForum(forumId, dto, lightDTO);
+
+    expect(mockForumService.putForum).toHaveBeenCalledWith(forumId, dto, lightDTO);
+  });
+
+  it('should call forumService.deleteForum with forumId', async () => {
+    const forumId: string = 'forum-123';
+
+    await controller.deleteForum(forumId);
+
+    expect(mockForumService.deleteForum).toHaveBeenCalledWith(forumId);
+  });
+
+  // ForumMessage tests
+  it('should call forumMessageService.getForumMessages with filters, sort and lightDTO', async () => {
+    const filters: FiltersForumMessage = {
+      forumId: null,
+      userId: null,
+      parentMessageId: null,
+      content: null,
+      createdAtStart: null,
+      createdAtEnd: null,
+    };
+    const sort: {
+      page: number;
+      size: number;
+      sortDirection: 'asc' | 'desc';
+      sortFields: SORT_FORUM_MESSAGE[];
+    } = {
+      page: 1,
+      size: 10,
+      sortDirection: 'desc',
+      sortFields: [],
+    };
+    const lightDTO: boolean = true;
+
+    await controller.getForumMessages(filters, sort, lightDTO);
+
+    expect(mockForumMessageService.getForumMessages).toHaveBeenCalledWith(filters, sort, lightDTO);
+  });
+
+  it('should call forumMessageService.getForumMessageById with messageId and lightDTO', async () => {
+    const messageId: string = 'message-123';
+    const lightDTO: boolean = false;
+
+    await controller.getForumMessageById(messageId, lightDTO);
+
+    expect(mockForumMessageService.getForumMessageById).toHaveBeenCalledWith(messageId, lightDTO);
+  });
+
+  it('should call forumMessageService.getMessagesByForumId with forumId, sort and lightDTO', async () => {
+    const forumId: string = 'forum-123';
+    const sort: {
+      page: number;
+      size: number;
+      sortDirection: 'asc' | 'desc';
+      sortFields: SORT_FORUM_MESSAGE[];
+    } = {
+      page: 1,
+      size: 20,
+      sortDirection: 'asc',
+      sortFields: [],
+    };
+    const lightDTO: boolean = true;
+
+    await controller.getMessagesByForumId(forumId, sort, lightDTO);
+
+    expect(mockForumMessageService.getMessagesByForumId).toHaveBeenCalledWith(
+      forumId,
+      sort,
+      lightDTO
+    );
+  });
+
+  it('should call forumMessageService.getRepliesByParentId with parentMessageId, sort and lightDTO', async () => {
+    const parentMessageId: string = 'message-123';
+    const sort: {
+      page: number;
+      size: number;
+      sortDirection: 'asc' | 'desc';
+      sortFields: SORT_FORUM_MESSAGE[];
+    } = {
+      page: 1,
+      size: 15,
+      sortDirection: 'desc',
+      sortFields: [],
+    };
+    const lightDTO: boolean = false;
+
+    await controller.getRepliesByParentId(parentMessageId, sort, lightDTO);
+
+    expect(mockForumMessageService.getRepliesByParentId).toHaveBeenCalledWith(
+      parentMessageId,
+      sort,
+      lightDTO
+    );
+  });
+
+  it('should call forumMessageService.postForumMessage with dto and lightDTO', async () => {
+    const dto: ForumMessageInDTO = {
+      forumId: 'forum-123',
+      userId: 'user-123',
+      content: 'Test message content',
+      parentMessageId: null,
+    };
+    const lightDTO: boolean = true;
+
+    await controller.postForumMessage(dto, lightDTO);
+
+    expect(mockForumMessageService.postForumMessage).toHaveBeenCalledWith(dto, lightDTO);
+  });
+
+  it('should call forumMessageService.putForumMessage with messageId, dto and lightDTO', async () => {
+    const messageId: string = 'message-123';
+    const dto: Partial<ForumMessageUpdateDTO> = {
+      content: 'Updated message content',
+    };
+    const lightDTO: boolean = false;
+
+    await controller.putForumMessage(messageId, dto, lightDTO);
+
+    expect(mockForumMessageService.putForumMessage).toHaveBeenCalledWith(messageId, dto, lightDTO);
+  });
+
+  it('should call forumMessageService.deleteForumMessage with messageId', async () => {
+    const messageId: string = 'message-123';
+
+    await controller.deleteForumMessage(messageId);
+
+    expect(mockForumMessageService.deleteForumMessage).toHaveBeenCalledWith(messageId);
   });
 });

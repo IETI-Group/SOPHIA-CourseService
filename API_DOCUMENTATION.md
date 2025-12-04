@@ -16,6 +16,8 @@
   - [Tags](#tags)
   - [Categories](#categories)
   - [AI Specs](#ai-specs)
+  - [Forums](#forums)
+  - [Forum Messages](#forum-messages)
 
 ---
 
@@ -1500,6 +1502,499 @@ enum DiscriminantResource {
 {
   "success": false,
   "message": "Internal server error",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+## Forums
+
+### GET /api/v1/forums
+Obtiene todos los foros con paginación y filtros.
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción | Valores |
+|-----------|------|-----------|-------------|---------|
+| page | number | No | Número de página | Default: 1 |
+| size | number | No | Cantidad por página | Default: 10, Max: 100 |
+| sort | string | No | Campo para ordenar | createdAt, commentsCount |
+| sortDirection | string | No | Dirección del ordenamiento | asc, desc (Default: asc) |
+| lightDTO | boolean | No | Retornar DTO ligero | Default: true |
+| courseId | string | No | Filtrar por ID del curso | UUID |
+| active | boolean | No | Filtrar por estado activo | true, false |
+| commentsCountMin | number | No | Comentarios mínimos | >= 0 |
+| commentsCountMax | number | No | Comentarios máximos | >= 0 |
+| createdAtStart | date | No | Fecha de creación inicio | ISO 8601 |
+| createdAtEnd | date | No | Fecha de creación fin | ISO 8601 |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forums retrieved successfully",
+  "data": [
+    {
+      "idForum": "550e8400-e29b-41d4-a716-446655440001",
+      "courseId": "550e8400-e29b-41d4-a716-446655440002",
+      "active": true,
+      "commentsCount": 25,
+      "createdAt": "2025-11-20T10:30:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z",
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 50,
+    "totalPages": 5,
+    "hasNext": true,
+    "hasPrev": false
+  }
+}
+```
+
+---
+
+### GET /api/v1/forums/:id
+Obtiene un foro específico por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| id | string | Sí | ID del foro (UUID) |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum retrieved successfully",
+  "data": {
+    "idForum": "550e8400-e29b-41d4-a716-446655440001",
+    "courseId": "550e8400-e29b-41d4-a716-446655440002",
+    "active": true,
+    "commentsCount": 25,
+    "createdAt": "2025-11-20T10:30:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/courses/:courseId/forum
+Obtiene el foro de un curso específico.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| courseId | string | Sí | ID del curso (UUID) |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum retrieved successfully",
+  "data": {
+    "idForum": "550e8400-e29b-41d4-a716-446655440001",
+    "courseId": "550e8400-e29b-41d4-a716-446655440002",
+    "active": true,
+    "commentsCount": 25,
+    "createdAt": "2025-11-20T10:30:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### POST /api/v1/forums
+Crea un nuevo foro.
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Body:**
+```json
+{
+  "courseId": "550e8400-e29b-41d4-a716-446655440002",
+  "active": true
+}
+```
+
+**Campos del Body:**
+| Campo | Tipo | Requerido | Validación | Descripción |
+|-------|------|-----------|------------|-------------|
+| courseId | string | Sí | UUID, max 36 | ID del curso |
+| active | boolean | Sí | true/false | Estado activo del foro |
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "Forum created successfully",
+  "data": {
+    "idForum": "550e8400-e29b-41d4-a716-446655440001",
+    "courseId": "550e8400-e29b-41d4-a716-446655440002",
+    "active": true,
+    "commentsCount": 0,
+    "createdAt": "2025-11-20T10:30:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/forums/:id
+Actualiza un foro existente.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| id | string | Sí | ID del foro (UUID) |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Body (todos los campos opcionales):**
+```json
+{
+  "courseId": "550e8400-e29b-41d4-a716-446655440002",
+  "active": false,
+  "commentsCount": 30
+}
+```
+
+**Campos del Body:**
+| Campo | Tipo | Requerido | Validación | Descripción |
+|-------|------|-----------|------------|-------------|
+| courseId | string | No | UUID, max 36 | ID del curso |
+| active | boolean | No | true/false | Estado activo |
+| commentsCount | number | No | >= 0, int | Contador de comentarios |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum updated successfully",
+  "data": {
+    "idForum": "550e8400-e29b-41d4-a716-446655440001",
+    "courseId": "550e8400-e29b-41d4-a716-446655440002",
+    "active": false,
+    "commentsCount": 30,
+    "createdAt": "2025-11-20T10:30:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/forums/:id
+Elimina un foro.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| id | string | Sí | ID del foro (UUID) |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum deleted successfully",
+  "data": {
+    "deleted": true
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+## Forum Messages
+
+### GET /api/v1/forum-messages
+Obtiene todos los mensajes de foro con paginación y filtros.
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción | Valores |
+|-----------|------|-----------|-------------|---------|
+| page | number | No | Número de página | Default: 1 |
+| size | number | No | Cantidad por página | Default: 10, Max: 100 |
+| sort | string | No | Campo para ordenar | createdAt, updatedAt |
+| sortDirection | string | No | Dirección del ordenamiento | asc, desc (Default: asc) |
+| lightDTO | boolean | No | Retornar DTO ligero | Default: true |
+| forumId | string | No | Filtrar por ID del foro | UUID |
+| userId | string | No | Filtrar por ID del usuario | string |
+| parentMessageId | string | No | Filtrar por ID del mensaje padre | UUID o null |
+| content | string | No | Buscar en contenido | string |
+| createdAtStart | date | No | Fecha de creación inicio | ISO 8601 |
+| createdAtEnd | date | No | Fecha de creación fin | ISO 8601 |
+| updatedAtStart | date | No | Fecha de actualización inicio | ISO 8601 |
+| updatedAtEnd | date | No | Fecha de actualización fin | ISO 8601 |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum messages retrieved successfully",
+  "data": [
+    {
+      "idMessage": "550e8400-e29b-41d4-a716-446655440001",
+      "forumId": "550e8400-e29b-41d4-a716-446655440002",
+      "userId": "user-123",
+      "content": "Este es un mensaje de ejemplo",
+      "parentMessageId": null,
+      "createdAt": "2025-11-20T10:30:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z",
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 50,
+    "totalPages": 5,
+    "hasNext": true,
+    "hasPrev": false
+  }
+}
+```
+
+---
+
+### GET /api/v1/forum-messages/:id
+Obtiene un mensaje específico por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| id | string | Sí | ID del mensaje (UUID) |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum message retrieved successfully",
+  "data": {
+    "idMessage": "550e8400-e29b-41d4-a716-446655440001",
+    "forumId": "550e8400-e29b-41d4-a716-446655440002",
+    "userId": "user-123",
+    "content": "Este es un mensaje de ejemplo",
+    "parentMessageId": null,
+    "createdAt": "2025-11-20T10:30:00.000Z",
+    "updatedAt": null
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/forums/:forumId/messages
+Obtiene todos los mensajes de un foro específico.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| forumId | string | Sí | ID del foro (UUID) |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| page | number | No | Número de página (Default: 1) |
+| size | number | No | Cantidad por página (Default: 10) |
+| sort | string | No | Campo para ordenar |
+| sortDirection | string | No | Dirección (asc, desc) |
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum messages retrieved successfully",
+  "data": [
+    {
+      "idMessage": "550e8400-e29b-41d4-a716-446655440001",
+      "forumId": "550e8400-e29b-41d4-a716-446655440002",
+      "userId": "user-123",
+      "content": "Mensaje en el foro",
+      "parentMessageId": null,
+      "createdAt": "2025-11-20T10:30:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z",
+  "pagination": {...}
+}
+```
+
+---
+
+### GET /api/v1/forum-messages/:parentMessageId/replies
+Obtiene todas las respuestas a un mensaje específico.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| parentMessageId | string | Sí | ID del mensaje padre (UUID) |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| page | number | No | Número de página (Default: 1) |
+| size | number | No | Cantidad por página (Default: 10) |
+| sort | string | No | Campo para ordenar |
+| sortDirection | string | No | Dirección (asc, desc) |
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Replies retrieved successfully",
+  "data": [
+    {
+      "idMessage": "550e8400-e29b-41d4-a716-446655440010",
+      "forumId": "550e8400-e29b-41d4-a716-446655440002",
+      "userId": "user-456",
+      "content": "Esta es una respuesta",
+      "parentMessageId": "550e8400-e29b-41d4-a716-446655440001",
+      "createdAt": "2025-11-20T11:00:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T11:00:00.000Z",
+  "pagination": {...}
+}
+```
+
+---
+
+### POST /api/v1/forum-messages
+Crea un nuevo mensaje en el foro.
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Body:**
+```json
+{
+  "forumId": "550e8400-e29b-41d4-a716-446655440002",
+  "userId": "user-123",
+  "content": "Este es un nuevo mensaje en el foro",
+  "parentMessageId": null
+}
+```
+
+**Campos del Body:**
+| Campo | Tipo | Requerido | Validación | Descripción |
+|-------|------|-----------|------------|-------------|
+| forumId | string | Sí | UUID, max 36 | ID del foro |
+| userId | string | Sí | max 200 | ID del usuario |
+| content | string | Sí | min 1 | Contenido del mensaje |
+| parentMessageId | string\|null | Sí | UUID o null | ID del mensaje padre (null para mensajes principales) |
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "Forum message created successfully",
+  "data": {
+    "idMessage": "550e8400-e29b-41d4-a716-446655440001",
+    "forumId": "550e8400-e29b-41d4-a716-446655440002",
+    "userId": "user-123",
+    "content": "Este es un nuevo mensaje en el foro",
+    "parentMessageId": null,
+    "createdAt": "2025-11-20T10:30:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/forum-messages/:id
+Actualiza un mensaje existente.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| id | string | Sí | ID del mensaje (UUID) |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| lightDTO | boolean | No | Retornar DTO ligero (Default: true) |
+
+**Body:**
+```json
+{
+  "content": "Contenido actualizado del mensaje"
+}
+```
+
+**Campos del Body:**
+| Campo | Tipo | Requerido | Validación | Descripción |
+|-------|------|-----------|------------|-------------|
+| content | string | No | min 1 | Nuevo contenido del mensaje |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum message updated successfully",
+  "data": {
+    "idMessage": "550e8400-e29b-41d4-a716-446655440001",
+    "forumId": "550e8400-e29b-41d4-a716-446655440002",
+    "userId": "user-123",
+    "content": "Contenido actualizado del mensaje",
+    "parentMessageId": null,
+    "createdAt": "2025-11-20T10:30:00.000Z",
+    "updatedAt": "2025-11-20T12:00:00.000Z"
+  },
+  "timestamp": "2025-11-20T12:00:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/forum-messages/:id
+Elimina un mensaje del foro.
+
+**Path Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|-----------|-----------|-------------|
+| id | string | Sí | ID del mensaje (UUID) |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Forum message deleted successfully",
+  "data": {
+    "deleted": true
+  },
   "timestamp": "2025-11-20T10:30:00.000Z"
 }
 ```

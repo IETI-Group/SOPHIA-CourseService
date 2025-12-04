@@ -7,6 +7,8 @@ export * from './contentlesson/index.js';
 export * from './coursedto/index.js';
 export * from './favoritecourse/index.js';
 export * from './filters.js';
+export * from './forum/index.js';
+export * from './forummessage/index.js';
 export * from './inscriptioncourse/index.js';
 export * from './lessonsection/index.js';
 export * from './mcp/index.js';

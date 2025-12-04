@@ -5,6 +5,8 @@ import {
   SORT_CATEGORY,
   SORT_COURSES,
   SORT_FAVORITE_COURSE,
+  SORT_FORUM,
+  SORT_FORUM_MESSAGE,
   SORT_INSCRIPTION,
   SORT_LESSON,
   SORT_LESSON_CONTENT,
@@ -69,4 +71,10 @@ export const sortingSectionQuizzesSchema = () => {
 };
 export const sortingQuizAttemptsSchema = () => {
   return requestSchema(SORT_ATTEMPT_QUIZ);
+};
+export const sortingForumsSchema = () => {
+  return requestSchema(SORT_FORUM);
+};
+export const sortingForumMessagesSchema = () => {
+  return requestSchema(SORT_FORUM_MESSAGE);
 };
