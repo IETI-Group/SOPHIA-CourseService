@@ -1,0 +1,152 @@
+# API REST Cursos
+# Usar extension de REST Client para VSCode para probar las peticiones
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+# Variables
+
+@host = http://localhost:3000
+@prefix = /api/v1
+@auth_token = token_here
+@courseId = course_id_here
+@forumId = forum_id_here
+@messageId = message_id_here
+
+### Obtener todos los cursos
+GET {{host}}{{prefix}}/courses
+Authorization: Bearer {{auth_token}}
+
+### Obtener un curso específico   
+GET {{host}}{{prefix}}/courses/{{courseId}}?lightDTO=false
+Authorization: Bearer {{auth_token}}
+
+### Crear un nuevo curso
+POST {{host}}{{prefix}}/courses
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "instructorId": "instructor-123",
+  "title": "Curso de Desarrollo Web Completo",
+  "description": "Aprende desarrollo web desde cero con HTML, CSS, JavaScript, React y Node.js",
+  "price": 99.99,
+  "level": "INTERMEDIATE",
+  "aiGenerated": false,
+  "generationTaskId": null,
+  "generationMetadata": {},
+  "lastAIUpdateAt": null
+}
+
+### Actualizar un curso
+PUT {{host}}{{prefix}}/courses/{{courseId}}
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title": "Curso de Desarrollo Web Avanzado",
+  "price": 129.99,
+  "status": "PUBLISHED"
+}
+
+### Eliminar un curso
+DELETE {{host}}{{prefix}}/courses/{{courseId}}
+Authorization: Bearer {{auth_token}}
+
+### ==================== FOROS ====================
+
+### Obtener todos los foros
+GET {{host}}{{prefix}}/forums
+Authorization: Bearer {{auth_token}}
+
+### Obtener todos los foros con filtros
+GET {{host}}{{prefix}}/forums?courseId={{courseId}}&active=true
+Authorization: Bearer {{auth_token}}
+
+### Obtener un foro específico
+GET {{host}}{{prefix}}/forums/{{forumId}}
+Authorization: Bearer {{auth_token}}
+
+### Obtener foro de un curso específico
+GET {{host}}{{prefix}}/courses/{{courseId}}/forum
+Authorization: Bearer {{auth_token}}
+
+### Crear un nuevo foro
+POST {{host}}{{prefix}}/forums
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "courseId": "{{courseId}}",
+  "active": true
+}
+
+### Actualizar un foro
+PUT {{host}}{{prefix}}/forums/{{forumId}}
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "active": false,
+  "commentsCount": 25
+}
+
+### Eliminar un foro
+DELETE {{host}}{{prefix}}/forums/{{forumId}}
+Authorization: Bearer {{auth_token}}
+
+### ==================== MENSAJES DE FORO ====================
+
+### Obtener todos los mensajes
+GET {{host}}{{prefix}}/forum-messages
+Authorization: Bearer {{auth_token}}
+
+### Obtener todos los mensajes con filtros
+GET {{host}}{{prefix}}/forum-messages?forumId={{forumId}}&userId=user-123
+Authorization: Bearer {{auth_token}}
+
+### Obtener un mensaje específico
+GET {{host}}{{prefix}}/forum-messages/{{messageId}}
+Authorization: Bearer {{auth_token}}
+
+### Obtener mensajes de un foro específico
+GET {{host}}{{prefix}}/forums/{{forumId}}/messages
+Authorization: Bearer {{auth_token}}
+
+### Obtener respuestas a un mensaje específico
+GET {{host}}{{prefix}}/forum-messages/{{messageId}}/replies
+Authorization: Bearer {{auth_token}}
+
+### Crear un nuevo mensaje (mensaje principal)
+POST {{host}}{{prefix}}/forum-messages
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "forumId": "{{forumId}}",
+  "userId": "user-123",
+  "content": "Este es un mensaje principal en el foro. ¿Alguien puede ayudarme con esta duda?",
+  "parentMessageId": null
+}
+
+### Crear una respuesta a un mensaje
+POST {{host}}{{prefix}}/forum-messages
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "forumId": "{{forumId}}",
+  "userId": "user-456",
+  "content": "¡Claro! Aquí está la respuesta a tu pregunta...",
+  "parentMessageId": "{{messageId}}"
+}
+
+### Actualizar un mensaje
+PUT {{host}}{{prefix}}/forum-messages/{{messageId}}
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "content": "Contenido del mensaje actualizado con más información"
+}
+
+### Eliminar un mensaje
+DELETE {{host}}{{prefix}}/forum-messages/{{messageId}}
+Authorization: Bearer {{auth_token}}

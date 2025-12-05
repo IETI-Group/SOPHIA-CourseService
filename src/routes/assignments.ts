@@ -19,7 +19,9 @@ export const createAssignmentsRouter = (controller?: AssignmentsController): IRo
     controller ?? container.resolve<AssignmentsController>('assignmentsController');
 
   const getAssignmentsByLesson = async (req: Request, res: Response) => {
+    const lessonId = idSchema().parse(req.params.lessonId);
     const filters: FiltersAssignmentLesson = filtersAssignmentLessonSchema().parse(req.query);
+    filters.lessonId = lessonId;
     const sorting: SortingAssignments = sortingAssignmentsSchema().parse(req.query);
     const result = await assignmentsController.getAssignmentsLesson(filters, sorting);
     res.status(200).json(result);

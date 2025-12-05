@@ -6,6 +6,8 @@ import type {
   ContentLessonOutLightDTO,
   CourseLightDTO,
   FavoriteCourseOutDTO,
+  ForumLightDTO,
+  ForumMessageLightDTO,
   InscriptionCourseOutDTO,
   LessonSectionOutLightDTO,
   OptionQuizOutDTO,
@@ -53,6 +55,8 @@ export interface PaginatedLessons extends PaginatedResponse<LessonSectionOutLigh
 export interface PaginatedSubmissions extends PaginatedResponse<SubmissionAssignmentOutDTO[]> {}
 export interface PaginatedResources extends PaginatedResponse<ResourcesOutLightDTO[]> {}
 export interface PaginatedAssignments extends PaginatedResponse<AssignmentLessonOutDTO[]> {}
+export interface PaginatedForums extends PaginatedResponse<ForumLightDTO[]> {}
+export interface PaginatedForumMessages extends PaginatedResponse<ForumMessageLightDTO[]> {}
 
 export const parseApiResponse = (
   data: unknown,

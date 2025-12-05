@@ -35,21 +35,37 @@ Este servicio forma parte de una arquitectura de microservicios donde:
 - Comunica con el servicio de **Notificaciones** para alertas y recordatorios
 - Integra con servicios de **Análiticas** para métricas y reportes
 
+### 🤖 Model Context Protocol (MCP) Server
+
+El servicio incluye un servidor MCP integrado que expone las capacidades de gestión de cursos a asistentes de IA. Esto permite:
+
+- **Creación de cursos** mediante herramientas estandarizadas
+- **Gestión de secciones y lecciones** a través de comandos estructurados
+- **Integración con agentes de IA** para generación automatizada de contenido
+- **Consultas de cursos** con filtros y paginación
+
+Ver [MCP_DOCUMENTATION.md](./MCP_DOCUMENTATION.md) para más detalles sobre las herramientas disponibles y cómo conectarse al servidor MCP.
+
+**Endpoint MCP:** `POST http://localhost:3000/mcp`
+
 ## Versión del Lenguaje
 
 - **Node.js**: v24 
 - **TypeScript**: 5.9.2
 - **Target ES**: ES2022
+- **MCP SDK**: 1.23.0 (Model Context Protocol)
 
 ## Dependencias
 
 ### Dependencias de Producción
 - **express**: ^5.1.0 - Framework web para Node.js
+- **@modelcontextprotocol/sdk**: ^1.23.0 - SDK para Model Context Protocol
 - **cors**: ^2.8.5 - Middleware para manejar CORS
 - **helmet**: ^8.1.0 - Middleware de seguridad
 - **morgan**: ^1.10.1 - Logger de peticiones HTTP
 - **winston**: ^3.17.0 - Logger de aplicación
 - **dotenv**: 17.2.2 - Manejo de variables de entorno
+- **zod**: ^4.1.12 - Validación de esquemas y tipos
 
 ### Dependencias de Desarrollo
 - **@biomejs/biome**: 2.2.2 - Linter y formateador

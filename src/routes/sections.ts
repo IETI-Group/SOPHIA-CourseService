@@ -20,7 +20,9 @@ export const createSectionsRouter = (controller?: SectionsController): IRouter =
     controller ?? container.resolve<SectionsController>('sectionsController');
 
   const getSectionsByCourse = async (req: Request, res: Response) => {
+    const course_id = idSchema().parse(req.params.courseId);
     const filters: FiltersSection = filtersSectionSchema().parse(req.query);
+    filters.courseId = course_id;
     const sorting: SortingSections = sortingSectionsSchema().parse(req.query);
     const { lightDTO } = lightDTOSchema().parse(req.query);
     const result = await sectionsController.getCourseSections(filters, sorting, lightDTO);

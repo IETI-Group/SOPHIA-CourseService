@@ -48,9 +48,13 @@ export const envConfig = {
     expiresIn: process.env.JWT_EXPIRE || '30d',
   },
 
+  authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:3003/api/v1',
+
   apiKeys: {
     key: process.env.API_KEY,
   },
+
+  serviceTimeout: Number.parseInt(process.env.SERVICE_TIMEOUT || '30000', 10),
 } as const;
 
 /**
@@ -66,6 +70,9 @@ export const validateEnvConfig = (): void => {
     }
     if (!process.env.DATABASE_URL) {
       criticalVars.push('DATABASE_URL');
+    }
+    if (!envConfig.authServiceUrl) {
+      throw new Error('AUTH_SERVICE_URL must be set in production');
     }
   }
 

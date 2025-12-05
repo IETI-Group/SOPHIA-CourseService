@@ -28,7 +28,6 @@ RUN pnpm install --prod --frozen-lockfile && pnpm add -D prisma && pnpm prisma:g
 # Copiar aplicación compilada
 COPY --from=build /app/dist ./dist
 
-# Instalar wget para health check
 RUN apk add --no-cache wget
 
 ENV NODE_ENV=production

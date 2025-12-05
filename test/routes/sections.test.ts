@@ -80,7 +80,7 @@ describe('Sections Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid courseId due to catch', async () => {
+    it('should throw error if invalid courseId', async () => {
       const invalidCourseId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -95,12 +95,7 @@ describe('Sections Routes', () => {
         .get(`/api/courses/${invalidCourseId}/sections`)
         .query({ courseId: invalidCourseId });
 
-      expect(response.status).toBe(200);
-      expect(mockSectionsController.getCourseSections).toHaveBeenCalledWith(
-        expect.objectContaining({ courseId: null }),
-        expect.any(Object),
-        true
-      );
+      expect(response.status).toBe(400);
     });
   });
 
