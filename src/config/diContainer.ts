@@ -13,6 +13,10 @@ import {
   CoursesRepositoryPostgreSQL,
   type FavoriteCoursesRepository,
   FavoriteCoursesRepositoryPostgreSQL,
+  type ForumMessagesRepository,
+  ForumMessagesRepositoryPostgreSQL,
+  type ForumsRepository,
+  ForumsRepositoryPostgreSQL,
   type InscriptionsCourseRepository,
   InscriptionsCourseRepositoryPostgreSQL,
   type LessonContentsRepository,
@@ -49,6 +53,10 @@ import {
   CourseServiceImpl,
   type FavoriteService,
   FavoriteServiceImpl,
+  type ForumMessageService,
+  ForumMessageServiceImpl,
+  type ForumService,
+  ForumServiceImpl,
   type InscriptionService,
   InscriptionServiceImpl,
   type LessonContentService,
@@ -79,6 +87,7 @@ import {
   SectionsController,
   TagsController,
 } from '../controllers/index.js';
+import { registerAllTools, SophiaMcpServer } from '../mcp/index.js';
 import { logger } from '../utils/logger.js';
 import prisma from './db.js';
 
@@ -91,6 +100,8 @@ interface DIContainer {
   categoriesRepository: CategoriesRepository;
   coursesRepository: CoursesRepository;
   favoriteCoursesRepository: FavoriteCoursesRepository;
+  forumsRepository: ForumsRepository;
+  forumMessagesRepository: ForumMessagesRepository;
   inscriptionsCourseRepository: InscriptionsCourseRepository;
   lessonContentsRepository: LessonContentsRepository;
   lessonsRepository: LessonsRepository;
@@ -114,6 +125,8 @@ interface DIContainer {
   courseService: CourseService;
   inscriptionService: InscriptionService;
   favoriteService: FavoriteService;
+  forumService: ForumService;
+  forumMessageService: ForumMessageService;
   lessonContentService: LessonContentService;
   lessonService: LessonService;
   progressService: ProgressService;
@@ -126,6 +139,7 @@ interface DIContainer {
   resourceService: ResourceService;
   tagService: TagService;
   categoryService: CategoryService;
+  mcpServer: SophiaMcpServer;
 }
 
 const container = createContainer<DIContainer>({
@@ -154,6 +168,12 @@ container.register({
     lifetime: 'SINGLETON',
   }),
   favoriteCoursesRepository: asClass(FavoriteCoursesRepositoryPostgreSQL, {
+    lifetime: 'SINGLETON',
+  }),
+  forumsRepository: asClass(ForumsRepositoryPostgreSQL, {
+    lifetime: 'SINGLETON',
+  }),
+  forumMessagesRepository: asClass(ForumMessagesRepositoryPostgreSQL, {
     lifetime: 'SINGLETON',
   }),
   inscriptionsCourseRepository: asClass(InscriptionsCourseRepositoryPostgreSQL, {
@@ -231,6 +251,12 @@ container.register({
   favoriteService: asClass(FavoriteServiceImpl, {
     lifetime: 'SINGLETON',
   }),
+  forumService: asClass(ForumServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
+  forumMessageService: asClass(ForumMessageServiceImpl, {
+    lifetime: 'SINGLETON',
+  }),
   lessonContentService: asClass(LessonContentServiceImpl, {
     lifetime: 'SINGLETON',
   }),
@@ -267,6 +293,24 @@ container.register({
   categoryService: asClass(CategoryServiceImpl, {
     lifetime: 'SINGLETON',
   }),
+});
+
+// Register MCP Server
+const mcpServer = new SophiaMcpServer(
+  container.resolve('courseService'),
+  container.resolve('sectionService'),
+  container.resolve('lessonService'),
+  container.resolve('lessonContentService'),
+  container.resolve('quizService'),
+  container.resolve('assignmentService')
+);
+
+// Register all MCP tools
+registerAllTools(mcpServer);
+
+// Register MCP server in container
+container.register({
+  mcpServer: asValue(mcpServer),
 });
 
 export default container;

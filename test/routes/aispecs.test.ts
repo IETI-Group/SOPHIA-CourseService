@@ -75,7 +75,7 @@ describe('AI Specs Routes', () => {
       );
     });
 
-    it('should return 200 even with invalid lessonContentId due to catch', async () => {
+    it('should throw error if invalid lessonContentId', async () => {
       const invalidLessonId = 'a'.repeat(250);
       const mockResponse = {
         success: true,
@@ -90,12 +90,7 @@ describe('AI Specs Routes', () => {
         .get(`/api/lessons/${invalidLessonId}/ai-specs`)
         .query({ lessonContentId: invalidLessonId });
 
-      expect(response.status).toBe(200);
-      expect(mockAISpecsController.getAISpecs).toHaveBeenCalledWith(
-        expect.objectContaining({ lessonContentId: null }),
-        expect.any(Object),
-        true
-      );
+      expect(response.status).toBe(400);
     });
   });
 

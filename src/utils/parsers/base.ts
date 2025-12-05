@@ -86,9 +86,23 @@ export const numberSchema = (options?: {
 };
 
 export const booleanSchema = (options?: { optional?: boolean; coerce?: boolean }) => {
-  const { optional = false, coerce = false } = options ?? {};
+  const { optional = false, coerce = true } = options ?? {};
 
-  const schema = coerce ? z.coerce.boolean() : z.boolean();
+  let schema: z.ZodType<boolean>;
+
+  if (coerce) {
+    schema = z.string().transform((v) => {
+      const value = v.toLowerCase().trim();
+
+      if (['true', '1', 'yes'].includes(value)) return true;
+      if (['false', '0', 'no'].includes(value)) return false;
+
+      throw new Error(`Invalid boolean value: "${v}"`);
+    });
+  } else {
+    schema = z.boolean();
+  }
+
   if (optional) return schema.optional();
   return schema;
 };

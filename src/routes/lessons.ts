@@ -37,7 +37,9 @@ export const createLessonsRouter = (controller?: LessonsController): IRouter => 
   const lessonsController = controller ?? container.resolve<LessonsController>('lessonsController');
 
   const getLessonsBySection = async (req: Request, res: Response) => {
+    const section_id = idSchema().parse(req.params.sectionId);
     const filters: FiltersLesson = filtersLessonSchema().parse(req.query);
+    filters.sectionId = section_id;
     const sorting: SortingLessons = sortingLessonsSchema().parse(req.query);
     const { lightDTO } = lightDTOSchema().parse(req.query);
     const result = await lessonsController.getSectionLessons(filters, sorting, lightDTO);
@@ -73,7 +75,9 @@ export const createLessonsRouter = (controller?: LessonsController): IRouter => 
   };
 
   const getContentsByLesson = async (req: Request, res: Response) => {
+    const lesson_id = idSchema().parse(req.params.lessonId);
     const filters: FiltersLessonContent = filtersLessonContentSchema().parse(req.query);
+    filters.lessonId = lesson_id;
     const sorting: SortingLessonContent = sortingLessonContentSchema().parse(req.query);
     const { lightDTO } = lightDTOSchema().parse(req.query);
     const result = await lessonsController.getLessonContents(filters, sorting, lightDTO);
@@ -113,7 +117,9 @@ export const createLessonsRouter = (controller?: LessonsController): IRouter => 
   };
 
   const getProgressByContent = async (req: Request, res: Response) => {
+    const content_id = idSchema().parse(req.params.contentId);
     const filters: FiltersProgressContent = filtersProgressContentSchema().parse(req.query);
+    filters.lessonContentId = content_id;
     const sorting: SortingContentProgress = sortingContentProgressSchema().parse(req.query);
     const result = await lessonsController.getProgressContent(filters, sorting);
     res.status(200).json(result);

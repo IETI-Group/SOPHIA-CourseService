@@ -19,7 +19,9 @@ export const createAISpecsRouter = (controller?: AISpecsController): IRouter => 
   const aiSpecsController = controller ?? container.resolve<AISpecsController>('aiSpecsController');
 
   const getAISpecsByLesson = async (req: Request, res: Response) => {
+    const lessonId = idSchema().parse(req.params.lessonId);
     const filters: FiltersAISpecsLesson = filtersAISpecsLessonSchema().parse(req.query);
+    filters.lessonContentId = lessonId;
     const sorting: SortingAILessonSpecs = sortingAILessonSpecsSchema().parse(req.query);
     const { lightDTO } = lightDTOSchema().parse(req.query);
     const result = await aiSpecsController.getAISpecs(filters, sorting, lightDTO);
