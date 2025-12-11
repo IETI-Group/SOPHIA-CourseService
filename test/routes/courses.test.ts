@@ -1295,7 +1295,7 @@ describe('Courses Routes', () => {
       expect(response.status).toBe(400);
     });
   });
-  
+
   describe('GET /api/inscriptions', () => {
     it('should return all inscriptions', async () => {
       const mockResponse = {
