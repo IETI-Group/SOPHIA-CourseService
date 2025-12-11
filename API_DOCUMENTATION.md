@@ -12,6 +12,8 @@
   - [Favorites](#favorites)
   - [Sections](#sections)
   - [Lessons](#lessons)
+  - [Lesson Contents](#lesson-contents)
+  - [Content Progress](#content-progress)
   - [Quizzes](#quizzes)
   - [Assignments](#assignments)
   - [Resources](#resources)
@@ -303,6 +305,41 @@ Elimina un curso.
 ---
 
 ## Inscriptions
+
+### GET /api/v1/inscriptions
+Obtiene todas las inscripciones (útil para "Mis Cursos").
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| userId | string | No | Filtrar por ID de usuario |
+| courseId | string | No | Filtrar por ID de curso |
+| active | boolean | No | Filtrar por estado activo |
+| completed | boolean | No | Filtrar por estado completado |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Inscriptions retrieved successfully",
+  "data": [
+    {
+      "idInscription": "uuid",
+      "userId": "uuid-user",
+      "courseId": "uuid-course",
+      "progressPercentage": 45.5,
+      "score": 85,
+      "active": true,
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
 
 ### GET /api/v1/courses/:courseId/inscriptions
 Obtiene todas las inscripciones de un curso.
@@ -1074,6 +1111,103 @@ Elimina un contenido.
 {
   "success": true,
   "message": "Content deleted successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+## Content Progress
+
+### GET /api/v1/contents/:contentId/progress
+Obtiene el progreso de un usuario en un contenido específico.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| contentId | string | ID del contenido |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| userId | string | No | Filtrar por ID de usuario |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Progress retrieved successfully",
+  "data": [
+    {
+      "idContentProgress": "uuid",
+      "userId": "uuid-user",
+      "lessonContentId": "uuid-content",
+      "timeSpendMinutes": 15,
+      "completionPercentage": 100,
+      "active": true,
+      "startedAt": "2025-01-01T10:00:00.000Z",
+      "completedAt": "2025-01-01T10:15:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### POST /api/v1/contents/:contentId/progress
+Registra o inicia el progreso en un contenido.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| contentId | string | ID del contenido |
+
+**Request Body:**
+```json
+{
+  "userId": "uuid-user",
+  "lessonContentId": "uuid-content"
+}
+```
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "Progress created successfully",
+  "data": "uuid-del-progreso",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/progress/:id
+Actualiza el progreso (tiempo, porcentaje, etc.).
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del progreso |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "timeSpendMinutes": 20,
+  "completionPercentage": 100,
+  "userRating": 5
+}
+```
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Progress updated successfully",
   "data": null,
   "timestamp": "2025-11-20T10:30:00.000Z"
 }

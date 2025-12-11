@@ -315,6 +315,7 @@ export const filtersInscriptionSchema = () => {
   return z
     .object({
       courseId: z.string().min(1).max(200).nullable().catch(null),
+      userId: z.string().min(1).max(200).nullable().catch(null),
       active: z.coerce.boolean().nullable().catch(null),
       completed: z.coerce.boolean().nullable().catch(null),
       createdAtStart: z.coerce.date().nullable().catch(null),
@@ -324,6 +325,7 @@ export const filtersInscriptionSchema = () => {
     .transform((data) => {
       return {
         courseId: data.courseId ?? null,
+        userId: data.userId ?? null,
         active: data.active ?? null,
         completed: data.completed ?? null,
         createdAtStart: data.createdAtStart ?? null,
