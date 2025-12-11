@@ -52,6 +52,7 @@ describe('Inscriptions Course Repository', () => {
       const result = await inscriptionsCourseRepository.getInscriptions(
         {
           courseId: null,
+          userId: null,
           active: true,
           completed: null,
           createdAtStart: null,

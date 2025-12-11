@@ -1296,6 +1296,33 @@ describe('Courses Routes', () => {
     });
   });
 
+  describe('GET /api/inscriptions', () => {
+    it('should return all inscriptions', async () => {
+      const mockResponse = {
+        success: true,
+        message: 'Inscriptions retrieved successfully',
+        data: [
+          {
+            idInscription: 'uuid-1',
+            userId: 'user-123',
+            courseId: 'course-456',
+            progressPercentage: 50,
+            active: true,
+          },
+        ],
+        timestamp: new Date().toISOString(),
+      };
+
+      mockCoursesController.getInscriptionsCourse.mockResolvedValue(mockResponse);
+
+      const response = await request(app).get('/api/inscriptions').query({ userId: 'user-123' });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockResponse);
+      expect(mockCoursesController.getInscriptionsCourse).toHaveBeenCalled();
+    });
+  });
+
   describe('DELETE /api/forum-messages/:id', () => {
     it('should delete a forum message', async () => {
       const messageId = '550e8400-e29b-41d4-a716-446655440001';

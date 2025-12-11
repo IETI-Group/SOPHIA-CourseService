@@ -84,6 +84,13 @@ export const createCoursesRouter = (controller?: CoursesController): IRouter => 
     res.status(200).json(result);
   };
 
+  const getInscriptions = async (req: Request, res: Response) => {
+    const filters: FiltersInscription = filtersInscriptionSchema().parse(req.query);
+    const sorting: SortingInscriptions = sortingInscriptionsSchema().parse(req.query);
+    const result = await coursesController.getInscriptionsCourse(filters, sorting);
+    res.status(200).json(result);
+  };
+
   const getInscriptionsByCourse = async (req: Request, res: Response) => {
     const courseId = idSchema().parse(req.params.courseId);
     const filters: FiltersInscription = filtersInscriptionSchema().parse(req.query);
@@ -255,6 +262,7 @@ export const createCoursesRouter = (controller?: CoursesController): IRouter => 
   router.put('/courses/:id', updateCourse);
   router.delete('/courses/:id', deleteCourse);
 
+  router.get('/inscriptions', getInscriptions);
   router.get('/courses/:courseId/inscriptions', getInscriptionsByCourse);
   router.get('/inscriptions/:id', getInscriptionById);
   router.post('/courses/:courseId/inscriptions', createInscription);

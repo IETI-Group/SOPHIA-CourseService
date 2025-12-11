@@ -8,8 +8,12 @@
 - [Endpoints](#endpoints)
   - [Health Check](#health-check)
   - [Courses](#courses)
+  - [Inscriptions](#inscriptions)
+  - [Favorites](#favorites)
   - [Sections](#sections)
   - [Lessons](#lessons)
+  - [Lesson Contents](#lesson-contents)
+  - [Content Progress](#content-progress)
   - [Quizzes](#quizzes)
   - [Assignments](#assignments)
   - [Resources](#resources)
@@ -293,6 +297,335 @@ Elimina un curso.
 {
   "success": true,
   "message": "Course deleted successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+## Inscriptions
+
+### GET /api/v1/inscriptions
+Obtiene todas las inscripciones (útil para "Mis Cursos").
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| userId | string | No | Filtrar por ID de usuario |
+| courseId | string | No | Filtrar por ID de curso |
+| active | boolean | No | Filtrar por estado activo |
+| completed | boolean | No | Filtrar por estado completado |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Inscriptions retrieved successfully",
+  "data": [
+    {
+      "idInscription": "uuid",
+      "userId": "uuid-user",
+      "courseId": "uuid-course",
+      "progressPercentage": 45.5,
+      "score": 85,
+      "active": true,
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/courses/:courseId/inscriptions
+Obtiene todas las inscripciones de un curso.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| courseId | string | ID del curso |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| userId | string | No | Filtrar por ID de usuario |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Inscriptions retrieved successfully",
+  "data": [
+    {
+      "idInscription": "uuid",
+      "userId": "uuid-user",
+      "courseId": "uuid-course",
+      "progressPercentage": 45.5,
+      "score": 85,
+      "active": true,
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/inscriptions/:id
+Obtiene una inscripción por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la inscripción |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Inscription retrieved successfully",
+  "data": {
+    "idInscription": "uuid",
+    "userId": "uuid-user",
+    "courseId": "uuid-course",
+    "progressPercentage": 45.5,
+    "score": 85,
+    "active": true,
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### POST /api/v1/courses/:courseId/inscriptions
+Inscribe a un usuario en un curso.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| courseId | string | ID del curso |
+
+**Request Body:**
+```json
+{
+  "userId": "uuid-del-usuario",
+  "courseId": "uuid-del-curso"
+}
+```
+
+**Validaciones:**
+- `userId`: String requerido, max 200 chars
+- `courseId`: String requerido, max 200 chars
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "Inscription created successfully",
+  "data": "uuid-de-la-inscripcion",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/inscriptions/:id
+Actualiza una inscripción (progreso, score, estado).
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la inscripción |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "progressPercentage": 75.0,
+  "score": 90,
+  "active": true
+}
+```
+
+**Validaciones:**
+- `progressPercentage`: Number entre 0 y 100
+- `score`: Number >= 0, nullable
+- `active`: Boolean
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Inscription updated successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/inscriptions/:id
+Elimina una inscripción.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID de la inscripción |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Inscription deleted successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+## Favorites
+
+### GET /api/v1/courses/:courseId/favorites
+Obtiene todos los favoritos de un curso.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| courseId | string | ID del curso |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| userId | string | No | Filtrar por ID de usuario |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Favorites retrieved successfully",
+  "data": [
+    {
+      "idFavorite": "uuid",
+      "userId": "uuid-user",
+      "courseId": "uuid-course",
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### GET /api/v1/favorites/:id
+Obtiene un favorito por ID.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del favorito |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Favorite retrieved successfully",
+  "data": {
+    "idFavorite": "uuid",
+    "userId": "uuid-user",
+    "courseId": "uuid-course",
+    "createdAt": "2025-01-01T00:00:00.000Z"
+  },
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### POST /api/v1/courses/:courseId/favorites
+Agrega un curso a favoritos.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| courseId | string | ID del curso |
+
+**Request Body:**
+```json
+{
+  "userId": "uuid-del-usuario",
+  "courseId": "uuid-del-curso"
+}
+```
+
+**Validaciones:**
+- `userId`: String requerido, max 200 chars
+- `courseId`: String requerido, max 200 chars
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "Favorite created successfully",
+  "data": "uuid-del-favorito",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/favorites/:id
+Actualiza un favorito.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del favorito |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "userId": "nuevo-uuid-usuario",
+  "courseId": "nuevo-uuid-curso"
+}
+```
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Favorite updated successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### DELETE /api/v1/favorites/:id
+Elimina un favorito.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del favorito |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Favorite deleted successfully",
   "data": null,
   "timestamp": "2025-11-20T10:30:00.000Z"
 }
@@ -778,6 +1111,103 @@ Elimina un contenido.
 {
   "success": true,
   "message": "Content deleted successfully",
+  "data": null,
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+## Content Progress
+
+### GET /api/v1/contents/:contentId/progress
+Obtiene el progreso de un usuario en un contenido específico.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| contentId | string | ID del contenido |
+
+**Query Parameters:**
+| Parámetro | Tipo | Requerido | Descripción |
+|-----------|------|-----------|-------------|
+| userId | string | No | Filtrar por ID de usuario |
+| filters | object | No | Filtros adicionales |
+| sorting | object | No | Parámetros de ordenamiento |
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Progress retrieved successfully",
+  "data": [
+    {
+      "idContentProgress": "uuid",
+      "userId": "uuid-user",
+      "lessonContentId": "uuid-content",
+      "timeSpendMinutes": 15,
+      "completionPercentage": 100,
+      "active": true,
+      "startedAt": "2025-01-01T10:00:00.000Z",
+      "completedAt": "2025-01-01T10:15:00.000Z"
+    }
+  ],
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### POST /api/v1/contents/:contentId/progress
+Registra o inicia el progreso en un contenido.
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| contentId | string | ID del contenido |
+
+**Request Body:**
+```json
+{
+  "userId": "uuid-user",
+  "lessonContentId": "uuid-content"
+}
+```
+
+**Respuesta (201):**
+```json
+{
+  "success": true,
+  "message": "Progress created successfully",
+  "data": "uuid-del-progreso",
+  "timestamp": "2025-11-20T10:30:00.000Z"
+}
+```
+
+---
+
+### PUT /api/v1/progress/:id
+Actualiza el progreso (tiempo, porcentaje, etc.).
+
+**Path Parameters:**
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| id | string | ID del progreso |
+
+**Request Body:** (Todos los campos opcionales)
+```json
+{
+  "timeSpendMinutes": 20,
+  "completionPercentage": 100,
+  "userRating": 5
+}
+```
+
+**Respuesta (200):**
+```json
+{
+  "success": true,
+  "message": "Progress updated successfully",
   "data": null,
   "timestamp": "2025-11-20T10:30:00.000Z"
 }

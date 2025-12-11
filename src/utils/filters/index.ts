@@ -144,6 +144,7 @@ export type FiltersQuizSection = Nullable<FiltersQuizSectionBase>;
 
 interface FiltersInscriptionBase {
   courseId: string;
+  userId: string;
   active: boolean;
   completed: boolean;
   createdAtStart: Date;
