@@ -43,6 +43,7 @@ export class InscriptionsCourseRepositoryPostgreSQL implements InscriptionsCours
     const where: Record<string, unknown> = {};
 
     this.addExactFilter(filters.courseId, 'course_id', where);
+    this.addExactFilter(filters.userId, 'user_id', where);
     this.addExactFilter(filters.active, 'active', where);
     this.addExactFilter(filters.completed, 'completed', where);
 

@@ -102,6 +102,121 @@ describe('Favorite Courses Repository', () => {
       expect(result.success).toBe(true);
       expect(result.message).toBe('Favorite courses retrieved successfully');
     });
+
+    it('Should filter by courseTitle', async () => {
+      const mockFavoriteCourses = [
+        {
+          user_id: 'user-1',
+          course_id: 'course-1',
+          created_at: new Date('2024-01-10'),
+          courses: {
+            title: 'Introduction to TypeScript',
+            average_reviews: 4.8,
+            total_enrollments: 1500,
+            level: CourseLevel.BEGINNER,
+          },
+        },
+      ];
+
+      prismaClient.favouritesCourses.findMany.mockResolvedValue(mockFavoriteCourses as never);
+      prismaClient.favouritesCourses.count.mockResolvedValue(1);
+
+      const result = await favoriteCoursesRepository.getFavoriteCourses(
+        {
+          courseId: null,
+          courseTitle: 'TypeScript',
+          userId: null,
+          courseLevel: null,
+          courseAverageReviewsMin: null,
+          courseAverageReviewsMax: null,
+          courseTotalEnrollmentsMin: null,
+          courseTotalEnrollmentsMax: null,
+          createdAtStart: null,
+          createdAtEnd: null,
+        },
+        {
+          page: 1,
+          size: 10,
+          sortFields: [SORT_FAVORITE_COURSE.TITLE],
+          sortDirection: 'asc',
+        }
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveLength(1);
+    });
+
+    it('Should filter by date range', async () => {
+      prismaClient.favouritesCourses.findMany.mockResolvedValue([] as never);
+      prismaClient.favouritesCourses.count.mockResolvedValue(0);
+
+      const result = await favoriteCoursesRepository.getFavoriteCourses(
+        {
+          courseId: null,
+          courseTitle: null,
+          userId: null,
+          courseLevel: null,
+          courseAverageReviewsMin: null,
+          courseAverageReviewsMax: null,
+          courseTotalEnrollmentsMin: null,
+          courseTotalEnrollmentsMax: null,
+          createdAtStart: new Date('2024-01-01'),
+          createdAtEnd: new Date('2024-12-31'),
+        },
+        {
+          page: 1,
+          size: 10,
+          sortFields: [SORT_FAVORITE_COURSE.CREATION_DATE],
+          sortDirection: 'desc',
+        }
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveLength(0);
+    });
+
+    it('Should filter by course level and average reviews range', async () => {
+      const mockFavoriteCourses = [
+        {
+          user_id: 'user-1',
+          course_id: 'course-1',
+          created_at: new Date('2024-01-10'),
+          courses: {
+            title: 'Advanced TypeScript',
+            average_reviews: 4.8,
+            total_enrollments: 1500,
+            level: CourseLevel.ADVANCED,
+          },
+        },
+      ];
+
+      prismaClient.favouritesCourses.findMany.mockResolvedValue(mockFavoriteCourses as never);
+      prismaClient.favouritesCourses.count.mockResolvedValue(1);
+
+      const result = await favoriteCoursesRepository.getFavoriteCourses(
+        {
+          courseId: null,
+          courseTitle: null,
+          userId: null,
+          courseLevel: CourseLevel.ADVANCED,
+          courseAverageReviewsMin: 4.5,
+          courseAverageReviewsMax: 5.0,
+          courseTotalEnrollmentsMin: 1000,
+          courseTotalEnrollmentsMax: 2000,
+          createdAtStart: null,
+          createdAtEnd: null,
+        },
+        {
+          page: 1,
+          size: 10,
+          sortFields: [SORT_FAVORITE_COURSE.AVERAGE_REVIEWS, SORT_FAVORITE_COURSE.LEVEL],
+          sortDirection: 'desc',
+        }
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveLength(1);
+    });
   });
 
   describe('getFavoriteCourseById', () => {

@@ -157,6 +157,7 @@ describe('CoursesController', () => {
   it('should call inscriptionService.getInscriptionsCourse with filters and sort', async () => {
     const filters: FiltersInscription = {
       courseId: 'course-123',
+      userId: null,
       active: null,
       completed: null,
       createdAtStart: null,

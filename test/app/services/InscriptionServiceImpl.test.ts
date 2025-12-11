@@ -23,6 +23,7 @@ describe('InscriptionServiceImpl', () => {
   it('should call inscriptionsCourseRepository.getInscriptions with filters and sort', async () => {
     const filters: FiltersInscription = {
       courseId: 'course-123',
+      userId: null,
       active: null,
       completed: null,
       createdAtStart: null,
